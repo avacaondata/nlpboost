@@ -1,0 +1,477 @@
+from typing import List
+import os
+from tqdm import tqdm
+from .metrics import (
+    compute_metrics_ner,
+    compute_metrics_classification,
+    compute_metrics_summarization,
+    compute_metrics_multilabel,
+)
+from .utils import (
+    _save_metrics,
+    joinpaths,
+)
+from copy import deepcopy
+from .ckpt_cleaner import CkptCleaner
+from optuna.samplers import TPESampler
+from apscheduler.schedulers.background import BackgroundScheduler
+from .hftransformers_manager import HFTransformersManager
+from .hfdatasets_manager import HFDatasetsManager
+from .results_getter import ResultsGetter
+
+metric_func_map = {
+    "ner": compute_metrics_ner,
+    "classification": compute_metrics_classification,
+    "qa": None,
+    "seq2seq": compute_metrics_summarization,
+    "multilabel": compute_metrics_multilabel,
+}
+
+
+class AutoTrainer:
+    """
+    Main class of nlpboost. Finetunes and evaluates several models on several datasets.
+
+    Useful for performing benchmarking of different models on the same datasets,
+    keeping track of each experiment with mlflow.
+
+    Parameters
+    ----------
+    model_configs: list
+        Configurations for the models, instances of ModelConfig, each describing their
+        names in the hub or local directory, the name to save the model, the dropout
+        values to use, and a long etc.
+    dataset_configs: list
+        Configurations for the datasets, instances of DatasetConfig, each describing
+        how each dataset should be processed.
+    metrics_dir: str
+        Directory to save the metrics for the experiments.
+    hp_search_mode: str
+        Mode for hyperparameter search; possibilities are optuna or raw, although by the
+        moment only optuna works, raw mode (grid search) is not available. Fixed training
+        also available.
+    clean: bool
+        Whether to clean checkpoints every 30 minutes to avoid using too much disk.
+    metrics_cleaner: str
+        Path to the folder where the metrics of the cleaner should be stored.
+    use_auth_token: bool
+        Whether to use auth token to load datasets and models.
+    """
+
+    def __init__(
+        self,
+        model_configs: List,
+        dataset_configs: List,
+        metrics_dir: str = "experiments_metrics_0105",
+        hp_search_mode: str = "optuna",
+        clean: bool = True,
+        metrics_cleaner: str = "tmp_metrics_cleaner",
+        use_auth_token: bool = True,
+    ):
+        self.model_configs = model_configs
+        self.dataset_configs = dataset_configs
+        self.metrics_dir = metrics_dir
+        self.hp_search_mode = hp_search_mode
+        self.metrics_cleaner = metrics_cleaner
+        self.clean = clean
+        self.use_auth_token = use_auth_token
+        os.makedirs(self.metrics_dir, exist_ok=True)
+        self.use_auth_token = use_auth_token
+
+    def __call__(
+        self,
+    ):
+        """Use train_with_fixed_params or optuna_hp_search to carry out hyperparameter search defined in init."""
+        if self.hp_search_mode == "optuna":
+            return self.optuna_hp_search()
+        elif self.hp_search_mode == "fixed":
+            return self.train_with_fixed_params()
+
+    def train_with_fixed_params(
+        self,
+    ):
+        """
+        Train without hyperparameter search, with a fixed set of params.
+
+        The default parameters are defined in the fixed_train_args of DatasetConfig.
+        However, we can use ModelConfig.overwrite_training_args to change this,
+        by passing a dictionary with the new parameters that we want to use for a model.
+        """
+        all_results = {}
+        for dataset_config in tqdm(
+            self.dataset_configs, desc="Iterating over datasets..."
+        ):
+            for model_config in tqdm(
+                self.model_configs,
+                desc=f"Trying models on dataset {dataset_config.dataset_name}",
+            ):
+                transformers_manager = HFTransformersManager(
+                    model_config, dataset_config
+                )
+                datasets_manager = HFDatasetsManager(dataset_config, model_config)
+                # TODO: REVISAR SI DATASET Y TOKENIZER SIGUEN TENIENDO QUE COLGAR DEL SELF. INTENTAR SACAR DEL SELF ESTOS OBJETOS.
+                self.tokenizer = transformers_manager.load_tokenizer()
+                model_config, dataset_config = self._adapt_objects_summarization(
+                    model_config, dataset_config
+                )
+                dataset, tag2id = datasets_manager.get_dataset_and_tag2id(
+                    deepcopy(self.tokenizer)
+                )
+                data_collator = transformers_manager.load_data_collator(self.tokenizer)
+                if len(model_config.dropout_vals) == 0:
+                    model_config.dropout_vals = [0.0]
+                config = transformers_manager.load_config(
+                    tag2id, model_config.dropout_vals[0]
+                )
+                output_dir = joinpaths(
+                    model_config.save_dir,
+                    f"fixedparams_{model_config.save_name}-{dataset_config.alias}",
+                )
+                args = transformers_manager.load_train_args(output_dir)
+                model_cls = transformers_manager.get_model_cls()
+                model_init = transformers_manager.load_model_init(
+                    model_cls, config, self.tokenizer
+                )
+                compute_metrics_func = self._get_compute_metrics(dataset_config)
+                self.trainer = transformers_manager.load_trainer(
+                    dataset,
+                    self.tokenizer,
+                    args,
+                    model_init,
+                    data_collator,
+                    compute_metrics_func,
+                    config,
+                )
+                test_results = self.train_one_model_fixed_params(
+                    model_config, dataset_config, compute_metrics_func, dataset["test"]
+                )
+                all_results[model_config.save_name.replace("/", "-")] = test_results
+        return all_results
+
+    def optuna_hp_search(
+        self,
+    ):
+        """
+        Carry out hyperparameter search with Optuna.
+
+        By using the model_configs and dataset_configs passed in __call__.
+        It also saves the metrics over the test dataset in the metrics_dir specified in __call__.
+        """
+        all_results = {}
+        for dataset_config in tqdm(
+            self.dataset_configs, desc="Iterating over datasets..."
+        ):
+            for model_config in tqdm(
+                self.model_configs,
+                desc=f"Trying models on dataset {dataset_config.dataset_name}",
+            ):
+                transformers_manager = HFTransformersManager(
+                    model_config, dataset_config
+                )
+                datasets_manager = HFDatasetsManager(dataset_config, model_config)
+                self.tokenizer = transformers_manager.load_tokenizer()
+                model_config, dataset_config = self._adapt_objects_summarization(
+                    model_config, dataset_config
+                )
+
+                if len(model_config.dropout_vals) == 0:
+                    model_config.dropout_vals = [0.0]
+                for p_d in model_config.dropout_vals:
+                    dataset, tag2id = datasets_manager.get_dataset_and_tag2id(
+                        deepcopy(self.tokenizer)
+                    )
+                    data_collator = transformers_manager.load_data_collator(
+                        self.tokenizer
+                    )
+                    config = transformers_manager.load_config(tag2id, p_d)
+
+                    output_dir = joinpaths(
+                        model_config.save_dir,
+                        f"best_optuna_{model_config.save_name}-{dataset_config.alias}-dropout_{p_d}",
+                    )
+                    args = transformers_manager.load_train_args(output_dir)
+                    model_cls = transformers_manager.get_model_cls()
+
+                    model_init = transformers_manager.load_model_init(
+                        model_cls, config, self.tokenizer
+                    )
+
+                    compute_metrics_func = self._get_compute_metrics(dataset_config)
+                    self.trainer = transformers_manager.load_trainer(
+                        dataset,
+                        self.tokenizer,
+                        args,
+                        model_init,
+                        data_collator,
+                        compute_metrics_func,
+                        config,
+                    )
+
+                    def compute_objective(metrics):
+                        return metrics[dataset_config.metric_optimize]
+
+                    test_results = self.train_one_model_optuna(
+                        model_config,
+                        dataset_config,
+                        compute_objective,
+                        compute_metrics_func,
+                        output_dir,
+                        dataset["test"],
+                    )
+                    all_results[model_config.save_name.replace("/", "-")] = test_results
+        return all_results
+
+    def train_one_model_fixed_params(
+        self, model_config, dataset_config, compute_metrics_func, test_dataset
+    ):
+        """
+        Train one model with fixed params in one dataset, without tuning parameters.
+
+        Parameters
+        ----------
+        model_config: ModelConfig
+            Configuration for the model.
+        dataset_config: DatasetConfig,
+            Configuration for the dataset.
+        compute_metrics_func
+            Function to compute metrics.
+        test_dataset: datasets.Dataset
+            Test dataset to get metrics on.
+        """
+        if not model_config.only_test:
+            self.trainer.train()
+        test_results = self._get_test_results(
+            dataset_config, compute_metrics_func, model_config, test_dataset
+        )
+        _save_metrics(
+            test_results,
+            model_config.save_name,
+            dataset_config.alias,
+            self.metrics_dir,
+        )
+        if model_config.push_to_hub:
+            self.trainer.push_to_hub(f"IIC/{model_config.save_name}", private=True)
+        test_results["model_name"] = model_config.save_name
+        test_results["dataset_name"] = dataset_config.alias
+        return test_results
+
+    def train_one_model_optuna(
+        self,
+        model_config,
+        dataset_config,
+        compute_objective,
+        compute_metrics_func,
+        output_dir,
+        test_dataset,
+    ):
+        """
+        Train one model in one dataset, with hyperparameter tuning, using Optuna. Also reports results by email.
+
+        Parameters
+        ----------
+        model_config: ModelConfig
+            Configuration for the model.
+        dataset_config: DatasetConfig,
+            Configuration for the dataset.
+        compute_objective
+            Function to return the computed metric objective.
+        compute_metrics_func
+            Function to compute metrics.
+        output_dir: str
+            Directory where the model is saved.
+        test_dataset: datasets.Dataset
+            Test dataset to get metrics on.
+
+        Returns
+        -------
+        test_results: Dict
+            Dictionary with the results in the test set.
+        """
+        if not model_config.do_nothing:
+
+            if not model_config.only_test:
+                scheduler = BackgroundScheduler()
+                cleaner_callable = self._create_clean_job(
+                    output_dir,
+                    model_config.save_dir,
+                    mode="max"
+                    if dataset_config.direction_optimize == "maximize"
+                    else "min",
+                    metrics_save_dir=self.metrics_cleaner,
+                    modelname=f"{model_config.save_name}-{dataset_config.alias}",
+                )
+                scheduler.add_job(cleaner_callable, "interval", seconds=600)
+                scheduler.start()
+                if not model_config.resume_from_checkpoint:
+                    best_run = self.trainer.hyperparameter_search(
+                        direction=dataset_config.direction_optimize,
+                        hp_space=model_config.hp_space,
+                        n_trials=model_config.n_trials,
+                        compute_objective=compute_objective,
+                        sampler=TPESampler(
+                            seed=dataset_config.seed,
+                            n_startup_trials=model_config.random_init_trials,
+                        ),
+                    )
+                    if dataset_config.retrain_at_end:
+                        for n, v in best_run.hyperparameters.items():
+                            setattr(self.trainer.args, n, v)
+                        self.trainer.train()
+                else:
+                    self.trainer.train(model_config.name)
+
+            test_results = self._get_test_results(
+                dataset_config, compute_metrics_func, model_config, test_dataset
+            )
+            _save_metrics(
+                test_results,
+                model_config.save_name,
+                dataset_config.alias,
+                self.metrics_dir,
+            )
+            if model_config.push_to_hub and model_config.hf_hub_username is not None:
+                self.trainer.push_to_hub(
+                    f"{model_config.hf_hub_username}/{model_config.save_name}",
+                    private=True,
+                )
+            if not model_config.only_test:
+                scheduler.shutdown()
+                cleaner_callable(skip_last=False)
+            test_results["model_name"] = model_config.save_name
+            test_results["dataset_name"] = dataset_config.alias
+            return test_results
+        else:
+            return {
+                "Do nothing": True,
+                "model_name": model_config.save_name,
+                "dataset_name": dataset_config.alias,
+            }
+
+    def _get_test_results(
+        self, dataset_config, compute_metrics_func, model_config, test_dataset
+    ):
+        """
+        Get results for the test set. Metrics vary depending on the task.
+
+        Parameters
+        ----------
+        dataset_config: DatasetConfig,
+            Configuration for the dataset.
+        compute_metrics_func
+            Function to compute metrics.
+        model_config: ModelConfig
+            Configuration for the model.
+        test_dataset: datasets.Dataset
+            Test dataset to get metrics on.
+
+        Returns
+        -------
+        test_results: Dict
+            Dictionary with the results in the test set.
+        """
+        if model_config.custom_results_getter is None:
+            results_getter = ResultsGetter(
+                dataset_config, model_config, compute_metrics_func
+            )
+        else:
+            results_getter = model_config.custom_results_getter(
+                dataset_config, model_config, compute_metrics_func
+            )
+        test_results = results_getter(self.trainer, test_dataset)
+        return test_results
+
+    def _create_clean_job(
+        self,
+        output_dir,
+        dataset_folder,
+        mode,
+        metrics_save_dir,
+        modelname,
+        try_mode=False,
+    ):
+        """
+        Create a job to schedule cleaning process with CkptCleaner.
+
+        Parameters
+        ----------
+        output_dir: str
+            Directory where models are being saved.
+        dataset_folder: str
+            The name of the dataset models.
+        mode: str
+            max or min are allowed.
+        metrics_save_dir: str
+            Directory to save metrics.
+        modelname: str
+            Name of the current model.
+        try_mode: bool
+            Default is False. This is to test the checkpoint cleaner without removing checkpoints.
+
+        Returns
+        -------
+        ckpt_cleaner: CkptCleaner
+            Instance of CkptCleaner to clean the checkpoints for the current model.
+        """
+        ckpt_cleaner = CkptCleaner(
+            current_folder_clean=output_dir,
+            current_dataset_folder=dataset_folder,
+            metrics_save_dir=metrics_save_dir,
+            modelname=modelname,
+            mode=mode,
+            try_mode=try_mode,
+        )
+        return ckpt_cleaner
+
+    def _adapt_tokenizer_summarization(
+        self,
+    ):
+        """Add bos and eos tokens to the tokenizer for summarization, in EncoderDecoder models."""
+        self.tokenizer.bos_token = self.tokenizer.cls_token
+        self.tokenizer.eos_token = self.tokenizer.sep_token
+
+    def _get_compute_metrics(self, dataset_config):
+        """
+        Get the function to compute metrics with.
+
+        Parameters
+        ----------
+        dataset_config: nlpboost.DatasetConfig
+            Configuration for the dataset.
+
+        Returns
+        -------
+        compute_metrics_func: Any
+            Function to compute metrics.
+        """
+        compute_metrics_func = (
+            metric_func_map[dataset_config.task]
+            if not dataset_config.custom_eval_func
+            else dataset_config.custom_eval_func
+        )
+        if dataset_config.is_multilabel:
+            compute_metrics_func = metric_func_map["multilabel"]
+        return compute_metrics_func
+
+    def _adapt_objects_summarization(self, model_config, dataset_config):
+        """
+        Adapt dataset config and model config, along with the tokenizer, for seq2seq tasks.
+
+        Parameters
+        ----------
+        model_config: nlpboost.ModelConfig
+            Configuration for the model.
+        dataset_config: nlpboost.DatasetConfig
+            Configuration for the dataset.
+
+        Returns
+        -------
+        model_config: nlpboost.ModelConfig
+            Adjusted configuration for the model.
+        dataset_config: nlpboost.DatasetConfig
+            Adjusted configuration for the dataset.
+        """
+        if dataset_config.task == "seq2seq":
+            dataset_config.max_length_summary = model_config.max_length_summary
+            if not model_config.model_cls_summarization:
+                self._adapt_tokenizer_summarization()
+        return model_config, dataset_config
