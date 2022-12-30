@@ -4,7 +4,6 @@ from .autotrainer import AutoTrainer
 from .dataset_config import DatasetConfig
 from .model_config import ModelConfig
 from .utils import (
-    preprocess_texts_qa,
     dict_to_list,
     joinpaths,
     match_questions_multiple_answers,

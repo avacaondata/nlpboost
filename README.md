@@ -1,16 +1,28 @@
 # NLPBOOST: A library for automatic training and comparison of Transformer models 
 
-This library is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or making much effort (the machine does the effort, not you).
+This library is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you).
 
-# TODO: CHANGE THIS BELOW.
+## ORIGIN OF NLPBOOST
 
-The system architecture is depicted in the following figure:
+This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my [LinkedIn page](https://www.linkedin.com/in/alejandro-vaca-serrano/). Thanks to automatic training, I could focus on more interesting things from a scientific point of view. This enabled me to be part of many conferences apart from my job, therefore I was able to learn more as time is better used when no long scripts need to be written for each new task. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners.
 
-![Diagrama benchmarker](./imgs/diagram_benchmarker.png "Diagram for benchmarker")
+This library is closely integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.
+
+
+## WHY USE NLPBOOST?
+
+The main advantages you will find when using nlpboost are the following:
+
+* |:high_brightness:| You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning.
+* |:watch:| Once you get used to the library and how scripts are configured, writing a new script for any task belonging to QA, NER, Classification (in any of its forms), or Seq2Seq, will take minutes.
+* |:floppy_disk:| To avoid disk overloading, AutoTrainer, the main class in nlpboost, comes with a checkpoint cleaner, which removes every 10 minutes all checkpoints but the four best (excluding the current optuna run to avoid errors). Additionally, a directory with the best checkpoint found (using validation metrics) is saved each time checkpoints are cleaned. This saves not only disk usage, but effort, easing the task of finding the best checkpoint and removing all unnecessary checkpoints. This is also useful if you want to run many models for many trials on many datasets while you go to a music festival |:sunglasses:| (tested). In that situation you don't want to worry about whether your disk is full before your experiments finish.
+* |:tokyo_tower:| nlpboost comes with a tool to easily integrate NLP data augmentation methods from [nlpaug](https://github.com/makcedward/nlpaug/) library. Keep reading to learn how.
+* |:bar_chart:| Metrics on test after hyperparameter tuning are saved in a directory defined when initializing AutoTrainer. Additionally, with ResultsPlotter you can easily generate a beautiful graph depicting the comparison of the different models you have trained for a dataset. This is handy for presenting a models' comparison in a visual way.
+* |:palm_tree:| nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel, and the rest is done by AutoTrainer.
 
 ## INSTALATION
 
-To install nlpboost run: 
+To install `nlpboost` run: 
 
 ```
 pip install git+https://github.com/alexvaca0/nlpboost.git
@@ -24,150 +36,14 @@ The library is composed mainly of 3 important objects: the ModelConfig, DatasetC
 
 ### MODELCONFIG
 
-The ModelConfig class allows to configure each of the models' configurations. The parameters for the ModelConfig class are the following:
-
-- **name: str**
-
-    Name of the model, either in the HF hub or a path to the local directory where it is stored.
-
-- **save_name: str**
-
-    Alias for the model, used for saving it.
-
-- **hp_space**
-
-    The hyperparameter space for hyperparameter search with optuna. Must be a function receiving a trial and returning a dictionary with the corresponding suggest_categorical and float fields.
-
-- **dropout_vals: List**
-
-    Dropout values to try.
-
-- **custom_config_class: transformers.PretrainedConfig**
-
-    Custom configuration for a model. Useful for training ensembles of transformers.
-
-- **custom_model_class: transformers.PreTrainedModel**
-
-    Custom model. None by default. Only used for ensemble models and other strange creatures of Nature.
-
-- **partial_custom_tok_func_call: Any**
-
-    Partial call for a tokenization function, with all necessary parameters passed to it.
-
-- **encoder_name: str**
-
-    Useful for summarization problems, when we want to create an encoder-decoder and want those models to be different.
-
-- **decoder_name: str**
-
-    Useful for summarization problems, when we want to create an encoder-decoder and want those models to be different.
-
-- **tie_encoder_decoder: bool**
-
-    Useful for summarization problems, when we want to have the weights of the encoder and decoder in an EncoderDecoderModel tied.
-
-- **max_length_summary: int**
-
-    Max length of the summaries. Useful for summarization datasets.
-
-- **min_length_summary : int**
-
-    Min length of the summaries. Useful for summarization datasets.
-
-- **no_repeat_ngram_size: int**
-
-    Number of n-grams to don't repeat when doing summarization.
-
-- **early_stopping_summarization: bool**
-
-    Whether to have early stopping when doing summarization tasks.
-
-- **length_penalty: float**
-
-    Length penalty for summarization tasks.
-
-- **num_beams: int**
-
-    Number of beams in beam search for summarization tasks.
-
-- **dropout_field_name: str**
-
-    Name for the dropout field in the pooler layer.
-
-- **n_trials : int**
-
-    Number of trials (trainings) to carry out with this model.
-
-- **random_init_trials: int**
-
-    Argument for optuna sampler, to control number of initial trials to run randomly.
-
-- **trainer_cls_summarization: Any**
-
-    Class for the trainer. Useful when it is desired to override the default trainer cls for summarization.
-
-- **model_cls_summarization: Any**
-
-    Class for the trainer. Useful when it is desired to override the default trainer cls for summarization.
-
-- **custom_proc_func_tokenization: Any**
-
-    Custom function for tokenizing summarization tasks with a model.
-
-- **only_test: bool**
-
-    Whether to only test, not train (for already trained models).
-
-- **test_batch_size: int**
-
-    Batch size for test; only used when doing only testing.
-
-- **overwrite_training_args: Dict**
-
-    Arguments to overwrite the default arguments for the trainer, for example to change the optimizer for this concrete model.
-
-- **save_dir: str**
-
-    The directory to save the trained model.
-
-- **push_to_hub: bool**
-
-    Whether to push the best model to the hub.
-
-- **additional_params_tokenizer: Dict**
-
-    Additional arguments to pass to the tokenizer.
-
-- **resume_from_checkpoint: bool**
-
-    Whether to resume from checkpoint to continue training.
-
-- **config_problem_type: str**
-
-    The type of the problem, for loss fct.
-
-- **custom_trainer_cls: Any**
-
-    Custom trainer class to override the current one.
-
-- **do_nothing: bool**
-
-    Whether to do nothing or not. If true, will not train nor predict.
-
-- **custom_params_config_model: Dict**
-
-    Dictionary with custom parameters for loading AutoConfig.
-
-- **generation_params: Dict**
-
-    Parameters for generative tasks, for the generate call.
+The ModelConfig class allows to configure each of the models' configurations. For a full list and description of all arguments of ModelConfig, please check the documentation.
 
 There are some examples in the following lines on how to instantiate a class of this type for different kind of models.
 
 - Example 1: instantiate a roberta large with a given hyperparameter space to save it under the name bsc@roberta-large, in a directory "/prueba/". We are going to run 20 trials, the first 8 of them will be random.
 
 ```python
-from benchmark import ModelConfig
+from nlpboost import ModelConfig
 
 def hp_space(trial):
     return {
@@ -198,11 +74,11 @@ bsc_large_config = ModelConfig(
         name="PlanTL-GOB-ES/roberta-large-bne",
         save_name="bsc@roberta-large",
         hp_space=hp_space,
-        save_dir="/prueba/",
-        n_trials=20,
-        random_init_trials=8,
-        dropout_vals=[0.0],
-        only_test=False,
+        save_dir="./test_trial/",
+        n_trials=20, # number of optuna trials to run for optimizing hyperparameters.
+        random_init_trials=8, # number of optuna random init trials (before the optimization algorithm drives the search)
+        dropout_vals=[0.0], # dropout values for last layer to use.
+        only_test=False, # whether to only test on test dataset (no prev train)
     )
 ```
 
@@ -218,13 +94,13 @@ def tokenize_dataset(examples, tokenizer, dataset_config):
 
     # Setup the tokenizer for targets
     with tokenizer.as_target_tokenizer():
-        labels = tokenizer(targets, max_length=dataset_config.max_length_summary, padding=True, truncation=True)# , return_tensors="np")
+        labels = tokenizer(targets, max_length=dataset_config.max_length_summary, padding=True, truncation=True)
 
     labels["input_ids"] = [
         [(l if l != tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
     ]
 
-    model_inputs["labels"] = labels["input_ids"] # [:, 1:].tolist()
+    model_inputs["labels"] = labels["input_ids"]
     return model_inputs
 
 mt5_config = ModelConfig(
@@ -234,7 +110,7 @@ mt5_config = ModelConfig(
          num_beams=4,
          trainer_cls_summarization=Seq2SeqTrainer,
          model_cls_summarization=MT5ForConditionalGeneration,
-         custom_proc_func_tokenization=tokenize_dataset,
+         custom_tok_func=tokenize_dataset,
          only_test=False,
          **{
             "min_length_summary": 64,
@@ -246,161 +122,9 @@ mt5_config = ModelConfig(
 )
 ```
 
-## DATASETCONFIG
+### DATASETCONFIG
 
-Next we have the DatasetConfig class, aimed at configuring all the specifications of a dataset: the fields where data is located, how to process it, what kind of task it is, etc.
-
-The parameters are the following:
-
-
-- **dataset_name: str**
-
-    The name of the dataset.
-
-- **alias: str**
-
-    Alias for the dataset, for saving it.
-
-- **task: str**
-
-    The task of the dataset. Currenlty, only classification, ner and qa (question answering) are available.
-
-- **fixed_training_args: Dict**
-    
-    The training arguments (to use in transformers.TrainingArguments) for every model on this dataset, in dictionary format.
-
-- **is_multilabel: bool**
-
-    Whether it is multilabel classification
-
-- **multilabel_label_names: List**
-
-    Names of the labels for multilabel training.
-
-- **hf_load_kwargs: Dict**
-    
-    Arguments for loading the dataset from the huggingface datasets' hub. Example: {'path': 'wikiann', 'name': 'es'}.
-    If None, it is assumed that all necessary files exist locally and are passed in the files field.
-
-- **type_load: str**
-
-    The type of load to perform in load_dataset; for example, if your data is in csv format (d = load_dataset('csv', ...)), this should be csv.
-
-- **files: Dict**
-
-    Files to load the dataset from, in Huggingface's datasets format. Possible keys are train, validation and test.
-
-- **data_field: str**
-    
-    Field to load data from in the case of jsons loading in datasets.
-
-- **partial_split: bool**
-    
-    Wheter a partial split is needed, that is, if you only have train and test sets, this should be True so that a new validation set is created.
-
-- **split: bool**
-    
-    This should be true when you only have one split, that is, a big train set; this creates new validation and test sets.
-
-- **label_col: str**
-    
-    Name of the label column.
-
-- **val_size: float**
-    
-    In case no validation split is provided, the proportion of the training data to leave for validation.
-
-- **test_size: float**
-    
-    In case no test split is provided, the proportion of the total data to leave for testing.
-
-- **pre_func**
-    
-    Function to perform previous transformations. For example, if your dataset lacks a field (like xquad with title field for example), you can fix it in a function provided here.
-
-- **squad_v2: bool**
-    
-    Only useful for question answering. Whether it is squad v2 format or not. Default is false.
-
-- **text_field: str**
-    
-    The name of the field containing the text. Useful only in case of unique-text-field datasets,like most datasets are. In case of 2-sentences datasets like xnli or paws-x this is not useful. Default is text.
-
-- **is_2sents: bool**
-    
-    Whether it is a 2 sentence dataset. Useful for processing datasets like xnli or paws-x.
-
-- **sentence1_field: str**
-    
-    In case this is a 2 sents dataset, the name of the first sentence field.
-
-- **sentence2_field: str**
-    
-    In case this is a 2 sents dataset, the name of the second sentence field.
-
-- **summary_field: str = field**
-    
-    The name of the field with summaries (we assume the long texts are in the text_field field). Only useful for summarization tasks. Default is summary.
-
-- **callbacks: List**
-    
-    Callbacks to use inside transformers.
-
-- **metric_optimize: str**
-    
-    Name of the metric you want to optimize in the hyperparameter search.
-
-- **direction_optimize : str**
-    
-    Direction of the optimization problem. Whether you want to maximize or minimize metric_optimize.
-
-- **custom_eval_func: Any**
-    
-    In case we want a special evaluation function, we can provide it here. It must receive EvalPredictions by trainer, like any compute_metrics function in transformers.
-
-- **seed : int**
-    
-    Seed for optuna sampler.
-
-- **max_length_summary: int**
-    
-    Max length of the summaries, for tokenization purposes. It will be changed depending on the ModelConfig.
-
-- **num_proc : int**
-    
-    Number of processes to preprocess data.
-
-- **loaded_dataset: Any**
-    
-    In case you want to do weird things like concatenating datasets or things like that, you can do that here, by passing a (non-tokenized) dataset in this field.
-
-- **additional_metrics: List**
-    
-    List of additional metrics loaded from datasets, to compute over the test part.
-
-- **retrain_at_end: bool**
-    
-    whether to retrain with the best performing model. In most cases this should be True, except when you're only training 1 model with 1 set of hyperparams.
-
-- **config_num_labels: int**
-    
-    Number of labels to set for the config, if None it will be computed based on number of labels detected.
-
-- **smoke_test: bool**
-    
-    Whether to select only top 10 rows of the dataset for smoke testing purposes.
-
-- **augment_data: bool**
-    
-    Whether to augment_data or not.
-
-- **data_augmentation_steps: List**
-
-    List of data augmentation techniques to use from NLPAugPipeline.
-
-- **pretokenized_dataset: datasets.DatasetDict**
-
-    Pre-tokenized dataset, to avoid tokenizing inside benchmarker, which may cause memory issues with huge datasets.
+Next we have the DatasetConfig class, aimed at configuring all the specifications of a dataset: the fields where data is located, how to process it, what kind of task it is, etc. For a full list of the parameters, please check the online documentation.
 
 
 Here we will see different examples of how to create a DatasetConfig for different tasks. There are certain objects that are used in all the examples:
@@ -435,7 +159,7 @@ fixed_train_args = {
 
 ```python
 from transformers import EarlyStoppingCallback
-from benchmark import DatasetConfig
+from nlpboost import DatasetConfig
 
 
 conll2002_config = {
@@ -451,7 +175,7 @@ conll2002_config = {
     "label_col": "ner_tags", # in this column we have the tags in list of labels format. 
 }
 
-conll2002_config = DatasetConfig(**conll2002_config) # Now we have it ready for training with benchmarker!
+conll2002_config = DatasetConfig(**conll2002_config) # Now we have it ready for training with AutoTrainer !
 
 ```
 
@@ -459,7 +183,7 @@ conll2002_config = DatasetConfig(**conll2002_config) # Now we have it ready for 
 
 ```python
 from transformers import EarlyStoppingCallback
-from benchmark import DatasetConfig
+from nlpboost import DatasetConfig
 
 mlsum_config = {
         "seed": 44,
@@ -483,7 +207,7 @@ mlsum_config = DatasetConfig(**mlsum_config)
 
 ```python
 from transformers import EarlyStoppingCallback
-from benchmark import DatasetConfig, joinpaths
+from nlpboost import DatasetConfig, joinpaths
 
 data_dir = "/home/loquesea/livingnerdata/"
 
@@ -504,6 +228,13 @@ livingner1_config = {
             "test": joinpaths(data_dir, "task1_val_complete.json")
 }
 
+# these jsons must come in the form:
+# {
+# 'data': [
+#       {"token_list": [], "label_list": []},
+#   ]
+# }
+
 livingner1_config = DatasetConfig(**livingner1_config)
 ```
 
@@ -520,7 +251,7 @@ If you want more information on how to use and configure each of these augmenter
 
 ```python
 from datasets import load_dataset
-from benchmark.augmentation import NLPAugPipeline, NLPAugConfig
+from nlpboost.augmentation import NLPAugPipeline, NLPAugConfig
 
 dataset = load_dataset("ade_corpus_v2", "Ade_corpus_v2_classification")
 
@@ -537,11 +268,11 @@ aug_pipeline = NLPAugPipeline(steps=steps)
 augmented_dataset = dataset.map(aug_pipeline.augment, batched=True)
 ```
 
-It is already integrated with Benchmarker via the DatasetConfig, as shown below. Note that not all objects are declared, so the below example as it is would throw an error. If you want to try it yourself, please define a hp_space function.
+It is already integrated with AutoTrainer via the DatasetConfig, as shown below. Note that not all objects are declared, so the below example as it is would throw an error. If you want to try it yourself, please define a hp_space function.
 
 ```python
-from benchmark import DatasetConfig, ModelConfig, BenchMarker
-from benchmark.augmentation import NLPAugConfig
+from nlpboost import DatasetConfig, ModelConfig, AutoTrainer
+from nlpboost.augmentation import NLPAugConfig
 
 augment_steps = [
     NLPAugConfig(name="contextual_w_e", proportion=0.3, aug_kwargs={"model_path": "bert-base-cased", "action": "insert", "device":"cuda"}),
@@ -571,12 +302,12 @@ model_config = ModelConfig(
     random_init_trials=5
 )
 
-benchmarker = BenchMarker(
+autotrainer = AutoTrainer(
     model_configs = [model_config],
     dataset_configs = [data_config]
 )
 
-benchmarker()
+autotrainer()
 ```
 
 In this way, we are using the pipeline to internally augment data before training, therefore we will increment the amount of training data, without modifying the validation and test subsets.

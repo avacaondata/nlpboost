@@ -1,7 +1,6 @@
 from datasets import load_dataset, Value
 import datasets
 from .utils import (
-    preprocess_texts_qa,
     get_tags,
     _tokenize_dataset,
 )

@@ -17,7 +17,6 @@ import pandas as pd
 from nlpboost.utils import (
     dict_to_list,
     get_tags,
-    preprocess_texts_qa,
     match_questions_multiple_answers,
 )
 from collections import OrderedDict
@@ -148,7 +147,6 @@ def test_tokenize_ner():
 def test_tokenize_qa():
     """Test the tokenization functions of QA tasks."""
     dataset = load_dataset("IIC/sqac_tests")
-    dataset = dataset.map(preprocess_texts_qa)
     feat_names_prev = _get_feature_names(dataset["train"])
     dataset_tokenized = dataset.map(
         partial(
