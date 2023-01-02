@@ -2,6 +2,13 @@
 
 This library is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you).
 
+The system architecture is depicted in the following figure:
+
+![Diagrama autotrainer](./imgs/diagram_nlpboost.png "Diagram for AutoTrainer, the main class in nlpboost!")
+
+
+This figure depicts the main functionality of `nlpboost`. The main class is `AutoTrainer`, which is configured with a list of `DatasetConfig`s and a list of `ModelConfig`s. Then, `AutoTrainer` will loop through each dataset configuration, performing hyperparameter tuning for each of the models configurations. For that, it uses `HFDatasetsManager` to load the dataset, depending on the configuration of `DatasetConfig`. It will also tokenize the dataset accordingly. As the dashed lines show, the user can use the default `tokenization_function` for the desired task, or can define their own in `DatasetConfig`. Then, `HFTransformersManager` will load all necessary Transformer objects (model, data collator, training arguments, trainer...). After that, hyperparameter tuning is performed with Optuna. A `CkptCleaner` (checkpoint cleaner) class removes bad performing checkpoints every 10 minutes, also saving the best performing checkpoint in the experiment in a separate directory. After hyperparameter tuning, results are obtained via `ResultsGetter`, which is customizable (by passing a custom ResultsGetter class overriding the current methods), and uses a `compute_metrics_function` which is also customizable, by passing a `custom_eval_func` to `DatasetConfig`. These results are stored in json or, if json saving fails, in txt format (results in txt can be also easily loaded with `ast.literal_eval`). `ResultsPlotter` is a helper class that enables the user to easily get a plot of the models' performance on each dataset, and their average performance. 
+
 ## ORIGIN OF NLPBOOST
 
 This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my [LinkedIn page](https://www.linkedin.com/in/alejandro-vaca-serrano/). Thanks to automatic training, I could focus on more interesting things from a scientific point of view. This enabled me to be part of many conferences apart from my job, therefore I was able to learn more as time is better used when no long scripts need to be written for each new task. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners.
@@ -29,6 +36,32 @@ pip install git+https://github.com/alexvaca0/nlpboost.git
 ```
 
 Be aware that pytorch must be built on a cuda version that is compatible with the machine's installed cuda version. In case pytorch's default cuda version is not compatible visit https://pytorch.org/get-started/locally/ and install a compatible pytorch version.
+
+## SUPPORTED TASKS
+
+Here is a list of the tasks supported by `nlpboost`.
+
+### Binary or Multi-Class Classification
+
+Binary or multi-class classification is supported under the task name `classification`. So, for training models for this task, you just need to set in your DatasetConfig `task="classification"`. 
+
+### Multi-Label Classification
+
+For multi-label classification, `AutoTrainer`, the main class in `nlpboost`, expects a dataset with a text field and the rest of the fields must be labels. If your dataset does not come in this format initially, you can either process your dataset outside of `AutoTrainer` and then pass a DatasetConfig with the processed dataset in the correct format, or you can define a `pre_func` to pass to `DatasetCOnfig` that will do that preprocessing. You can find an example of how to do this under the `examples/classification` folder, in the script called `train_multilabel.py`. 
+
+For multi-label tasks, we can define a probability threshold for labels to be positive, as each label is independent of the rest. However, defining this threshold can be tricky, and is not straightforward. For that reason, when computing the metrics for multilabel, we iterate over thresholds from 0.1 to 0.9, with 0.1 step size. Then, we return the metrics belonging to the threshold which scored highest, together with that threshold. This way, the user already knows which probability threshold to use when using the returned model in production.
+
+### Named Entity Recognition (NER)
+
+The task name for NER is `ner`, so inside DatasetConfig, the user must pass `task="ner"`. AutoTrainer expects two fields: a list of tokens (`token_list`) and a list of labels (`label_list`) for each data instance. If your dataset is not already in that format, which is the most common case, you can easily process your dataset with a `pre_func`, using `nlpboost.utils.dict_to_list` function. You can check an example of how to do this in the script `examples/NER/train_spanish_ner.py`. In that script, `ehealth_kd` dataset does not have that format by default, so `pre_func=dict_to_list` is added to `DatasetConfig` to preprocess data before tokenizing it.
+
+### Extractive Question Answering (QA)
+
+The task name for QA is `qa`, so the correct configuration is `DatasetConfig(..., task="qa")`. The default format for this task is the SQUAD format (check [squad dataset in Huggingface's Datasets](https://huggingface.co/datasets/squad)). If your QA dataset is not in that format, you can either preprocess it before using `AutoTrainer` with it, or use a `pre_func` in `DatasetConfig` to achieve the same.
+
+### Seq2Seq
+
+Seq2Seq involves many different subtasks, such as translation, summarization, generative question answering... `AutoTrainer` is suited to perform any of these, as they all are based on generating a target text from a source text. The task name in `nlpboost` is `seq2seq`, so the configuration would be `DatasetConfig(..., task="seq2seq")`.
 
 ## MODULES
 

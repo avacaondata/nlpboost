@@ -83,9 +83,8 @@ class HFDatasetsManager:
         """
         dataset = self._basic_dataset_loading()
         dataset = self._smoke_test_filter(dataset)
-        # TODO: ELIMINAR ESTOS DOS BUCLES DE ABAJO Y DEJAR SOLO EL PRIMERO, PARA HACER CUSTOMIZABLE EL PREPROCESO DE QA SIN QUE ESTÉ INCLUIDO EN LA PROPIA LIBRERÍA.
         if self.dataset_config.pre_func is not None:
-            dataset = dataset.map(self.dataset_config.pre_func)
+            dataset = dataset.map(self.dataset_config.pre_func, remove_columns=dataset["train"].column_names if self.dataset_config.remove_fields_pre_func else None)
             if self.dataset_config.task == "qa":
                 test_dataset = dataset["test"]
         tags = get_tags(dataset, self.dataset_config)

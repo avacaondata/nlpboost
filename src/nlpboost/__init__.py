@@ -20,3 +20,4 @@ from .tokenization_functions import (
     tokenize_summarization,
 )
 from .results_getter import ResultsGetter
+from .default_param_spaces import hp_space_base, hp_space_large

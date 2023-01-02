@@ -169,6 +169,10 @@ class DatasetConfig:
             "help": "function to perform previous transformations. For example, if your dataset lacks a field (like xquad with title field for example), you can fix it in a function provided here."
         },
     )
+    remove_fields_pre_func: bool = field(
+        default=False,
+        metadata={"help": "Whether to remove fields after pre_func is applied."}
+    )
     squad_v2: bool = field(
         default=False,
         metadata={
