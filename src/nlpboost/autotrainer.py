@@ -30,7 +30,7 @@ metric_func_map = {
 
 class AutoTrainer:
     """
-    Main class of nlpboost. Finetunes and evaluates several models on several datasets.
+    Main class of nlpboost. Fine-tune and evaluate several models on several datasets.
 
     Useful for performing benchmarking of different models on the same datasets,
     keeping track of each experiment with mlflow.
@@ -45,15 +45,21 @@ class AutoTrainer:
         Configurations for the datasets, instances of DatasetConfig, each describing
         how each dataset should be processed.
     metrics_dir: str
-        Directory to save the metrics for the experiments.
+        Directory to save the metrics for the experiments, as returned by `nlpboost.ResultsGetter`.
     hp_search_mode: str
-        Mode for hyperparameter search; possibilities are optuna or raw, although by the
-        moment only optuna works, raw mode (grid search) is not available. Fixed training
-        also available.
+        Mode for hyperparameter search; possibilities are `optuna` or `fixed`. If `fixed`,
+        no hyperparameter tuning is carried out.
     clean: bool
-        Whether to clean checkpoints every 30 minutes to avoid using too much disk.
+        Whether to clean checkpoints every 10 minutes to avoid using too much disk, by
+        using nlpboost.CkptCleaner. Best model checkpoint is also saved when unuseful
+        checkpoints are deleted.
     metrics_cleaner: str
-        Path to the folder where the metrics of the cleaner should be stored.
+        Path to the folder where the metrics of the checkpoint cleaner should be stored.
+        These metrics are used to decide which checkpoints should be removed. Note: if the
+        experiment fails for some reason, and you re-launch it, please remove this folder
+        before doing so. Otherwise there will probably be an error, as the checkpoint cleaner
+        will use metrics from past experiments, not the running one, so there will be incorrect
+        checkpoint removals.
     use_auth_token: bool
         Whether to use auth token to load datasets and models.
     """
@@ -62,7 +68,7 @@ class AutoTrainer:
         self,
         model_configs: List,
         dataset_configs: List,
-        metrics_dir: str = "experiments_metrics_0105",
+        metrics_dir: str = "tmp_experiments_metrics",
         hp_search_mode: str = "optuna",
         clean: bool = True,
         metrics_cleaner: str = "tmp_metrics_cleaner",
@@ -81,7 +87,10 @@ class AutoTrainer:
     def __call__(
         self,
     ):
-        """Use train_with_fixed_params or optuna_hp_search to carry out hyperparameter search defined in init."""
+        """
+        Use `train_with_fixed_params` or `optuna_hp_search` to carry out hyperparameter search defined in init.
+        Check the documentation of those methods for more information.
+        """
         if self.hp_search_mode == "optuna":
             return self.optuna_hp_search()
         elif self.hp_search_mode == "fixed":
@@ -154,8 +163,17 @@ class AutoTrainer:
         """
         Carry out hyperparameter search with Optuna.
 
-        By using the model_configs and dataset_configs passed in __call__.
-        It also saves the metrics over the test dataset in the metrics_dir specified in __call__.
+        By using the model_configs and dataset_configs passed in __call__. Iterate over
+        each dataset, and then over each model, by doing hyperparameter tuning.
+        It also saves the metrics over the test dataset in the metrics_dir specified in __call__
+        for each of those models, for later comparison.
+
+        Returns
+        -------
+        all_results: Dict
+            Dictionary with results from the experiments. First keys are dataset names, as called in
+            `alias` param of `DatasetConfig`. Then, for each dataset there is a dict of model names,
+            which are themselves keys of dicts of metrics.
         """
         all_results = {}
         for dataset_config in tqdm(
@@ -265,7 +283,17 @@ class AutoTrainer:
         test_dataset,
     ):
         """
-        Train one model in one dataset, with hyperparameter tuning, using Optuna. Also reports results by email.
+        Train one model in one dataset, with hyperparameter tuning, using Optuna.
+        Load a checkpoint cleaner in the background to clean bad performing checkpoints
+        every 10 minutes, also saving the best performing checkpoint. Then, carry out
+        hyperparameter search and, if configured (see `DatasetConfig`), retrain at end
+        with the best hyperparameters again. After that, results on the test set are
+        obtained. For that, `ResultsGetter` is used for dataset processing, prediction
+        and metrics gathering. If desired, the user may change the behavior
+        of this part by creating a custom `ResultsGetter` overriding the desired
+        methods, and passing it to `DatasetConfig` as a `custom_results_getter`.
+        Metrics are saved in json or txt format, and, if configured, the model
+        is pushed to the hub.
 
         Parameters
         ----------
@@ -352,6 +380,10 @@ class AutoTrainer:
     ):
         """
         Get results for the test set. Metrics vary depending on the task.
+        Use `ResultsGetter` for dataset processing, obtaining the predictions
+        and getting the metrics. If desired, the user may change the behavior
+        of this part by creating a custom `ResultsGetter` overriding the desired
+        methods.
 
         Parameters
         ----------

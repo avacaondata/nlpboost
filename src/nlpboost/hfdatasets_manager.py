@@ -23,7 +23,7 @@ tok_func_map = {
 
 class HFDatasetsManager:
     """
-    Utility for loading HF Datasets' objects, using a dataset config and a model config.
+    Utility for loading HF Datasets' objects, using a DatasetConfig and a ModelConfig.
 
     Parameters
     ----------
@@ -40,6 +40,9 @@ class HFDatasetsManager:
     def get_dataset_and_tag2id(self, tokenizer):
         """
         Get dataset and tag2id depending on dataset and model config.
+        Using dataset config (task, etc) a preprocessing is applied to
+        the dataset, tokenizing text data, returning a processed dataset
+        ready for the configured task.
 
         Parameters
         ----------
@@ -49,9 +52,9 @@ class HFDatasetsManager:
         Returns
         -------
         dataset: datasets.DatasetDict
-            Loaded dataset
+            Tokenized dataset.
         tag2id: Dict
-            Dictionary with tags and their indexes.
+            Dictionary with tags (labels) and their indexes.
         """
         if self.dataset_config.pretokenized_dataset is None:
             dataset, tag2id = self._generic_load_dataset(tokenizer)

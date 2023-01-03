@@ -85,6 +85,16 @@ class ModelConfig:
         Username in HF Hub, to push models to hub.
     custom_results_getter: Any
         Custom class to get test results after training.
+
+    Examples
+    --------
+    With the following lines you can create a ModelConfig for bert-base-cased model.
+
+    >>>from nlpboost import ModelConfig
+
+    >>>from nlpboost.default_param_spaces import hp_space_base
+
+    >>>model_config = ModelConfig(name='bert-base-cased', save_name='bert', hp_space=hp_space_base)
     """
 
     name: str = field(

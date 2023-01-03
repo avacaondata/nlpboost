@@ -77,7 +77,7 @@ class DatasetConfig:
     additional_metrics: List
         List of additional metrics loaded from datasets, to compute over the test part.
     retrain_at_end: bool
-        whether to retrain with the best performing model. In most cases this should be True, except when you're only training 1 model with 1 set of hyperparams.
+        whether to retrain with the best performing model. In most cases this should be True, except when training 1 model with 1 set of hyperparams.
     config_num_labels: int
         Number of labels to set for the config, if None it will be computed based on number of labels detected.
     smoke_test: bool
@@ -88,6 +88,16 @@ class DatasetConfig:
         List of data augmentation techniques to use from NLPAugPipeline.
     pretokenized_dataset: Any
         Pre-tokenized dataset, to avoid tokenizing inside AutoTrainer, which may cause memory issues with huge datasets.
+
+    Examples
+    --------
+    One can easily create a DatasetConfig for dataset conll2002 just with the following:
+
+    >>>from nlpboost import DatasetConfig
+
+    >>>config={'fixed_train_args': {}, 'dataset_name': 'conll2002', 'alias': 'conll2002', 'task': 'ner', 'hf_load_kwargs': {'path': 'conll2002', 'name': 'es'}, 'label_col':'ner_tags'}
+
+    >>>config = DatasetConfig(**config)
     """
 
     dataset_name: str = field(metadata={"help": "The name of the dataset"})

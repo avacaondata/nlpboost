@@ -1,33 +1,30 @@
 # NLPBOOST: A library for automatic training and comparison of Transformer models 
 
-This library is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you).
+`nlpboost` is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you). It is highly integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.
 
-The system architecture is depicted in the following figure:
+The main functionality of `nlpboost` is depicted in the following figure:
 
-![Diagrama autotrainer](./imgs/nlpboost_diagram.png "Diagram for AutoTrainer, the main class in nlpboost!")
+![Diagram autotrainer](./imgs/nlpboost_diagram.png "Diagram for AutoTrainer, the main class in nlpboost!")
 
 
-This figure depicts the main functionality of `nlpboost`. The main class is `AutoTrainer`, which is configured with a list of `DatasetConfig`s and a list of `ModelConfig`s. Then, `AutoTrainer` will loop through each dataset configuration, performing hyperparameter tuning for each of the models configurations. For that, it uses `HFDatasetsManager` to load the dataset, depending on the configuration of `DatasetConfig`. It will also tokenize the dataset accordingly. As the dashed lines show, the user can use the default `tokenization_function` for the desired task, or can define their own in `DatasetConfig`. Then, `HFTransformersManager` will load all necessary Transformer objects (model, data collator, training arguments, trainer...). After that, hyperparameter tuning is performed with Optuna. A `CkptCleaner` (checkpoint cleaner) class removes bad performing checkpoints every 10 minutes, also saving the best performing checkpoint in the experiment in a separate directory. After hyperparameter tuning, results are obtained via `ResultsGetter`, which is customizable (by passing a custom ResultsGetter class overriding the current methods), and uses a `compute_metrics_function` which is also customizable, by passing a `custom_eval_func` to `DatasetConfig`. These results are stored in json or, if json saving fails, in txt format (results in txt can be also easily loaded with `ast.literal_eval`). `ResultsPlotter` is a helper class that enables the user to easily get a plot of the models' performance on each dataset, and their average performance. 
+This figure depicts the main functionality of `nlpboost`. The main class is `AutoTrainer`, which is configured with a list of `DatasetConfig`s and a list of `ModelConfig`s. Then, `AutoTrainer` will loop through each dataset configuration, performing hyperparameter tuning for each of the models configurations. For that, it uses `HFDatasetsManager` to load the dataset, depending on the configuration of `DatasetConfig`. It will also tokenize the dataset accordingly. As the dashed lines show, the user can use the default `tokenization_function` for the desired task, or can define their own in `DatasetConfig`. Then, `HFTransformersManager` will load all necessary Transformer objects (model, data collator, training arguments, trainer...). After that, hyperparameter tuning is performed with Optuna. A `CkptCleaner` (checkpoint cleaner) class removes bad performing checkpoints every 10 minutes, also saving the best performing checkpoint in the experiment in a separate directory. After hyperparameter tuning, results on the test split (if available, otherwise the validation split) are obtained via `ResultsGetter`, which is customizable (by passing a custom ResultsGetter class overriding the current methods), and uses a `compute_metrics_function` which is also customizable, by passing a `custom_eval_func` to `DatasetConfig`. These results are stored in json or, if json saving fails, in txt format (results in txt can be also easily loaded with `ast.literal_eval`). `ResultsPlotter` is a helper class that enables the user to easily get a plot of the models' performance on each dataset, and their average performance. 
 
 ## ORIGIN OF NLPBOOST
 
-This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my [LinkedIn page](https://www.linkedin.com/in/alejandro-vaca-serrano/). Thanks to automatic training, I could focus on more interesting things from a scientific point of view. This enabled me to be part of many conferences apart from my job, therefore I was able to learn more as time is better used when no long scripts need to be written for each new task. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners.
-
-This library is closely integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.
-
+This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my [LinkedIn page](https://www.linkedin.com/in/alejandro-vaca-serrano/). Thanks to automatic training, I could focus on more interesting things from a scientific point of view, producing higher quality work. This enabled me to be part of some conferences apart from my job, therefore I was able to learn more, as time is better used when no long scripts need to be written for each new task. My experience, after developing the tool, is that it enables me to use my time more effectively whenever I'm doing a NLP project. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners, and that it can help them to obtain the best results out of their projects |:heart:|.
 
 ## WHY USE NLPBOOST?
 
 The main advantages you will find when using nlpboost are the following:
 
-* |:high_brightness:| You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning.
+* |:high_brightness:| You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning. This eases the task of finding the best model for each task, by comparing multiple models with different parameter configurations. Optuna is used for hyperparameter search.
 * |:watch:| Once you get used to the library and how scripts are configured, writing a new script for any task belonging to QA, NER, Classification (in any of its forms), or Seq2Seq, will take minutes.
 * |:floppy_disk:| To avoid disk overloading, AutoTrainer, the main class in nlpboost, comes with a checkpoint cleaner, which removes every 10 minutes all checkpoints but the four best (excluding the current optuna run to avoid errors). Additionally, a directory with the best checkpoint found (using validation metrics) is saved each time checkpoints are cleaned. This saves not only disk usage, but effort, easing the task of finding the best checkpoint and removing all unnecessary checkpoints. This is also useful if you want to run many models for many trials on many datasets while you go to a music festival |:sunglasses:| (tested). In that situation you don't want to worry about whether your disk is full before your experiments finish.
 * |:tokyo_tower:| nlpboost comes with a tool to easily integrate NLP data augmentation methods from [nlpaug](https://github.com/makcedward/nlpaug/) library. Keep reading to learn how.
 * |:bar_chart:| Metrics on test after hyperparameter tuning are saved in a directory defined when initializing AutoTrainer. Additionally, with ResultsPlotter you can easily generate a beautiful graph depicting the comparison of the different models you have trained for a dataset. This is handy for presenting a models' comparison in a visual way.
-* |:palm_tree:| nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel, and the rest is done by AutoTrainer.
+* |:palm_tree:| nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel and configure ModelConfig and DatasetConfig accordingly; the rest is done by AutoTrainer. The same applies to artificial Encoder-Decoder models (that is encoder-decoder models created from pre-trained encoder-only or decoder-only models) - check [this](https://huggingface.co/docs/transformers/model_doc/encoder-decoder) for more information. EncoderDecoderModel architecture can be configured for seq2seq tasks by setting the correct ModelConfig's parameters. This is useful for seq2seq tasks on languages for which there is no Encoder-Decoder model available.
 
-## INSTALATION
+## INSTALLATION
 
 To install `nlpboost` run: 
 
@@ -47,7 +44,7 @@ Binary or multi-class classification is supported under the task name `classific
 
 ### Multi-Label Classification
 
-For multi-label classification, `AutoTrainer`, the main class in `nlpboost`, expects a dataset with a text field and the rest of the fields must be labels. If your dataset does not come in this format initially, you can either process your dataset outside of `AutoTrainer` and then pass a DatasetConfig with the processed dataset in the correct format, or you can define a `pre_func` to pass to `DatasetCOnfig` that will do that preprocessing. You can find an example of how to do this under the `examples/classification` folder, in the script called `train_multilabel.py`. 
+Multi-label classification is also under the task name `classification`. However, the user must add `is_multilabel=True` and `config_num_labels=<num_labels_multilabel>` to DatasetConfig. For multi-label classification, `AutoTrainer`, the main class in `nlpboost`, expects a dataset with a text field and the rest of the fields must be labels. If your dataset does not come in this format initially, you can either process your dataset outside of `AutoTrainer` and then pass a DatasetConfig with the processed dataset in the correct format, or you can define a `pre_func` to pass to `DatasetCOnfig` that will do that preprocessing. You can find an example of how to do this under the `examples/classification` folder, in the script called `train_multilabel.py`. 
 
 For multi-label tasks, we can define a probability threshold for labels to be positive, as each label is independent of the rest. However, defining this threshold can be tricky, and is not straightforward. For that reason, when computing the metrics for multilabel, we iterate over thresholds from 0.1 to 0.9, with 0.1 step size. Then, we return the metrics belonging to the threshold which scored highest, together with that threshold. This way, the user already knows which probability threshold to use when using the returned model in production.
 
@@ -61,13 +58,23 @@ The task name for QA is `qa`, so the correct configuration is `DatasetConfig(...
 
 ### Seq2Seq
 
-Seq2Seq involves many different subtasks, such as translation, summarization, generative question answering... `AutoTrainer` is suited to perform any of these, as they all are based on generating a target text from a source text. The task name in `nlpboost` is `seq2seq`, so the configuration would be `DatasetConfig(..., task="seq2seq")`.
+Seq2Seq involves many different subtasks, such as translation, summarization, generative question answering... `AutoTrainer` is suited to perform any of these, as they all are based on generating a target text from a source text. The task name in `nlpboost` is `seq2seq`, so the configuration would be `DatasetConfig(..., task="seq2seq")`. You can find an example on how to train models on a seq2seq task in `examples/seq2seq/train_summarization_mlsum.py` script.
+
+## RELEVANT PROJECTS USING NLPBOOST
+
+Here is a list of public projects that have used `nlpboost` as its main tool for training models:
+
+1. `BioMedIA`: The winning project of [SomosNLP Hackaton](https://huggingface.co/hackathon-pln-es). It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper [here](https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf).
+2. `Detecting and Classifying Sexism by Ensembling Transformers Models`. This work was presented as part of IberLEF2022@Sepln2022 Conference. In the [results page of the workshop](http://nlp.uned.es/exist2022/#results) you can check that the systems produced by this paper achieved highest on both tasks of the workshop. Link to the paper [here](https://ceur-ws.org/Vol-3202/exist-paper3.pdf).
+3. `Named Entity Recognition For Humans and Species With Domain-Specific and Domain-Adapted Transformer Models`. This work was presented as part of IberLEF2022@Sepln2022 Conference. Link to the paper [here](https://ceur-ws.org/Vol-3202/livingner-paper9.pdf).
+4. Adversarial Question Answering in Spanish with Transformer Models. This work was presented as part of IberLEF2022@Sepln2022 Conference. Link to the paper [here](https://ceur-ws.org/Vol-3202/quales-paper3.pdf).
+5. Extractive and Abstractive Summarization Methods for Financial Narrative Summarization in English, Spanish and Greek. . This work was presented as part of FNP@LREC2022 Conference. Link to the paper [here](https://aclanthology.org/2022.fnp-1.8.pdf).
 
 ## MODULES
 
 The library is composed mainly of 3 important objects: the ModelConfig, DatasetConfig, and BenchMarker. The two first are useful for configuring the experiments in a user-friendly way; both of them are dataclasses. BenchMarker, on the other hand, serves for optimizing the models with the configurations passed to it. It uses Optuna in the background to optimize the models' parameters, which are passed in the ModelConfig.
 
-### MODELCONFIG
+### ModelConfig
 
 The ModelConfig class allows to configure each of the models' configurations. For a full list and description of all arguments of ModelConfig, please check the documentation.
 
@@ -155,7 +162,7 @@ mt5_config = ModelConfig(
 )
 ```
 
-### DATASETCONFIG
+### DatasetConfig
 
 Next we have the DatasetConfig class, aimed at configuring all the specifications of a dataset: the fields where data is located, how to process it, what kind of task it is, etc. For a full list of the parameters, please check the online documentation.
 
@@ -259,8 +266,8 @@ livingner1_config = {
     "files": {"train": joinpaths(data_dir, "task1_train_complete.json"),
             "validation": joinpaths(data_dir, "task1_val_complete.json"),
             "test": joinpaths(data_dir, "task1_val_complete.json")
+    }
 }
-
 # these jsons must come in the form:
 # {
 # 'data': [
@@ -273,6 +280,24 @@ livingner1_config = DatasetConfig(**livingner1_config)
 
 You can refer to the examples folder to see more ways of using DatasetConfig, as well as to understand the functionalities of it that are specific to a certain task.
 
+### AutoTrainer
+
+AutoTrainer is the main class in `nlpboost`, but is almost purely configured via lists of `DatasetConfig` and `ModelConfig`. The full configuration of AutoTrainer, given that you already have a `DatasetConfig` and a `ModelConfig`, would be the following:
+
+```python
+from nlpboost import AutoTrainer
+
+autotrainer = AutoTrainer(
+    dataset_configs=[dataset_config],
+    model_configs=[model_config],
+    metrics_dir="experiments_metrics",
+    hp_search_mode="optuna",
+    clean=True,
+    metrics_cleaner="tmp_metrics_cleaner",
+    use_auth_token=True,
+)
+all_results = autotrainer()
+```
 
 ## ADDITIONAL TOOLS
 

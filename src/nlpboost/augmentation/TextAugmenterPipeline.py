@@ -6,20 +6,24 @@ import numpy as np
 class NLPAugPipeline:
     """
     Augment text data, with various forms of augmenting. It uses `nlpaug` in the background.
+    The configuration of the augmentation pipeline is done with `nlpboost.augmentation.augmenter_config.NLPAugConfig`.
+    NLPAugPipeline receives a list of configs of that type, where each config defines a type
+    of augmentation technique to use, as well as the proportion of the train dataset that is
+    to be augmented.
 
     Parameters
     ----------
-    steps: List
+    steps: List[nlpboost.augmentation.augmenter_config.NLPAugConfig]
         List of steps. Each step must be a NLPAugConfig instance.
     text_field: str
-        Name of the field where texts are located.
+        Name of the field in the dataset where texts are.
     """
 
     def __init__(self, steps, text_field: str = "text"):
         self.text_field = text_field
         self.pipeline = {
             i: {
-                "augmenter": class_translator[config.name](**config.aug_kwargs),
+                "augmenter": class_translator[config.name](**config.aug_kwargs) if config.augmenter_cls is None else config.augmenter_cls(**config.aug_kwargs),
                 "prop": config.proportion,
             }
             for i, config in enumerate(steps)
@@ -27,7 +31,7 @@ class NLPAugPipeline:
 
     def augment(self, samples):
         """
-        Augment data for datasets samples.
+        Augment data for datasets samples following the configuration defined at init.
 
         Parameters
         ----------
