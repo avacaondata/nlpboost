@@ -18,10 +18,15 @@ This library was developed to be able to compete in many Hackatons while working
 The main advantages you will find when using nlpboost are the following:
 
 * |:high_brightness:| You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning. This eases the task of finding the best model for each task, by comparing multiple models with different parameter configurations. Optuna is used for hyperparameter search.
+
 * |:watch:| Once you get used to the library and how scripts are configured, writing a new script for any task belonging to QA, NER, Classification (in any of its forms), or Seq2Seq, will take minutes.
+
 * |:floppy_disk:| To avoid disk overloading, AutoTrainer, the main class in nlpboost, comes with a checkpoint cleaner, which removes every 10 minutes all checkpoints but the four best (excluding the current optuna run to avoid errors). Additionally, a directory with the best checkpoint found (using validation metrics) is saved each time checkpoints are cleaned. This saves not only disk usage, but effort, easing the task of finding the best checkpoint and removing all unnecessary checkpoints. This is also useful if you want to run many models for many trials on many datasets while you go to a music festival |:sunglasses:| (tested). In that situation you don't want to worry about whether your disk is full before your experiments finish.
+
 * |:tokyo_tower:| nlpboost comes with a tool to easily integrate NLP data augmentation methods from [nlpaug](https://github.com/makcedward/nlpaug/) library. Keep reading to learn how.
+
 * |:bar_chart:| Metrics on test after hyperparameter tuning are saved in a directory defined when initializing AutoTrainer. Additionally, with ResultsPlotter you can easily generate a beautiful graph depicting the comparison of the different models you have trained for a dataset. This is handy for presenting a models' comparison in a visual way.
+
 * |:palm_tree:| nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel and configure ModelConfig and DatasetConfig accordingly; the rest is done by AutoTrainer. The same applies to artificial Encoder-Decoder models (that is encoder-decoder models created from pre-trained encoder-only or decoder-only models) - check [this](https://huggingface.co/docs/transformers/model_doc/encoder-decoder) for more information. EncoderDecoderModel architecture can be configured for seq2seq tasks by setting the correct ModelConfig's parameters. This is useful for seq2seq tasks on languages for which there is no Encoder-Decoder model available.
 
 ## INSTALLATION AND TESTING
@@ -74,14 +79,18 @@ The task name for QA is `qa`, so the correct configuration is `DatasetConfig(...
 
 Seq2Seq involves many different subtasks, such as translation, summarization, generative question answering... `AutoTrainer` is suited to perform any of these, as they all are based on generating a target text from a source text. The task name in `nlpboost` is `seq2seq`, so the configuration would be `DatasetConfig(..., task="seq2seq")`. You can find an example on how to train models on a seq2seq task in `examples/seq2seq/train_summarization_mlsum.py` script.
 
-## RELEVANT PROJECTS USING NLPBOOST
+## RELEVANT PUBLIC PROJECTS USING NLPBOOST
 
 Here is a list of public projects that have used `nlpboost` as its main tool for training models:
 
 1. `BioMedIA`: The winning project of [SomosNLP Hackaton](https://huggingface.co/hackathon-pln-es). It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper [here](https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf).
+
 2. `Detecting and Classifying Sexism by Ensembling Transformers Models`. This work was presented as part of IberLEF2022@Sepln2022 Conference. In the [results page of the workshop](http://nlp.uned.es/exist2022/#results) you can check that the systems produced by this paper achieved highest on both tasks of the workshop. Link to the paper [here](https://ceur-ws.org/Vol-3202/exist-paper3.pdf).
+
 3. `Named Entity Recognition For Humans and Species With Domain-Specific and Domain-Adapted Transformer Models`. This work was presented as part of IberLEF2022@Sepln2022 Conference. Link to the paper [here](https://ceur-ws.org/Vol-3202/livingner-paper9.pdf).
+
 4. Adversarial Question Answering in Spanish with Transformer Models. This work was presented as part of IberLEF2022@Sepln2022 Conference. Link to the paper [here](https://ceur-ws.org/Vol-3202/quales-paper3.pdf).
+
 5. Extractive and Abstractive Summarization Methods for Financial Narrative Summarization in English, Spanish and Greek. . This work was presented as part of FNP@LREC2022 Conference. Link to the paper [here](https://aclanthology.org/2022.fnp-1.8.pdf).
 
 ## MODULES
