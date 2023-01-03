@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples of how to use nlpboost" href="examples.html" />
+    <link rel="next" title="Example scripts of how to use nlpboost for each task" href="examples.html" />
     <link rel="prev" title="Welcome to nlpboost’s documentation!" href="index.html" /> 
 </head>
 
@@ -66,7 +66,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples of how to use nlpboost</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example scripts of how to use nlpboost for each task</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">nlpboost</a></li>
 </ul>
 
@@ -414,9 +414,10 @@ If you want more information on how to use and configure each of these augmenter
 <span class="n">augmented_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">aug_pipeline</span><span class="o">.</span><span class="n">augment</span><span class="p">,</span> <span class="n">batched</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>It is already integrated with AutoTrainer via the DatasetConfig, as shown below. Note that not all objects are declared, so the below example as it is would throw an error. If you want to try it yourself, please define a hp_space function.</p>
+<p>It is already integrated with AutoTrainer via the DatasetConfig, as shown below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">DatasetConfig</span><span class="p">,</span> <span class="n">ModelConfig</span><span class="p">,</span> <span class="n">AutoTrainer</span>
 <span class="kn">from</span> <span class="nn">nlpboost.augmentation</span> <span class="kn">import</span> <span class="n">NLPAugConfig</span>
+<span class="kn">from</span> <span class="nn">nlpboost.default_param_spaces</span> <span class="kn">import</span> <span class="n">hp_space_base</span>
 
 <span class="n">augment_steps</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">NLPAugConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;contextual_w_e&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_path&quot;</span><span class="p">:</span> <span class="s2">&quot;bert-base-cased&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span><span class="s2">&quot;cuda&quot;</span><span class="p">}),</span>
@@ -441,7 +442,7 @@ If you want more information on how to use and configure each of these augmenter
 <span class="n">model_config</span> <span class="o">=</span> <span class="n">ModelConfig</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;bert-base-uncased&quot;</span><span class="p">,</span>
     <span class="n">save_name</span><span class="o">=</span><span class="s2">&quot;bert_prueba&quot;</span><span class="p">,</span>
-    <span class="n">hp_space</span> <span class="o">=</span> <span class="n">hp_space</span><span class="p">,</span> <span class="c1"># we would have to define this object before.</span>
+    <span class="n">hp_space</span> <span class="o">=</span> <span class="n">hp_space_base</span><span class="p">,</span> <span class="c1"># we would have to define this object before.</span>
     <span class="n">n_trials</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">random_init_trials</span><span class="o">=</span><span class="mi">5</span>
 <span class="p">)</span>
@@ -464,7 +465,7 @@ If you want more information on how to use and configure each of these augmenter
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to nlpboost’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples.html" class="btn btn-neutral float-right" title="Examples of how to use nlpboost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Example scripts of how to use nlpboost for each task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

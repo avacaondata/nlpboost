@@ -365,12 +365,13 @@ If you want more information on how to use and configure each of these augmenter
    aug_pipeline = NLPAugPipeline(steps=steps)
    augmented_dataset = dataset.map(aug_pipeline.augment, batched=True)
 
-It is already integrated with AutoTrainer via the DatasetConfig, as shown below. Note that not all objects are declared, so the below example as it is would throw an error. If you want to try it yourself, please define a hp_space function.
+It is already integrated with AutoTrainer via the DatasetConfig, as shown below.
 
 .. code-block:: python
 
    from nlpboost import DatasetConfig, ModelConfig, AutoTrainer
    from nlpboost.augmentation import NLPAugConfig
+   from nlpboost.default_param_spaces import hp_space_base
 
    augment_steps = [
        NLPAugConfig(name="contextual_w_e", proportion=0.3, aug_kwargs={"model_path": "bert-base-cased", "action": "insert", "device":"cuda"}),
@@ -395,7 +396,7 @@ It is already integrated with AutoTrainer via the DatasetConfig, as shown below.
    model_config = ModelConfig(
        name="bert-base-uncased",
        save_name="bert_prueba",
-       hp_space = hp_space, # we would have to define this object before.
+       hp_space = hp_space_base, # we would have to define this object before.
        n_trials=10,
        random_init_trials=5
    )
