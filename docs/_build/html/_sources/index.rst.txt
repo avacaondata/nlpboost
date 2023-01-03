@@ -6,6 +6,11 @@
 Welcome to nlpboost's documentation!
 ====================================
 
+.. image:: ../imgs/nlpboost_logo_2.png
+   :target: ../imgs/nlpboost_logo_2.png
+   :width: 500
+   :alt: nlpboost logo
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
