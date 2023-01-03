@@ -6,11 +6,12 @@ from transformers import (
     Seq2SeqTrainingArguments,
     TrainingArguments,
     AutoModelForSequenceClassification,
+    AutoModelForSeq2SeqLM,
     AutoConfig,
     AutoModelForTokenClassification,
     AutoModelForQuestionAnswering,
     DataCollatorForTokenClassification,
-    DataCollatorForSeq2Seq,
+    DataCollatorForSeq2Seq
 )
 import torch
 from functools import partial
@@ -54,8 +55,7 @@ map_model_cls = {
     "classification": AutoModelForSequenceClassification,
     "ner": AutoModelForTokenClassification,
     "qa": AutoModelForQuestionAnswering,
-    # TODO: ADAPT THIS TO BE ABLE TO USE BART AND THAT TYPE OF MODELS.
-    "seq2seq": EncoderDecoderModel,
+    "seq2seq": AutoModelForSeq2SeqLM,
 }
 
 
@@ -333,7 +333,7 @@ class HFTransformersManager:
         if self.dataset_config.task == "seq2seq" and self.model_config.encoder_name:
 
             def model_init():
-                model = model_cls.from_encoder_decoder_pretrained(
+                model = EncoderDecoderModel.from_encoder_decoder_pretrained(
                     self.model_config.encoder_name,
                     self.model_config.decoder_name,
                     tie_encoder_decoder=self.model_config.tie_encoder_decoder,

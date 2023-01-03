@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NLPBOOST: A library for automatic training and comparison of Transformer models &mdash; nlpboost  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nlpboost" href="modules.html" />
+    <link rel="prev" title="Welcome to nlpboost’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> nlpboost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NLPBOOST: A library for automatic training and comparison of Transformer models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#origin-of-nlpboost">ORIGIN OF NLPBOOST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-use-nlpboost">WHY USE NLPBOOST?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">INSTALLATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-tasks">SUPPORTED TASKS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#binary-or-multi-class-classification">Binary or Multi-Class Classification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-label-classification">Multi-Label Classification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-entity-recognition-ner">Named Entity Recognition (NER)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extractive-question-answering-qa">Extractive Question Answering (QA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#seq2seq">Seq2Seq</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#relevant-projects-using-nlpboost">RELEVANT PROJECTS USING NLPBOOST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modules">MODULES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modelconfig">ModelConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#datasetconfig">DatasetConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autotrainer">AutoTrainer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-tools">ADDITIONAL TOOLS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nlpaugpipeline">NLPAugPipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">nlpboost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nlpboost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">NLPBOOST: A library for automatic training and comparison of Transformer models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/readme.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nlpboost-a-library-for-automatic-training-and-comparison-of-transformer-models">
+<h1>NLPBOOST: A library for automatic training and comparison of Transformer models<a class="headerlink" href="#nlpboost-a-library-for-automatic-training-and-comparison-of-transformer-models" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you). It is highly integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.</p>
+<p>The main functionality of <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> is depicted in the following figure:</p>
+<a class="reference external image-reference" href="../imgs/nlpboost_diagram.png"><img alt="Diagram autotrainer" src="_images/nlpboost_diagram.png" style="width: 1200px;" /></a>
+<p>This figure depicts the main functionality of <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code>. The main class is <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code>, which is configured with a list of <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>s and a list of <code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code>s. Then, <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code> will loop through each dataset configuration, performing hyperparameter tuning for each of the models configurations. For that, it uses <code class="docutils literal notranslate"><span class="pre">HFDatasetsManager</span></code> to load the dataset, depending on the configuration of <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>. It will also tokenize the dataset accordingly. As the dashed lines show, the user can use the default <code class="docutils literal notranslate"><span class="pre">tokenization_function</span></code> for the desired task, or can define their own in <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>. Then, <code class="docutils literal notranslate"><span class="pre">HFTransformersManager</span></code> will load all necessary Transformer objects (model, data collator, training arguments, trainer…). After that, hyperparameter tuning is performed with Optuna. A <code class="docutils literal notranslate"><span class="pre">CkptCleaner</span></code> (checkpoint cleaner) class removes bad performing checkpoints every 10 minutes, also saving the best performing checkpoint in the experiment in a separate directory. After hyperparameter tuning, results on the test split (if available, otherwise the validation split) are obtained via <code class="docutils literal notranslate"><span class="pre">ResultsGetter</span></code>, which is customizable (by passing a custom ResultsGetter class overriding the current methods), and uses a <code class="docutils literal notranslate"><span class="pre">compute_metrics_function</span></code> which is also customizable, by passing a <code class="docutils literal notranslate"><span class="pre">custom_eval_func</span></code> to <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>. These results are stored in json or, if json saving fails, in txt format (results in txt can be also easily loaded with <code class="docutils literal notranslate"><span class="pre">ast.literal_eval</span></code>). <code class="docutils literal notranslate"><span class="pre">ResultsPlotter</span></code> is a helper class that enables the user to easily get a plot of the models’ performance on each dataset, and their average performance.</p>
+<section id="origin-of-nlpboost">
+<h2>ORIGIN OF NLPBOOST<a class="headerlink" href="#origin-of-nlpboost" title="Permalink to this heading"></a></h2>
+<p>This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my <a class="reference external" href="https://www.linkedin.com/in/alejandro-vaca-serrano/">LinkedIn page</a>. Thanks to automatic training, I could focus on more interesting things from a scientific point of view, producing higher quality work. This enabled me to be part of some conferences apart from my job, therefore I was able to learn more, as time is better used when no long scripts need to be written for each new task. My experience, after developing the tool, is that it enables me to use my time more effectively whenever I’m doing a NLP project. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners, and that it can help them to obtain the best results out of their projects ❤️.</p>
+</section>
+<section id="why-use-nlpboost">
+<h2>WHY USE NLPBOOST?<a class="headerlink" href="#why-use-nlpboost" title="Permalink to this heading"></a></h2>
+<p>The main advantages you will find when using nlpboost are the following:</p>
+<ul class="simple">
+<li><p>🔆 You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning.</p></li>
+<li><p>⌚ Once you get used to the library and how scripts are configured, writing a new script for any task belonging to QA, NER, Classification (in any of its forms), or Seq2Seq, will take minutes.</p></li>
+<li><p>💾 To avoid disk overloading, AutoTrainer, the main class in nlpboost, comes with a checkpoint cleaner, which removes every 10 minutes all checkpoints but the four best (excluding the current optuna run to avoid errors). Additionally, a directory with the best checkpoint found (using validation metrics) is saved each time checkpoints are cleaned. This saves not only disk usage, but effort, easing the task of finding the best checkpoint and removing all unnecessary checkpoints. This is also useful if you want to run many models for many trials on many datasets while you go to a music festival 😎 (tested). In that situation you don’t want to worry about whether your disk is full before your experiments finish.</p></li>
+<li><p>🗼 nlpboost comes with a tool to easily integrate NLP data augmentation methods from <a class="reference external" href="https://github.com/makcedward/nlpaug/">nlpaug</a> library. Keep reading to learn how.</p></li>
+<li><p>📊 Metrics on test after hyperparameter tuning are saved in a directory defined when initializing AutoTrainer. Additionally, with ResultsPlotter you can easily generate a beautiful graph depicting the comparison of the different models you have trained for a dataset. This is handy for presenting a models’ comparison in a visual way.</p></li>
+<li><p>🌴 nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel, and the rest is done by AutoTrainer.</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>INSTALLATION<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>To install <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">alexvaca0</span><span class="o">/</span><span class="n">nlpboost</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Be aware that pytorch must be built on a cuda version that is compatible with the machine’s installed cuda version. In case pytorch’s default cuda version is not compatible visit <a class="reference external" href="https://pytorch.org/get-started/locally/">https://pytorch.org/get-started/locally/</a> and install a compatible pytorch version.</p>
+</section>
+<section id="supported-tasks">
+<h2>SUPPORTED TASKS<a class="headerlink" href="#supported-tasks" title="Permalink to this heading"></a></h2>
+<p>Here is a list of the tasks supported by <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code>.</p>
+<section id="binary-or-multi-class-classification">
+<h3>Binary or Multi-Class Classification<a class="headerlink" href="#binary-or-multi-class-classification" title="Permalink to this heading"></a></h3>
+<p>Binary or multi-class classification is supported under the task name <code class="docutils literal notranslate"><span class="pre">classification</span></code>. So, for training models for this task, you just need to set in your DatasetConfig <code class="docutils literal notranslate"><span class="pre">task=&quot;classification&quot;</span></code>.</p>
+</section>
+<section id="multi-label-classification">
+<h3>Multi-Label Classification<a class="headerlink" href="#multi-label-classification" title="Permalink to this heading"></a></h3>
+<p>Multi-label classification is also under the task name <code class="docutils literal notranslate"><span class="pre">classification</span></code>. However, the user must add <code class="docutils literal notranslate"><span class="pre">is_multilabel=True</span></code> and <code class="docutils literal notranslate"><span class="pre">config_num_labels=&lt;num_labels_multilabel&gt;</span></code> to DatasetConfig. For multi-label classification, <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code>, the main class in <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code>, expects a dataset with a text field and the rest of the fields must be labels. If your dataset does not come in this format initially, you can either process your dataset outside of <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code> and then pass a DatasetConfig with the processed dataset in the correct format, or you can define a <code class="docutils literal notranslate"><span class="pre">pre_func</span></code> to pass to <code class="docutils literal notranslate"><span class="pre">DatasetCOnfig</span></code> that will do that preprocessing. You can find an example of how to do this under the <code class="docutils literal notranslate"><span class="pre">examples/classification</span></code> folder, in the script called <code class="docutils literal notranslate"><span class="pre">train_multilabel.py</span></code>.</p>
+<p>For multi-label tasks, we can define a probability threshold for labels to be positive, as each label is independent of the rest. However, defining this threshold can be tricky, and is not straightforward. For that reason, when computing the metrics for multilabel, we iterate over thresholds from 0.1 to 0.9, with 0.1 step size. Then, we return the metrics belonging to the threshold which scored highest, together with that threshold. This way, the user already knows which probability threshold to use when using the returned model in production.</p>
+</section>
+<section id="named-entity-recognition-ner">
+<h3>Named Entity Recognition (NER)<a class="headerlink" href="#named-entity-recognition-ner" title="Permalink to this heading"></a></h3>
+<p>The task name for NER is <code class="docutils literal notranslate"><span class="pre">ner</span></code>, so inside DatasetConfig, the user must pass <code class="docutils literal notranslate"><span class="pre">task=&quot;ner&quot;</span></code>. AutoTrainer expects two fields: a list of tokens (<code class="docutils literal notranslate"><span class="pre">token_list</span></code>) and a list of labels (<code class="docutils literal notranslate"><span class="pre">label_list</span></code>) for each data instance. If your dataset is not already in that format, which is the most common case, you can easily process your dataset with a <code class="docutils literal notranslate"><span class="pre">pre_func</span></code>, using <code class="docutils literal notranslate"><span class="pre">nlpboost.utils.dict_to_list</span></code> function. You can check an example of how to do this in the script <code class="docutils literal notranslate"><span class="pre">examples/NER/train_spanish_ner.py</span></code>. In that script, <code class="docutils literal notranslate"><span class="pre">ehealth_kd</span></code> dataset does not have that format by default, so <code class="docutils literal notranslate"><span class="pre">pre_func=dict_to_list</span></code> is added to <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code> to preprocess data before tokenizing it.</p>
+</section>
+<section id="extractive-question-answering-qa">
+<h3>Extractive Question Answering (QA)<a class="headerlink" href="#extractive-question-answering-qa" title="Permalink to this heading"></a></h3>
+<p>The task name for QA is <code class="docutils literal notranslate"><span class="pre">qa</span></code>, so the correct configuration is <code class="docutils literal notranslate"><span class="pre">DatasetConfig(...,</span> <span class="pre">task=&quot;qa&quot;)</span></code>. The default format for this task is the SQUAD format (check <a class="reference external" href="https://huggingface.co/datasets/squad">squad dataset in Huggingface’s Datasets</a>). If your QA dataset is not in that format, you can either preprocess it before using <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code> with it, or use a <code class="docutils literal notranslate"><span class="pre">pre_func</span></code> in <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code> to achieve the same.</p>
+</section>
+<section id="seq2seq">
+<h3>Seq2Seq<a class="headerlink" href="#seq2seq" title="Permalink to this heading"></a></h3>
+<p>Seq2Seq involves many different subtasks, such as translation, summarization, generative question answering… <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code> is suited to perform any of these, as they all are based on generating a target text from a source text. The task name in <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> is <code class="docutils literal notranslate"><span class="pre">seq2seq</span></code>, so the configuration would be <code class="docutils literal notranslate"><span class="pre">DatasetConfig(...,</span> <span class="pre">task=&quot;seq2seq&quot;)</span></code>. You can find an example on how to train models on a seq2seq task in <code class="docutils literal notranslate"><span class="pre">examples/seq2seq/train_summarization_mlsum.py</span></code> script.</p>
+</section>
+</section>
+<section id="relevant-projects-using-nlpboost">
+<h2>RELEVANT PROJECTS USING NLPBOOST<a class="headerlink" href="#relevant-projects-using-nlpboost" title="Permalink to this heading"></a></h2>
+<p>Here is a list of public projects that have used <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> as its main tool for training models:</p>
+<ol class="arabic simple">
+<li><p><cite>BioMedIA</cite>: The winning project of [SomosNLP Hackaton](<a class="reference external" href="https://huggingface.co/hackathon-pln-es">https://huggingface.co/hackathon-pln-es</a>). It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper <a class="reference external" href="https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf">here</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Detecting</span> <span class="pre">and</span> <span class="pre">Classifying</span> <span class="pre">Sexism</span> <span class="pre">by</span> <span class="pre">Ensembling</span> <span class="pre">Transformers</span> <span class="pre">Models</span></code>. This work was presented as part of <a class="reference external" href="mailto:IberLEF2022&#37;&#52;&#48;Sepln2022">IberLEF2022<span>&#64;</span>Sepln2022</a> Conference. In the <a class="reference external" href="http://nlp.uned.es/exist2022/#results">results page of the workshop</a> you can check that the systems produced by this paper achieved highest on both tasks of the workshop. Link to the paper <a class="reference external" href="https://ceur-ws.org/Vol-3202/exist-paper3.pdf">here</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Named</span> <span class="pre">Entity</span> <span class="pre">Recognition</span> <span class="pre">For</span> <span class="pre">Humans</span> <span class="pre">and</span> <span class="pre">Species</span> <span class="pre">With</span> <span class="pre">Domain-Specific</span> <span class="pre">and</span> <span class="pre">Domain-Adapted</span> <span class="pre">Transformer</span> <span class="pre">Models</span></code>. This work was presented as part of <a class="reference external" href="mailto:IberLEF2022&#37;&#52;&#48;Sepln2022">IberLEF2022<span>&#64;</span>Sepln2022</a> Conference. Link to the paper <a class="reference external" href="https://ceur-ws.org/Vol-3202/livingner-paper9.pdf">here</a>.</p></li>
+<li><p>Adversarial Question Answering in Spanish with Transformer Models. This work was presented as part of <a class="reference external" href="mailto:IberLEF2022&#37;&#52;&#48;Sepln2022">IberLEF2022<span>&#64;</span>Sepln2022</a> Conference. Link to the paper <a class="reference external" href="https://ceur-ws.org/Vol-3202/quales-paper3.pdf">here</a>.</p></li>
+<li><p>Extractive and Abstractive Summarization Methods for Financial Narrative Summarization in English, Spanish and Greek. . This work was presented as part of <a class="reference external" href="mailto:FNP&#37;&#52;&#48;LREC2022">FNP<span>&#64;</span>LREC2022</a> Conference. Link to the paper <a class="reference external" href="https://aclanthology.org/2022.fnp-1.8.pdf">here</a>.</p></li>
+</ol>
+</section>
+<section id="modules">
+<h2>MODULES<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+<p>The library is composed mainly of 3 important objects: the ModelConfig, DatasetConfig, and BenchMarker. The two first are useful for configuring the experiments in a user-friendly way; both of them are dataclasses. BenchMarker, on the other hand, serves for optimizing the models with the configurations passed to it. It uses Optuna in the background to optimize the models’ parameters, which are passed in the ModelConfig.</p>
+<section id="modelconfig">
+<h3>ModelConfig<a class="headerlink" href="#modelconfig" title="Permalink to this heading"></a></h3>
+<p>The ModelConfig class allows to configure each of the models’ configurations. For a full list and description of all arguments of ModelConfig, please check the documentation.</p>
+<p>There are some examples in the following lines on how to instantiate a class of this type for different kind of models.</p>
+<ul class="simple">
+<li><p>Example 1: instantiate a roberta large with a given hyperparameter space to save it under the name <a class="reference external" href="mailto:bsc&#37;&#52;&#48;roberta-large">bsc<span>&#64;</span>roberta-large</a>, in a directory “/prueba/”. We are going to run 20 trials, the first 8 of them will be random.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">ModelConfig</span>
+
+<span class="k">def</span> <span class="nf">hp_space</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span>
+            <span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">5e-5</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;num_train_epochs&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span>
+            <span class="s2">&quot;num_train_epochs&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;per_device_train_batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span>
+            <span class="s2">&quot;per_device_train_batch_size&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">8</span><span class="p">]),</span>
+        <span class="s2">&quot;per_device_eval_batch_size&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span>
+            <span class="s2">&quot;per_device_eval_batch_size&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">16</span><span class="p">]),</span>
+        <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span>
+            <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">]),</span>
+        <span class="s2">&quot;warmup_ratio&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span>
+            <span class="s2">&quot;warmup_ratio&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span>
+            <span class="s2">&quot;weight_decay&quot;</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;adam_epsilon&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span>
+            <span class="s2">&quot;adam_epsilon&quot;</span><span class="p">,</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+
+<span class="n">bsc_large_config</span> <span class="o">=</span> <span class="n">ModelConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;PlanTL-GOB-ES/roberta-large-bne&quot;</span><span class="p">,</span>
+        <span class="n">save_name</span><span class="o">=</span><span class="s2">&quot;bsc@roberta-large&quot;</span><span class="p">,</span>
+        <span class="n">hp_space</span><span class="o">=</span><span class="n">hp_space</span><span class="p">,</span>
+        <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;./test_trial/&quot;</span><span class="p">,</span>
+        <span class="n">n_trials</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="c1"># number of optuna trials to run for optimizing hyperparameters.</span>
+        <span class="n">random_init_trials</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="c1"># number of optuna random init trials (before the optimization algorithm drives the search)</span>
+        <span class="n">dropout_vals</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="c1"># dropout values for last layer to use.</span>
+        <span class="n">only_test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># whether to only test on test dataset (no prev train)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>On the other hand, if the model we are configuring is aimed at doing a seq2seq task, we could configure it like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainer</span><span class="p">,</span> <span class="n">MT5ForConditionalGeneration</span>
+
+<span class="k">def</span> <span class="nf">tokenize_dataset</span><span class="p">(</span><span class="n">examples</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;question: </span><span class="si">{}</span><span class="s2"> context: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">examples</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span> <span class="n">examples</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">])]</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">examples</span><span class="p">[</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">label_col</span><span class="p">]</span>
+    <span class="n">model_inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">1024</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">model_max_length</span> <span class="o">!=</span> <span class="mi">512</span> <span class="k">else</span> <span class="mi">512</span><span class="p">,</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Setup the tokenizer for targets</span>
+    <span class="k">with</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">as_target_tokenizer</span><span class="p">():</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">max_length_summary</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[(</span><span class="n">l</span> <span class="k">if</span> <span class="n">l</span> <span class="o">!=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">pad_token_id</span> <span class="k">else</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">model_inputs</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">model_inputs</span>
+
+<span class="n">mt5_config</span> <span class="o">=</span> <span class="n">ModelConfig</span><span class="p">(</span>
+         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;google/mt5-base&quot;</span><span class="p">,</span>
+         <span class="n">save_name</span><span class="o">=</span><span class="s2">&quot;mt5-base&quot;</span><span class="p">,</span>
+         <span class="n">hp_space</span><span class="o">=</span><span class="n">hp_space</span><span class="p">,</span>
+         <span class="n">num_beams</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+         <span class="n">trainer_cls_summarization</span><span class="o">=</span><span class="n">Seq2SeqTrainer</span><span class="p">,</span>
+         <span class="n">model_cls_summarization</span><span class="o">=</span><span class="n">MT5ForConditionalGeneration</span><span class="p">,</span>
+         <span class="n">custom_tok_func</span><span class="o">=</span><span class="n">tokenize_dataset</span><span class="p">,</span>
+         <span class="n">only_test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="o">**</span><span class="p">{</span>
+            <span class="s2">&quot;min_length_summary&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+            <span class="s2">&quot;max_length_summary&quot;</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span>
+            <span class="s2">&quot;random_init_trials&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;n_trials&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;save_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;/prueba_seq2seq/&quot;</span>
+         <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="datasetconfig">
+<h3>DatasetConfig<a class="headerlink" href="#datasetconfig" title="Permalink to this heading"></a></h3>
+<p>Next we have the DatasetConfig class, aimed at configuring all the specifications of a dataset: the fields where data is located, how to process it, what kind of task it is, etc. For a full list of the parameters, please check the online documentation.</p>
+<p>Here we will see different examples of how to create a DatasetConfig for different tasks. There are certain objects that are used in all the examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fixed_train_args</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;evaluation_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;steps&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_train_epochs&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;do_train&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;do_eval&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;logging_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;steps&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;eval_steps&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;save_steps&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;logging_steps&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;save_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;steps&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;save_total_limit&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">69</span><span class="p">,</span>
+        <span class="s2">&quot;fp16&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;no_cuda&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;dataloader_num_workers&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;load_best_model_at_end&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;per_device_eval_batch_size&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;adam_epsilon&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
+        <span class="s2">&quot;adam_beta1&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="s2">&quot;adam_beta2&quot;</span><span class="p">:</span> <span class="mf">0.999</span><span class="p">,</span>
+        <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Example 1: Create a config for Conll2002 dataset, loading it from the Hub:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">EarlyStoppingCallback</span>
+<span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">DatasetConfig</span>
+
+
+<span class="n">conll2002_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+    <span class="s2">&quot;direction_optimize&quot;</span><span class="p">:</span> <span class="s2">&quot;maximize&quot;</span><span class="p">,</span> <span class="c1"># whether to maximize or minimize the metric_optimize.</span>
+    <span class="s2">&quot;metric_optimize&quot;</span><span class="p">:</span> <span class="s2">&quot;eval_f1-score&quot;</span><span class="p">,</span> <span class="c1"># metric to optimize; must be returned by compute_metrics_func</span>
+    <span class="s2">&quot;callbacks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">EarlyStoppingCallback</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">)],</span> <span class="c1"># callbacks</span>
+    <span class="s2">&quot;fixed_training_args&quot;</span><span class="p">:</span> <span class="n">fixed_train_args</span><span class="p">,</span> <span class="c1"># fixed train args defined before</span>
+    <span class="s2">&quot;dataset_name&quot;</span><span class="p">:</span> <span class="s2">&quot;conll2002&quot;</span><span class="p">,</span> <span class="c1"># the name for the dataset</span>
+    <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;conll2002&quot;</span><span class="p">,</span> <span class="c1"># the alias for our dataset</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;ner&quot;</span><span class="p">,</span> <span class="c1"># the type of tasl</span>
+    <span class="s2">&quot;hf_load_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;conll2002&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;es&quot;</span><span class="p">},</span> <span class="c1"># this are the arguments we should pass to datasets.load_dataset</span>
+    <span class="s2">&quot;label_col&quot;</span><span class="p">:</span> <span class="s2">&quot;ner_tags&quot;</span><span class="p">,</span> <span class="c1"># in this column we have the tags in list of labels format.</span>
+<span class="p">}</span>
+
+<span class="n">conll2002_config</span> <span class="o">=</span> <span class="n">DatasetConfig</span><span class="p">(</span><span class="o">**</span><span class="n">conll2002_config</span><span class="p">)</span> <span class="c1"># Now we have it ready for training with AutoTrainer !</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Example 2: Create a config for MLSUM dataset (for summarization)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">EarlyStoppingCallback</span>
+<span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">DatasetConfig</span>
+
+<span class="n">mlsum_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+        <span class="s2">&quot;direction_optimize&quot;</span><span class="p">:</span> <span class="s2">&quot;maximize&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;metric_optimize&quot;</span><span class="p">:</span> <span class="s2">&quot;eval_rouge2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;callbacks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">EarlyStoppingCallback</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">)],</span>
+        <span class="s2">&quot;fixed_training_args&quot;</span><span class="p">:</span> <span class="n">fixed_train_args</span><span class="p">,</span>
+        <span class="s2">&quot;dataset_name&quot;</span><span class="p">:</span> <span class="s2">&quot;mlsum&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mlsum&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;retrain_at_end&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;summarization&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hf_load_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;mlsum&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;es&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;label_col&quot;</span><span class="p">:</span> <span class="s2">&quot;summary&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_proc&quot;</span><span class="p">:</span> <span class="mi">16</span>
+    <span class="p">}</span>
+
+<span class="n">mlsum_config</span> <span class="o">=</span> <span class="n">DatasetConfig</span><span class="p">(</span><span class="o">**</span><span class="n">mlsum_config</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Example 3: Create a config for a NER task which is in json format.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">EarlyStoppingCallback</span>
+<span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">DatasetConfig</span><span class="p">,</span> <span class="n">joinpaths</span>
+
+<span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;/home/loquesea/livingnerdata/&quot;</span>
+
+<span class="n">livingner1_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span>
+    <span class="s2">&quot;direction_optimize&quot;</span><span class="p">:</span> <span class="s2">&quot;maximize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;metric_optimize&quot;</span><span class="p">:</span> <span class="s2">&quot;eval_f1-score&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;callbacks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">EarlyStoppingCallback</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">)],</span>
+    <span class="s2">&quot;fixed_training_args&quot;</span><span class="p">:</span> <span class="n">fixed_train_args</span><span class="p">,</span>
+    <span class="s2">&quot;dataset_name&quot;</span><span class="p">:</span> <span class="s2">&quot;task1-complete@livingner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;task1-complete@livingner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;ner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;split&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;label_col&quot;</span><span class="p">:</span> <span class="s2">&quot;ner_tags&quot;</span><span class="p">,</span> <span class="c1"># in this field of each json dict labels are located.</span>
+    <span class="s2">&quot;text_field&quot;</span><span class="p">:</span> <span class="s2">&quot;token_list&quot;</span><span class="p">,</span> <span class="c1"># in this field of each json dict the tokens are located</span>
+    <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">joinpaths</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;task1_train_complete.json&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;validation&quot;</span><span class="p">:</span> <span class="n">joinpaths</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;task1_val_complete.json&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="n">joinpaths</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s2">&quot;task1_val_complete.json&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1"># these jsons must come in the form:</span>
+<span class="c1"># {</span>
+<span class="c1"># &#39;data&#39;: [</span>
+<span class="c1">#       {&quot;token_list&quot;: [], &quot;label_list&quot;: []},</span>
+<span class="c1">#   ]</span>
+<span class="c1"># }</span>
+
+<span class="n">livingner1_config</span> <span class="o">=</span> <span class="n">DatasetConfig</span><span class="p">(</span><span class="o">**</span><span class="n">livingner1_config</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can refer to the examples folder to see more ways of using DatasetConfig, as well as to understand the functionalities of it that are specific to a certain task.</p>
+</section>
+<section id="autotrainer">
+<h3>AutoTrainer<a class="headerlink" href="#autotrainer" title="Permalink to this heading"></a></h3>
+<p>AutoTrainer is the main class in <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code>, but is almost purely configured via lists of <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code> and <code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code>. The full configuration of AutoTrainer, given that you already have a <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code> and a <code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code>, would be the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">AutoTrainer</span>
+
+<span class="n">autotrainer</span> <span class="o">=</span> <span class="n">AutoTrainer</span><span class="p">(</span>
+    <span class="n">dataset_configs</span><span class="o">=</span><span class="p">[</span><span class="n">dataset_config</span><span class="p">],</span>
+    <span class="n">model_configs</span><span class="o">=</span><span class="p">[</span><span class="n">model_config</span><span class="p">],</span>
+    <span class="n">metrics_dir</span><span class="o">=</span><span class="s2">&quot;experiments_metrics&quot;</span><span class="p">,</span>
+    <span class="n">hp_search_mode</span><span class="o">=</span><span class="s2">&quot;optuna&quot;</span><span class="p">,</span>
+    <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">metrics_cleaner</span><span class="o">=</span><span class="s2">&quot;tmp_metrics_cleaner&quot;</span><span class="p">,</span>
+    <span class="n">use_auth_token</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">all_results</span> <span class="o">=</span> <span class="n">autotrainer</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="additional-tools">
+<h2>ADDITIONAL TOOLS<a class="headerlink" href="#additional-tools" title="Permalink to this heading"></a></h2>
+<section id="nlpaugpipeline">
+<h3>NLPAugPipeline<a class="headerlink" href="#nlpaugpipeline" title="Permalink to this heading"></a></h3>
+<p>This is a pipeline for data augmentation. With this, you can easily integrate <a class="reference external" href="https://github.com/makcedward/nlpaug/">nlpaug</a> into your datasets from Huggingface, in an easy way. Below there is an example of how to build a pipeline that will be applied over the dataset with different data augmentation methods.
+In the below example, 10% of the examples are augmented with contextual word embeddings in inserting mode (that is, a word from the language model is inserted somewhere in the text); 15% are augmented with the same type of augmenter but substituting the words instead of inserting them. Moreover, we also use a backtranslation augmenter over 20% of the examples, translating them to german and then back to english.
+If you want more information on how to use and configure each of these augmenters, just check <a class="reference external" href="https://github.com/makcedward/nlpaug/blob/master/example/textual_augmenter.ipynb">this notebook</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span> <span class="nn">nlpboost.augmentation</span> <span class="kn">import</span> <span class="n">NLPAugPipeline</span><span class="p">,</span> <span class="n">NLPAugConfig</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;ade_corpus_v2&quot;</span><span class="p">,</span> <span class="s2">&quot;Ade_corpus_v2_classification&quot;</span><span class="p">)</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">NLPAugConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;contextual_w_e&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_path&quot;</span><span class="p">:</span> <span class="s2">&quot;bert-base-cased&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span><span class="s2">&quot;cuda&quot;</span><span class="p">}),</span>
+    <span class="n">NLPAugConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;contextual_w_e&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_path&quot;</span><span class="p">:</span> <span class="s2">&quot;bert-base-cased&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;substitute&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cuda&quot;</span><span class="p">}),</span>
+    <span class="n">NLPAugConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;backtranslation&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;from_model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook/wmt19-en-de&quot;</span><span class="p">,</span> <span class="s2">&quot;to_model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;facebook/wmt19-de-en&quot;</span><span class="p">}</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+<span class="n">aug_pipeline</span> <span class="o">=</span> <span class="n">NLPAugPipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
+<span class="n">augmented_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">aug_pipeline</span><span class="o">.</span><span class="n">augment</span><span class="p">,</span> <span class="n">batched</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is already integrated with AutoTrainer via the DatasetConfig, as shown below. Note that not all objects are declared, so the below example as it is would throw an error. If you want to try it yourself, please define a hp_space function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">DatasetConfig</span><span class="p">,</span> <span class="n">ModelConfig</span><span class="p">,</span> <span class="n">AutoTrainer</span>
+<span class="kn">from</span> <span class="nn">nlpboost.augmentation</span> <span class="kn">import</span> <span class="n">NLPAugConfig</span>
+
+<span class="n">augment_steps</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">NLPAugConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;contextual_w_e&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_path&quot;</span><span class="p">:</span> <span class="s2">&quot;bert-base-cased&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span><span class="s2">&quot;cuda&quot;</span><span class="p">}),</span>
+    <span class="n">NLPAugConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;contextual_w_e&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_path&quot;</span><span class="p">:</span> <span class="s2">&quot;bert-base-cased&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;substitute&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cuda&quot;</span><span class="p">}),</span>
+    <span class="n">NLPAugConfig</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;backtranslation&quot;</span><span class="p">,</span> <span class="n">proportion</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">aug_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;from_model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Helsinki-NLP/opus-mt-es-en&quot;</span><span class="p">,</span> <span class="s2">&quot;to_model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Helsinki-NLP/opus-mt-en-es&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cuda&quot;</span><span class="p">}</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">data_config</span> <span class="o">=</span> <span class="n">DatasetConfig</span><span class="p">(</span>
+    <span class="o">**</span><span class="p">{</span>
+        <span class="s2">&quot;hf_load_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;ade_corpus_v2&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ade_corpus_v2_classification&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+        <span class="c1"># we would put many other parameters here.</span>
+        <span class="s2">&quot;augment_data&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;data_augmentation_steps&quot;</span><span class="p">:</span> <span class="n">augment_steps</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># now we can create a model and train it over this dataset with data augmentation.</span>
+
+<span class="n">model_config</span> <span class="o">=</span> <span class="n">ModelConfig</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;bert-base-uncased&quot;</span><span class="p">,</span>
+    <span class="n">save_name</span><span class="o">=</span><span class="s2">&quot;bert_prueba&quot;</span><span class="p">,</span>
+    <span class="n">hp_space</span> <span class="o">=</span> <span class="n">hp_space</span><span class="p">,</span> <span class="c1"># we would have to define this object before.</span>
+    <span class="n">n_trials</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">random_init_trials</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+
+<span class="n">autotrainer</span> <span class="o">=</span> <span class="n">AutoTrainer</span><span class="p">(</span>
+    <span class="n">model_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_config</span><span class="p">],</span>
+    <span class="n">dataset_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_config</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">autotrainer</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In this way, we are using the pipeline to internally augment data before training, therefore we will increment the amount of training data, without modifying the validation and test subsets.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to nlpboost’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="nlpboost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alejandro Vaca.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

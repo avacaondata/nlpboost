@@ -11,7 +11,7 @@ This figure depicts the main functionality of `nlpboost`. The main class is `Aut
 
 ## ORIGIN OF NLPBOOST
 
-This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my [LinkedIn page](https://www.linkedin.com/in/alejandro-vaca-serrano/). Thanks to automatic training, I could focus on more interesting things from a scientific point of view, producing higher quality work. This enabled me to be part of some conferences apart from my job, therefore I was able to learn more, as time is better used when no long scripts need to be written for each new task. My experience, after developing the tool, is that it enables me to use my time more effectively whenever I'm doing a NLP project. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners, and that it can help them to obtain the best results out of their projects |:heart:|.
+This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my [LinkedIn page](https://www.linkedin.com/in/alejandro-vaca-serrano/). Thanks to automatic training, I could focus on more interesting things from a scientific point of view, producing higher quality work. This also enabled me to be part of some conferences apart from my job, therefore I was able to learn more, as time is better used when no long scripts need to be written for each new task. My experience, after developing the tool, is that it enables me to use my time more effectively whenever I'm doing a NLP project. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practitioners, and that it can help them to obtain the best results out of their projects |:heart:|.
 
 ## WHY USE NLPBOOST?
 
@@ -30,6 +30,14 @@ To install `nlpboost` run:
 
 ```
 pip install git+https://github.com/alexvaca0/nlpboost.git
+```
+
+If you prefer to have a local copy of the library, in case you want to customize any part of it or for whatever reason, you can install it from the local repository in editable mode, like this:
+
+```
+git clone https://github.com/alexvaca0/nlpboost.git
+cd nlpboost
+pip install -e .
 ```
 
 Be aware that pytorch must be built on a cuda version that is compatible with the machine's installed cuda version. In case pytorch's default cuda version is not compatible visit https://pytorch.org/get-started/locally/ and install a compatible pytorch version.
