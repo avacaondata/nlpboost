@@ -1,4 +1,4 @@
-from nlpboost import DatasetConfig, ModelConfig, AutoTrainer
+from nlpboost import DatasetConfig, ModelConfig, AutoTrainer, ResultsPlotter
 from nlpboost.default_param_spaces import hp_space_base
 
 if __name__ == "__main__":
@@ -53,3 +53,11 @@ if __name__ == "__main__":
 
     results = autotrainer()
     print(results)
+
+    plotter = ResultsPlotter(
+        metrics_dir=autotrainer.metrics_dir,
+        model_names=[model_config.save_name for model_config in autotrainer.model_configs],
+        dataset_to_task_map={dataset_config.alias: dataset_config.task for dataset_config in autotrainer.dataset_configs},
+    )
+    ax = plotter.plot_metrics()
+    ax.figure.savefig("results.png")

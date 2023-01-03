@@ -2,7 +2,7 @@
 
 `nlpboost` is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you). It is highly integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.
 
-The main functionality of `nlpboost` is depicted in the following figure:
+The main functionality of `nlpboost` is depicted in the following figure, where the dashed lines represent fully customizable modules:
 
 ![Diagram autotrainer](./imgs/nlpboost_diagram.png "Diagram for AutoTrainer, the main class in nlpboost!")
 

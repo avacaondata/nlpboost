@@ -1,4 +1,4 @@
-from nlpboost import AutoTrainer, DatasetConfig, ModelConfig, dict_to_list
+from nlpboost import AutoTrainer, DatasetConfig, ModelConfig, dict_to_list, ResultsPlotter
 from transformers import EarlyStoppingCallback
 
 
@@ -115,4 +115,13 @@ if __name__ == "__main__":
         metrics_dir="pruebas_ner_bertin_bsc",
     )
 
-    autotrainer()
+    results = autotrainer()
+    print(results)
+
+    plotter = ResultsPlotter(
+        metrics_dir=autotrainer.metrics_dir,
+        model_names=[model_config.save_name for model_config in autotrainer.model_configs],
+        dataset_to_task_map={dataset_config.alias: dataset_config.task for dataset_config in autotrainer.dataset_configs},
+    )
+    ax = plotter.plot_metrics()
+    ax.figure.savefig("results.png")

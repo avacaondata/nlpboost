@@ -76,7 +76,7 @@ class ResultsPlotter:
 
         ax = sns.barplot(
             y="dataset_name",
-            x="f1",
+            x=self.metric_field,
             data=df.sort_values(["model_name", "dataset_name"]),
             hue="model_name",
         )
@@ -93,7 +93,7 @@ class ResultsPlotter:
         )
         plt.ylabel("Dataset Name", size=18, fontdict={"fontfamily": "serif"})
         plt.xlabel(
-            "F1-Score (Higher is Better)", size=18, fontdict={"fontfamily": "serif"}
+            f"{self.metric_field}", size=18, fontdict={"fontfamily": "serif"}
         )
         sns.despine()
         plt.legend(bbox_to_anchor=(0.9, 0.98), loc=3, borderaxespad=0.0)
@@ -139,7 +139,7 @@ class ResultsPlotter:
                 newdic = {
                     "model_name": model_name,
                     "dataset_name": dataset_name,
-                    "f1": f1,
+                    f"{self.metric_field}": f1,
                     "namefile": file,
                     "task": task,
                 }
