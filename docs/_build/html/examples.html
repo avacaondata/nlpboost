@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples of how to use nlpboost &mdash; nlpboost  documentation</title>
+  <title>Example scripts of how to use nlpboost for each task &mdash; nlpboost  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -42,7 +42,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples of how to use nlpboost</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example scripts of how to use nlpboost for each task</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">nlpboost</a></li>
 </ul>
 
@@ -60,7 +60,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Examples of how to use nlpboost</li>
+      <li class="breadcrumb-item active">Example scripts of how to use nlpboost for each task</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -70,27 +70,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="examples-of-how-to-use-nlpboost">
-<h1>Examples of how to use nlpboost<a class="headerlink" href="#examples-of-how-to-use-nlpboost" title="Permalink to this heading"></a></h1>
-<p>In this folder you will find example scripts showing how to fine-tune models for different tasks. These tasks are divided in directories, as you see.</p>
+  <section id="example-scripts-of-how-to-use-nlpboost-for-each-task">
+<h1>Example scripts of how to use nlpboost for each task<a class="headerlink" href="#example-scripts-of-how-to-use-nlpboost-for-each-task" title="Permalink to this heading"></a></h1>
+<p>In this folder you will find example scripts showing how to fine-tune models for different tasks. These tasks are divided in directories, as you see. In all scripts it is also shown how to use <code class="docutils literal notranslate"><span class="pre">ResultsPlotter</span></code> to save a metrics comparison figure of the models trained.</p>
 <ul class="simple">
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">classification</span></code></dt><dd><p>For classification we have 2 examples. <code class="docutils literal notranslate"><span class="pre">train_classification.py</span></code> shows how to train a BERTIN model for multi-class classification (emotion detection, check tweet_eval: emotion dataset for more info.). On the other hand, <code class="docutils literal notranslate"><span class="pre">train_multilabel.py</span></code> shows how to train a model on a multilabel task.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">classification</span></code></dt><dd><p>For classification we have 2 examples. <cite>``train_classification.py`</cite> &lt;<a class="reference external" href="https://github.com/avacaondata/nlpboost/blob/main/examples/classification/train_classification.py">https://github.com/avacaondata/nlpboost/blob/main/examples/classification/train_classification.py</a>&gt;`_ shows how to train a BERTIN model for multi-class classification (emotion detection, check tweet_eval: emotion dataset for more info.). On the other hand, <cite>``train_multilabel.py`</cite> &lt;<a class="reference external" href="https://github.com/avacaondata/nlpboost/blob/main/examples/classification/train_multilabel.py">https://github.com/avacaondata/nlpboost/blob/main/examples/classification/train_multilabel.py</a>&gt;`_ shows how to train a model on a multilabel task.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">extractive_qa</span></code></dt><dd><p>For extractive QA we have only 1 example, as this type of task is very similar in all cases: <code class="docutils literal notranslate"><span class="pre">train_sqac.py</span></code> shows how to train a MarIA-large (Spanish Roberta-large) model on SQAC dataset, with hyperparameter search.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">extractive_qa</span></code></dt><dd><p>For extractive QA we have only 1 example, as this type of task is very similar in all cases: <cite>``train_sqac.py`</cite> &lt;<a class="reference external" href="https://github.com/avacaondata/nlpboost/blob/main/examples/extractive_qa/train_sqac.py">https://github.com/avacaondata/nlpboost/blob/main/examples/extractive_qa/train_sqac.py</a>&gt;`_ shows how to train a MarIA-large (Spanish Roberta-large) model on SQAC dataset, with hyperparameter search.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">NER</span></code></dt><dd><p>For NER, there is an example script, showing how to train multiple models on multiple NER datasets with different format, where we need to apply a <code class="docutils literal notranslate"><span class="pre">pre_func</span></code> to one of the datasets. The script is called <code class="docutils literal notranslate"><span class="pre">train_spanish_ner.py</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">NER</span></code></dt><dd><p>For NER, there is an example script, showing how to train multiple models on multiple NER datasets with different format, where we need to apply a <code class="docutils literal notranslate"><span class="pre">pre_func</span></code> to one of the datasets. The script is called <cite>``train_spanish_ner.py`</cite> &lt;<a class="reference external" href="https://github.com/avacaondata/nlpboost/blob/main/examples/NER/train_spanish_ner.py">https://github.com/avacaondata/nlpboost/blob/main/examples/NER/train_spanish_ner.py</a>&gt;`_.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">seq2seq</span></code></dt><dd><p>For this task, check out <code class="docutils literal notranslate"><span class="pre">train_maria_encoder_decoder_marimari.py</span></code>, which shows how to train a seq2seq model when no encoder-decoder architecture is readily available for a certain language, in this case Spanish. On the other hand, check out <code class="docutils literal notranslate"><span class="pre">train_summarization_mlsum.py</span></code> to learn how to configure training for two multilingual encoder-decoder models for MLSUM summarization task.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">seq2seq</span></code></dt><dd><p>For this task, check out <cite>``train_maria_encoder_decoder_marimari.py`</cite> &lt;<a class="reference external" href="https://github.com/avacaondata/nlpboost/blob/main/examples/seq2seq/train_maria_encoder_decoder_marimari.py">https://github.com/avacaondata/nlpboost/blob/main/examples/seq2seq/train_maria_encoder_decoder_marimari.py</a>&gt;`_, which shows how to train a seq2seq model when no encoder-decoder architecture is readily available for a certain language, in this case Spanish. On the other hand, check out <cite>``train_summarization_mlsum.py`</cite> &lt;<a class="reference external" href="https://github.com/avacaondata/nlpboost/blob/main/examples/seq2seq/train_summarization_mlsum.py">https://github.com/avacaondata/nlpboost/blob/main/examples/seq2seq/train_summarization_mlsum.py</a>&gt;`_ to learn how to configure training for two multilingual encoder-decoder models for MLSUM summarization task.</p>
 </dd>
 </dl>
 </li>
