@@ -39,6 +39,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples of how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -240,9 +241,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        all_results: Dict</span>
-<span class="sd">            Dictionary with results from the experiments. First keys are dataset names, as called in</span>
-<span class="sd">            `alias` param of `DatasetConfig`. Then, for each dataset there is a dict of model names,</span>
-<span class="sd">            which are themselves keys of dicts of metrics.</span>
+<span class="sd">            Dictionary with results from the experiments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_results</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">dataset_config</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>

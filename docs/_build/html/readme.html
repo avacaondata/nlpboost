@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="nlpboost" href="modules.html" />
+    <link rel="next" title="Examples of how to use nlpboost" href="examples.html" />
     <link rel="prev" title="Welcome to nlpboost’s documentation!" href="index.html" /> 
 </head>
 
@@ -44,7 +44,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">NLPBOOST: A library for automatic training and comparison of Transformer models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#origin-of-nlpboost">ORIGIN OF NLPBOOST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#why-use-nlpboost">WHY USE NLPBOOST?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">INSTALLATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-and-testing">INSTALLATION AND TESTING</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#supported-tasks">SUPPORTED TASKS</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#binary-or-multi-class-classification">Binary or Multi-Class Classification</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#multi-label-classification">Multi-Label Classification</a></li>
@@ -66,6 +66,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples of how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">nlpboost</a></li>
 </ul>
 
@@ -96,32 +97,42 @@
   <section id="nlpboost-a-library-for-automatic-training-and-comparison-of-transformer-models">
 <h1>NLPBOOST: A library for automatic training and comparison of Transformer models<a class="headerlink" href="#nlpboost-a-library-for-automatic-training-and-comparison-of-transformer-models" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you). It is highly integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.</p>
-<p>The main functionality of <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> is depicted in the following figure:</p>
-<a class="reference external image-reference" href="../imgs/nlpboost_diagram.png"><img alt="Diagram autotrainer" src="_images/nlpboost_diagram.png" style="width: 1200px;" /></a>
+<p>The main functionality of <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> is depicted in the following figure, where the dashed lines represent fully customizable modules:</p>
+<a class="reference external image-reference" href="../imgs/nlpboost_diagram.png"><img alt="Diagram autotrainer" src="_images/nlpboost_diagram.png" style="width: 1400px;" /></a>
 <p>This figure depicts the main functionality of <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code>. The main class is <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code>, which is configured with a list of <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>s and a list of <code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code>s. Then, <code class="docutils literal notranslate"><span class="pre">AutoTrainer</span></code> will loop through each dataset configuration, performing hyperparameter tuning for each of the models configurations. For that, it uses <code class="docutils literal notranslate"><span class="pre">HFDatasetsManager</span></code> to load the dataset, depending on the configuration of <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>. It will also tokenize the dataset accordingly. As the dashed lines show, the user can use the default <code class="docutils literal notranslate"><span class="pre">tokenization_function</span></code> for the desired task, or can define their own in <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>. Then, <code class="docutils literal notranslate"><span class="pre">HFTransformersManager</span></code> will load all necessary Transformer objects (model, data collator, training arguments, trainer…). After that, hyperparameter tuning is performed with Optuna. A <code class="docutils literal notranslate"><span class="pre">CkptCleaner</span></code> (checkpoint cleaner) class removes bad performing checkpoints every 10 minutes, also saving the best performing checkpoint in the experiment in a separate directory. After hyperparameter tuning, results on the test split (if available, otherwise the validation split) are obtained via <code class="docutils literal notranslate"><span class="pre">ResultsGetter</span></code>, which is customizable (by passing a custom ResultsGetter class overriding the current methods), and uses a <code class="docutils literal notranslate"><span class="pre">compute_metrics_function</span></code> which is also customizable, by passing a <code class="docutils literal notranslate"><span class="pre">custom_eval_func</span></code> to <code class="docutils literal notranslate"><span class="pre">DatasetConfig</span></code>. These results are stored in json or, if json saving fails, in txt format (results in txt can be also easily loaded with <code class="docutils literal notranslate"><span class="pre">ast.literal_eval</span></code>). <code class="docutils literal notranslate"><span class="pre">ResultsPlotter</span></code> is a helper class that enables the user to easily get a plot of the models’ performance on each dataset, and their average performance.</p>
 <section id="origin-of-nlpboost">
 <h2>ORIGIN OF NLPBOOST<a class="headerlink" href="#origin-of-nlpboost" title="Permalink to this heading"></a></h2>
-<p>This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my <a class="reference external" href="https://www.linkedin.com/in/alejandro-vaca-serrano/">LinkedIn page</a>. Thanks to automatic training, I could focus on more interesting things from a scientific point of view, producing higher quality work. This enabled me to be part of some conferences apart from my job, therefore I was able to learn more, as time is better used when no long scripts need to be written for each new task. My experience, after developing the tool, is that it enables me to use my time more effectively whenever I’m doing a NLP project. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practicioners, and that it can help them to obtain the best results out of their projects ❤️.</p>
+<p>This library was developed to be able to compete in many Hackatons while working on a full-time job. The results from those Hackatons were honestly good, which you can check in my <a class="reference external" href="https://www.linkedin.com/in/alejandro-vaca-serrano/">LinkedIn page</a>. Thanks to automatic training, I could focus on more interesting things from a scientific point of view, producing higher quality work. This also enabled me to be part of some conferences apart from my job, therefore I was able to learn more, as time is better used when no long scripts need to be written for each new task. My experience, after developing the tool, is that it enables me to use my time more effectively whenever I’m doing a NLP project. For this reason, I would like to share this work with the community, hoping that it can save time from other NLP practitioners, and that it can help them to obtain the best results out of their projects ❤️.</p>
 </section>
 <section id="why-use-nlpboost">
 <h2>WHY USE NLPBOOST?<a class="headerlink" href="#why-use-nlpboost" title="Permalink to this heading"></a></h2>
 <p>The main advantages you will find when using nlpboost are the following:</p>
 <ul class="simple">
-<li><p>🔆 You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning.</p></li>
+<li><p>🔆 You can easily train multiple models on multiple datasets, sequentially, with hyperparameter tuning. This eases the task of finding the best model for each task, by comparing multiple models with different parameter configurations. Optuna is used for hyperparameter search.</p></li>
 <li><p>⌚ Once you get used to the library and how scripts are configured, writing a new script for any task belonging to QA, NER, Classification (in any of its forms), or Seq2Seq, will take minutes.</p></li>
 <li><p>💾 To avoid disk overloading, AutoTrainer, the main class in nlpboost, comes with a checkpoint cleaner, which removes every 10 minutes all checkpoints but the four best (excluding the current optuna run to avoid errors). Additionally, a directory with the best checkpoint found (using validation metrics) is saved each time checkpoints are cleaned. This saves not only disk usage, but effort, easing the task of finding the best checkpoint and removing all unnecessary checkpoints. This is also useful if you want to run many models for many trials on many datasets while you go to a music festival 😎 (tested). In that situation you don’t want to worry about whether your disk is full before your experiments finish.</p></li>
 <li><p>🗼 nlpboost comes with a tool to easily integrate NLP data augmentation methods from <a class="reference external" href="https://github.com/makcedward/nlpaug/">nlpaug</a> library. Keep reading to learn how.</p></li>
 <li><p>📊 Metrics on test after hyperparameter tuning are saved in a directory defined when initializing AutoTrainer. Additionally, with ResultsPlotter you can easily generate a beautiful graph depicting the comparison of the different models you have trained for a dataset. This is handy for presenting a models’ comparison in a visual way.</p></li>
-<li><p>🌴 nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel, and the rest is done by AutoTrainer.</p></li>
+<li><p>🌴 nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel and configure ModelConfig and DatasetConfig accordingly; the rest is done by AutoTrainer. The same applies to artificial Encoder-Decoder models (that is encoder-decoder models created from pre-trained encoder-only or decoder-only models) - check <a class="reference external" href="https://huggingface.co/docs/transformers/model_doc/encoder-decoder">this</a> for more information. EncoderDecoderModel architecture can be configured for seq2seq tasks by setting the correct ModelConfig’s parameters. This is useful for seq2seq tasks on languages for which there is no Encoder-Decoder model available.</p></li>
 </ul>
 </section>
-<section id="installation">
-<h2>INSTALLATION<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<section id="installation-and-testing">
+<h2>INSTALLATION AND TESTING<a class="headerlink" href="#installation-and-testing" title="Permalink to this heading"></a></h2>
 <p>To install <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">alexvaca0</span><span class="o">/</span><span class="n">nlpboost</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
+<p>If you prefer to have a local copy of the library, in case you want to customize any part of it or for whatever reason, you can install it from the local repository in editable mode, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">alexvaca0</span><span class="o">/</span><span class="n">nlpboost</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">nlpboost</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
 <p>Be aware that pytorch must be built on a cuda version that is compatible with the machine’s installed cuda version. In case pytorch’s default cuda version is not compatible visit <a class="reference external" href="https://pytorch.org/get-started/locally/">https://pytorch.org/get-started/locally/</a> and install a compatible pytorch version.</p>
+<p>You can run tests after installing the library with <code class="docutils literal notranslate"><span class="pre">pytest</span></code>. It is already installed when installing <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code>. Inside the main <code class="docutils literal notranslate"><span class="pre">nlpboost</span></code> repository directory (where README is), run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="o">.</span>
+</pre></div>
+</div>
 </section>
 <section id="supported-tasks">
 <h2>SUPPORTED TASKS<a class="headerlink" href="#supported-tasks" title="Permalink to this heading"></a></h2>
@@ -208,7 +219,7 @@
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>On the other hand, if the model we are configuring is aimed at doing a seq2seq task, we could configure it like this:</p>
+<p>Example 2: if the model we are configuring is aimed at doing a seq2seq task, we could configure it like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Seq2SeqTrainer</span><span class="p">,</span> <span class="n">MT5ForConditionalGeneration</span>
 
 <span class="k">def</span> <span class="nf">tokenize_dataset</span><span class="p">(</span><span class="n">examples</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">):</span>
@@ -241,7 +252,7 @@
             <span class="s2">&quot;max_length_summary&quot;</span><span class="p">:</span> <span class="mi">360</span><span class="p">,</span>
             <span class="s2">&quot;random_init_trials&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
             <span class="s2">&quot;n_trials&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;save_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;/prueba_seq2seq/&quot;</span>
+            <span class="s2">&quot;save_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./example_seq2seq/&quot;</span>
          <span class="p">}</span>
 <span class="p">)</span>
 </pre></div>
@@ -453,7 +464,7 @@ If you want more information on how to use and configure each of these augmenter
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to nlpboost’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="modules.html" class="btn btn-neutral float-right" title="nlpboost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples of how to use nlpboost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

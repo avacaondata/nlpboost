@@ -42,7 +42,7 @@ pip install -e .
 
 Be aware that pytorch must be built on a cuda version that is compatible with the machine's installed cuda version. In case pytorch's default cuda version is not compatible visit https://pytorch.org/get-started/locally/ and install a compatible pytorch version.
 
-You can run tests after installing the library with `pytest`. It is already installed when installing `nlpboost`. Inside `nlpboost` folder, run:
+You can run tests after installing the library with `pytest`. It is already installed when installing `nlpboost`. Inside the main `nlpboost` repository directory (where README is), run:
 
 ```
 pytest .
@@ -136,7 +136,7 @@ bsc_large_config = ModelConfig(
     )
 ```
 
-On the other hand, if the model we are configuring is aimed at doing a seq2seq task, we could configure it like this:
+Example 2: if the model we are configuring is aimed at doing a seq2seq task, we could configure it like this:
 
 ```python
 from transformers import Seq2SeqTrainer, MT5ForConditionalGeneration
@@ -171,7 +171,7 @@ mt5_config = ModelConfig(
             "max_length_summary": 360,
             "random_init_trials": 3,
             "n_trials": 1,
-            "save_dir": "/prueba_seq2seq/"
+            "save_dir": "./example_seq2seq/"
          }
 )
 ```
