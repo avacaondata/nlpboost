@@ -43,7 +43,8 @@ if __name__ == "__main__":
         name="bertin-project/bertin-roberta-base-spanish",
         save_name="bertin",
         hp_space=hp_space_base,
-        n_trials=1
+        n_trials=1,
+        only_test=True
     )
     autotrainer = AutoTrainer(
         model_configs=[model_config],

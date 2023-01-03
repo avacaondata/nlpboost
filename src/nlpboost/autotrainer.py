@@ -171,9 +171,7 @@ class AutoTrainer:
         Returns
         -------
         all_results: Dict
-            Dictionary with results from the experiments. First keys are dataset names, as called in
-            `alias` param of `DatasetConfig`. Then, for each dataset there is a dict of model names,
-            which are themselves keys of dicts of metrics.
+            Dictionary with results from the experiments.
         """
         all_results = {}
         for dataset_config in tqdm(
