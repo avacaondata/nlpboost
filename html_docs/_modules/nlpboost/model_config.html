@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nlpboost.model_config &mdash; nlpboost  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> nlpboost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nlpboost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nlpboost.model_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nlpboost.model_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">PretrainedConfig</span><span class="p">,</span> <span class="n">PreTrainedModel</span>
+
+
+<div class="viewcode-block" id="ModelConfig"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.model_config.ModelConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ModelConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configure a model to use inside the AutoTrainer class.</span>
+
+<span class="sd">    With this we determine every choice related to the model</span>
+<span class="sd">    such as the original name, the name to save the model with, the hyperparameter space, and a long etc.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: str</span>
+<span class="sd">        Name of the model, either in the HF hub or a path to the local directory where it is stored.</span>
+<span class="sd">    save_name: str</span>
+<span class="sd">        Alias for the model, used for saving it.</span>
+<span class="sd">    hp_space</span>
+<span class="sd">        The hyperparameter space for hyperparameter search with optuna. Must be a function receiving a trial and returning a dictionary with the corresponding suggest_categorical and float fields.</span>
+<span class="sd">    dropout_vals: List</span>
+<span class="sd">        Dropout values to try.</span>
+<span class="sd">    custom_config_class: transformers.PretrainedConfig</span>
+<span class="sd">        Custom configuration for a model. Useful for training ensembles of transformers.</span>
+<span class="sd">    custom_model_class: transformers.PreTrainedModel</span>
+<span class="sd">        Custom model. None by default. Only used for ensemble models and other strange creatures of Nature.</span>
+<span class="sd">    partial_custom_tok_func_call: Any</span>
+<span class="sd">        Partial call for a tokenization function, with all necessary parameters passed to it.</span>
+<span class="sd">    encoder_name: str</span>
+<span class="sd">        Useful for summarization problems, when we want to create an encoder-decoder and want those models to be different.</span>
+<span class="sd">    decoder_name: str</span>
+<span class="sd">        Useful for summarization problems, when we want to create an encoder-decoder and want those models to be different.</span>
+<span class="sd">    tie_encoder_decoder: bool</span>
+<span class="sd">        Useful for summarization problems, when we want to have the weights of the encoder and decoder in an EncoderDecoderModel tied.</span>
+<span class="sd">    max_length_summary: int</span>
+<span class="sd">        Max length of the summaries. Useful for summarization datasets.</span>
+<span class="sd">    min_length_summary : int</span>
+<span class="sd">        Min length of the summaries. Useful for summarization datasets.</span>
+<span class="sd">    no_repeat_ngram_size: int</span>
+<span class="sd">        Number of n-grams to don&#39;t repeat when doing summarization.</span>
+<span class="sd">    early_stopping_summarization: bool</span>
+<span class="sd">        Whether to have early stopping when doing summarization tasks.</span>
+<span class="sd">    length_penalty: float</span>
+<span class="sd">        Length penalty for summarization tasks.</span>
+<span class="sd">    num_beams: int</span>
+<span class="sd">        Number of beams in beam search for summarization tasks.</span>
+<span class="sd">    dropout_field_name: str</span>
+<span class="sd">        Name for the dropout field in the pooler layer.</span>
+<span class="sd">    n_trials : int</span>
+<span class="sd">        Number of trials (trainings) to carry out with this model.</span>
+<span class="sd">    random_init_trials: int</span>
+<span class="sd">        Argument for optuna sampler, to control number of initial trials to run randomly.</span>
+<span class="sd">    trainer_cls_summarization: Any</span>
+<span class="sd">        Class for the trainer. Useful when it is desired to override the default trainer cls for summarization.</span>
+<span class="sd">    model_cls_summarization: Any</span>
+<span class="sd">        Class for the trainer. Useful when it is desired to override the default trainer cls for summarization.</span>
+<span class="sd">    custom_tokenization_func: Any</span>
+<span class="sd">        Custom tokenization function for processing texts. When the user does not want to use the default tokenization function for the task at hand, one can create a custom tokenization function. This function must receive samples from a dataset, a tokenizer and a dataset config.</span>
+<span class="sd">    only_test: bool</span>
+<span class="sd">        Whether to only test, not train (for already trained models).</span>
+<span class="sd">    test_batch_size: int</span>
+<span class="sd">        Batch size for test; only used when doing only testing.</span>
+<span class="sd">    overwrite_training_args: Dict</span>
+<span class="sd">        Arguments to overwrite the default arguments for the trainer, for example to change the optimizer for this concrete model.</span>
+<span class="sd">    save_dir: str</span>
+<span class="sd">        The directory to save the trained model.</span>
+<span class="sd">    push_to_hub: bool</span>
+<span class="sd">        Whether to push the best model to the hub.</span>
+<span class="sd">    additional_params_tokenizer: Dict</span>
+<span class="sd">        Additional arguments to pass to the tokenizer.</span>
+<span class="sd">    resume_from_checkpoint: bool</span>
+<span class="sd">        Whether to resume from checkpoint to continue training.</span>
+<span class="sd">    config_problem_type: str</span>
+<span class="sd">        The type of the problem, for loss fct.</span>
+<span class="sd">    custom_trainer_cls: Any</span>
+<span class="sd">        Custom trainer class to override the current one.</span>
+<span class="sd">    do_nothing: bool</span>
+<span class="sd">        Whether to do nothing or not. If true, will not train nor predict.</span>
+<span class="sd">    custom_params_config_model: Dict</span>
+<span class="sd">        Dictionary with custom parameters for loading AutoConfig.</span>
+<span class="sd">    generation_params: Dict</span>
+<span class="sd">        Parameters for generative tasks, for the generate call.</span>
+<span class="sd">    hf_hub_username: str</span>
+<span class="sd">        Username in HF Hub, to push models to hub.</span>
+<span class="sd">    custom_results_getter: Any</span>
+<span class="sd">        Custom class to get test results after training.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    With the following lines you can create a ModelConfig for bert-base-cased model.</span>
+
+<span class="sd">    &gt;&gt;&gt;from nlpboost import ModelConfig</span>
+
+<span class="sd">    &gt;&gt;&gt;from nlpboost.default_param_spaces import hp_space_base</span>
+
+<span class="sd">    &gt;&gt;&gt;model_config = ModelConfig(name=&#39;bert-base-cased&#39;, save_name=&#39;bert&#39;, hp_space=hp_space_base)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Name of the model, either in the HF hub or a path to the local directory where it is stored.&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">save_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Alias for the model, used for saving it.&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">hp_space</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;The hyperparameter space for hyperparameter search with optuna. Must be a function receiving a trial and returning a dictionary with the corresponding suggest_categorical and float fields.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">dropout_vals</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Dropout values to try.&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">custom_config_class</span><span class="p">:</span> <span class="n">PretrainedConfig</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom configuration for a model. Useful for training ensembles of transformers.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">custom_model_class</span><span class="p">:</span> <span class="n">PreTrainedModel</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom model. None by default. Only used for ensemble models and other strange creatures of Nature.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">custom_tokenization_func</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom tokenization function for processing texts. When the user does not want to use the default tokenization function for the task at hand, one can create a custom tokenization function. This function must receive samples from a dataset, a tokenizer and a dataset config.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">partial_custom_tok_func_call</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Partial call for a tokenization function, with all necessary parameters passed to it..&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">encoder_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Useful for summarization problems, when we want to create an encoder-decoder and want those models to be different. &quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">decoder_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Useful for summarization problems, when we want to create an encoder-decoder and want those models to be different. &quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">tie_encoder_decoder</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Useful for summarization problems, when we want to have the weights of the encoder and decoder in an EncoderDecoderModel tied.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">max_length_summary</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Max length of the summaries. Useful for summarization datasets.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">min_length_summary</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Min length of the summaries. Useful for summarization datasets.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">no_repeat_ngram_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of n-grams to don&#39;t repeat when doing summarization.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">early_stopping_summarization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to have early stopping when doing summarization tasks.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">length_penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Length penalty for summarization tasks.&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">num_beams</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;number of beams in beam search for summarization tasks.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">dropout_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;cls_dropout&quot;</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Name for the dropout field in the pooler layer.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of trials (trainings) to carry out with this model.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">random_init_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Argument for optuna sampler, to control number of initial trials to run randomly.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">trainer_cls_summarization</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Class for the trainer. Useful when it is desired to override the default trainer cls for summarization.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">model_cls_summarization</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Class for the trainer. Useful when it is desired to override the default trainer cls for summarization.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="c1"># custom_proc_func_summarization: Any = field(</span>
+    <span class="c1">#     default=None,</span>
+    <span class="c1">#     metadata={</span>
+    <span class="c1">#         &quot;help&quot;: &quot;Custom function for tokenizing summarization tasks with a model.&quot;</span>
+    <span class="c1">#     },</span>
+    <span class="c1"># )</span>
+    <span class="n">only_test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to only test, not train (for already trained models).&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">test_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Batch size for test; only used when doing only testing.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">overwrite_training_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Arguments to overwrite the default arguments for the trainer, for example to change the optimizer for this concrete model.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;The directory to save the trained model.&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">push_to_hub</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to push the best model to the hub.&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">additional_params_tokenizer</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Additional arguments to pass to the tokenizer.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">resume_from_checkpoint</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to resume from checkpoint to continue training.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">config_problem_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;The type of the problem, for loss fct.&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">custom_trainer_cls</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom trainer class to override the current one.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">do_nothing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to do nothing or not. If true, will not train nor predict.&quot;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">custom_params_config_model</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Dictionary with custom parameters for loading AutoConfig.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">generation_params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Parameters for generative tasks, for the generate call.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">hf_hub_username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Username in the Huggingface hub, to push models to hub.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">custom_results_getter</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom class to get test results after training.&quot;</span><span class="p">},</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alejandro Vaca.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

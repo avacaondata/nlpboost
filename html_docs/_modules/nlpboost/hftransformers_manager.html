@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nlpboost.hftransformers_manager &mdash; nlpboost  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> nlpboost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nlpboost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nlpboost.hftransformers_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nlpboost.hftransformers_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AutoTokenizer</span><span class="p">,</span>
+    <span class="n">EncoderDecoderModel</span><span class="p">,</span>
+    <span class="n">Seq2SeqTrainer</span><span class="p">,</span>
+    <span class="n">Trainer</span><span class="p">,</span>
+    <span class="n">Seq2SeqTrainingArguments</span><span class="p">,</span>
+    <span class="n">TrainingArguments</span><span class="p">,</span>
+    <span class="n">AutoModelForSequenceClassification</span><span class="p">,</span>
+    <span class="n">AutoModelForSeq2SeqLM</span><span class="p">,</span>
+    <span class="n">AutoConfig</span><span class="p">,</span>
+    <span class="n">AutoModelForTokenClassification</span><span class="p">,</span>
+    <span class="n">AutoModelForQuestionAnswering</span><span class="p">,</span>
+    <span class="n">DataCollatorForTokenClassification</span><span class="p">,</span>
+    <span class="n">DataCollatorForSeq2Seq</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+
+<div class="viewcode-block" id="MultilabelTrainer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.MultilabelTrainer">[docs]</a><span class="k">class</span> <span class="nc">MultilabelTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Version of the trainer used for multilabel setting.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MultilabelTrainer.compute_loss"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.MultilabelTrainer.compute_loss">[docs]</a>    <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">return_outputs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute loss of the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model : transformers.PreTrainedModel</span>
+<span class="sd">            Model to compute loss.</span>
+<span class="sd">        inputs : torch.Tensor</span>
+<span class="sd">            Model inputs.</span>
+<span class="sd">        return_outputs : bool</span>
+<span class="sd">            Wether or not to return model outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">logits</span>
+        <span class="n">loss_fct</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fct</span><span class="p">(</span>
+            <span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_labels</span><span class="p">),</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_labels</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_outputs</span> <span class="k">else</span> <span class="n">loss</span></div></div>
+
+
+<span class="n">map_trainer_cls</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span>
+    <span class="s2">&quot;ner&quot;</span><span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span>
+    <span class="s2">&quot;qa&quot;</span><span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span>
+    <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="n">MultilabelTrainer</span><span class="p">,</span>
+    <span class="s2">&quot;seq2seq&quot;</span><span class="p">:</span> <span class="n">Seq2SeqTrainer</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">map_model_cls</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="n">AutoModelForSequenceClassification</span><span class="p">,</span>
+    <span class="s2">&quot;ner&quot;</span><span class="p">:</span> <span class="n">AutoModelForTokenClassification</span><span class="p">,</span>
+    <span class="s2">&quot;qa&quot;</span><span class="p">:</span> <span class="n">AutoModelForQuestionAnswering</span><span class="p">,</span>
+    <span class="s2">&quot;seq2seq&quot;</span><span class="p">:</span> <span class="n">AutoModelForSeq2SeqLM</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="HFTransformersManager"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager">[docs]</a><span class="k">class</span> <span class="nc">HFTransformersManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Utility for loading HF Transformers&#39; objects, using a dataset config and a model config.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_config:</span>
+<span class="sd">        Configuration for the model.</span>
+<span class="sd">    dataset_config:</span>
+<span class="sd">        Configuration for the dataset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataset_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_auth_token</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="o">=</span> <span class="n">model_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span> <span class="o">=</span> <span class="n">dataset_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span> <span class="o">=</span> <span class="n">use_auth_token</span>
+
+<div class="viewcode-block" id="HFTransformersManager.load_config"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">dropout</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load configuration for the model depending on the type of task we are doing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag2id: Dict</span>
+<span class="sd">            Dictionary with the map of tag to id of those tags.</span>
+<span class="sd">        dropout: float</span>
+<span class="sd">            Dropout proportion for the pooler layer.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        config: transformers.AutoConfig</span>
+<span class="sd">            Configuration for use in the transformers module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;qa&quot;</span><span class="p">,</span> <span class="s2">&quot;multiple_choice&quot;</span><span class="p">]:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">AutoConfig</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                <span class="n">model_name</span><span class="p">,</span>
+                <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">dropout_field_name</span><span class="p">:</span> <span class="n">dropout</span><span class="p">},</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;seq2seq&quot;</span><span class="p">]:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">AutoConfig</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                    <span class="n">model_name</span><span class="p">,</span> <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_config_class</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">AutoConfig</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                    <span class="n">model_name</span><span class="p">,</span>
+                    <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span><span class="p">,</span>
+                    <span class="n">num_labels</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">tag2id</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">config_num_labels</span>
+                    <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">config_num_labels</span><span class="p">,</span>
+                    <span class="o">**</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">dropout_field_name</span><span class="p">:</span> <span class="n">dropout</span><span class="p">},</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_config_class</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;label2id&quot;</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;id2label&quot;</span><span class="p">,</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tag2id</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">config_problem_type</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;problem_type&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">config_problem_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_params_config_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_params_config_model</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span></div>
+
+<div class="viewcode-block" id="HFTransformersManager.load_data_collator"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_data_collator">[docs]</a>    <span class="k">def</span> <span class="nf">load_data_collator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load data collator depending on the type of task we are doing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tokenizer: transformers.PretrainedTokenizer</span>
+<span class="sd">            Tokenizer to process data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_collator: transformers.DataCollator</span>
+<span class="sd">            DataCollator for use in the transformers library.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_collator</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;ner&quot;</span><span class="p">:</span>
+            <span class="n">data_collator</span> <span class="o">=</span> <span class="n">DataCollatorForTokenClassification</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">:</span>
+            <span class="n">data_collator</span> <span class="o">=</span> <span class="n">DataCollatorForSeq2Seq</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data_collator</span></div>
+
+<div class="viewcode-block" id="HFTransformersManager.load_tokenizer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_tokenizer">[docs]</a>    <span class="k">def</span> <span class="nf">load_tokenizer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load tokenizer for the given model config and model name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tokenizer:</span>
+<span class="sd">            Loaded tokenizer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">additional_params_tokenizer</span><span class="p">:</span>
+            <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">name</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span><span class="p">,</span>
+                <span class="n">do_lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">add_prefix_space</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">use_fast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span><span class="p">,</span>
+                <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">additional_params_tokenizer</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">name</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span>
+                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span><span class="p">,</span>
+                <span class="n">do_lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">add_prefix_space</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">use_fast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">tokenizer</span></div>
+
+<div class="viewcode-block" id="HFTransformersManager.get_model_cls"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.get_model_cls">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the class to use for a model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        model_cls:</span>
+<span class="sd">            Class for the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_model_class</span><span class="p">:</span>
+            <span class="n">model_cls</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">model_cls_summarization</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;seq2seq&quot;</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">model_cls_summarization</span>
+                <span class="k">else</span> <span class="n">map_model_cls</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">model_cls</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_model_class</span></div>
+
+<div class="viewcode-block" id="HFTransformersManager.load_trainer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_trainer">[docs]</a>    <span class="k">def</span> <span class="nf">load_trainer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="p">,</span>
+        <span class="n">tokenizer</span><span class="p">,</span>
+        <span class="n">args</span><span class="p">,</span>
+        <span class="n">model_init</span><span class="p">,</span>
+        <span class="n">data_collator</span><span class="p">,</span>
+        <span class="n">compute_metrics_func</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load an instantiated Trainer object depending on the configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dataset: datasets.DatasetDict</span>
+<span class="sd">            Dataset with train and validation splits.</span>
+<span class="sd">        tokenizer: transformers.AutoTokenizer</span>
+<span class="sd">            Tokenizer from transformers.</span>
+<span class="sd">        args:</span>
+<span class="sd">            TrainingArguments for the Trainer.</span>
+<span class="sd">        model_init:</span>
+<span class="sd">            Function that loads the model.</span>
+<span class="sd">        data_collator:</span>
+<span class="sd">            Data Collator to use inside Trainer.</span>
+<span class="sd">        compute_metrics_func:</span>
+<span class="sd">            Function to compute metrics.</span>
+<span class="sd">        config:</span>
+<span class="sd">            Configuration for the model in Huggingface Transformers.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Trainer:</span>
+<span class="sd">            Trainer object loaded with the given configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trainer_cls</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_trainer_cls</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_trainer_cls</span>
+            <span class="k">else</span> <span class="n">map_trainer_cls</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">trainer_cls</span><span class="p">(</span>
+            <span class="n">model_init</span><span class="o">=</span><span class="n">model_init</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
+            <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span>
+                <span class="s2">&quot;train&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">only_test</span> <span class="k">else</span> <span class="s2">&quot;test&quot;</span>
+            <span class="p">],</span>
+            <span class="n">eval_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span>
+                <span class="s2">&quot;validation&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">only_test</span> <span class="k">else</span> <span class="s2">&quot;test&quot;</span>
+            <span class="p">],</span>
+            <span class="n">data_collator</span><span class="o">=</span><span class="n">data_collator</span><span class="p">,</span>
+            <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
+            <span class="n">compute_metrics</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span>
+                <span class="n">compute_metrics_func</span><span class="p">,</span>
+                <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
+                <span class="n">id2tag</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">id2label</span> <span class="k">if</span> <span class="n">config</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">compute_metrics_func</span>
+            <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">callbacks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">callbacks</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">trainer</span></div>
+
+<div class="viewcode-block" id="HFTransformersManager.load_train_args"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_train_args">[docs]</a>    <span class="k">def</span> <span class="nf">load_train_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load training args depending on the task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_dir: str</span>
+<span class="sd">            Local directory name to save the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        args: transformers.TrainingArguments</span>
+<span class="sd">            Arguments for training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">fixed_training_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;metric_for_best_model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">metric_optimize</span><span class="p">,</span>
+                <span class="s2">&quot;greater_is_better&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">direction_optimize</span>
+                <span class="o">==</span> <span class="s2">&quot;maximize&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">fixed_training_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">fixed_training_args</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">overwrite_training_args</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">overwrite_training_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">fixed_training_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">!=</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">TrainingArguments</span><span class="p">(</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">run_name</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">overwrite_output_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">report_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tensorboard&quot;</span><span class="p">],</span>
+                <span class="o">**</span><span class="n">fixed_training_args</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">Seq2SeqTrainingArguments</span><span class="p">(</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">run_name</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">overwrite_output_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">predict_with_generate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">report_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tensorboard&quot;</span><span class="p">],</span>
+                <span class="o">**</span><span class="n">fixed_training_args</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">args</span></div>
+
+<div class="viewcode-block" id="HFTransformersManager.load_model_init"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_model_init">[docs]</a>    <span class="k">def</span> <span class="nf">load_model_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load the model init function.</span>
+
+<span class="sd">        This function is useful for the Transformers integration with Optuna.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model_cls</span>
+<span class="sd">            Class for the model.</span>
+<span class="sd">        config: AutoConfig</span>
+<span class="sd">            Configuration for the model.</span>
+<span class="sd">        tokenizer: transformers.PretrainedTokenizer</span>
+<span class="sd">            Tokenizer to preprocess text data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        model_init</span>
+<span class="sd">            Function for initializing the model. Furtherly passed to the Trainer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;seq2seq&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">model_init</span><span class="p">():</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">EncoderDecoderModel</span><span class="o">.</span><span class="n">from_encoder_decoder_pretrained</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">encoder_name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">decoder_name</span><span class="p">,</span>
+                    <span class="n">tie_encoder_decoder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">tie_encoder_decoder</span><span class="p">,</span>
+                    <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">decoder_start_token_id</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token_id</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">eos_token_id</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token_id</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">pad_token_id</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">pad_token_id</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">vocab_size</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">max_length_summary</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">min_length_summary</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">no_repeat_ngram_size</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">no_repeat_ngram_size</span>
+                <span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">early_stopping</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">early_stopping_summarization</span>
+                <span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">length_penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">length_penalty</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_beams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">num_beams</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">bos_token_id</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token_id</span> <span class="k">if</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">model</span>
+
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_model_class</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">model_init</span><span class="p">():</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Model init function needed by optuna to initialize the model.&quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">is_multilabel</span><span class="p">:</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;problem_type&quot;</span><span class="p">:</span> <span class="s2">&quot;multi_label_classification&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;num_labels&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">config_num_labels</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
+                <span class="k">return</span> <span class="n">model_cls</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                    <span class="n">use_auth_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_config_class</span><span class="p">:</span>
+
+                <span class="k">def</span> <span class="nf">model_init</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_model_class</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_config_class</span>
+                    <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="k">def</span> <span class="nf">model_init</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_model_class</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+                    <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">model_init</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alejandro Vaca.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

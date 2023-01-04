@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nlpboost.augmentation package &mdash; nlpboost  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="nlpboost package" href="nlpboost.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> nlpboost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">nlpboost</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nlpboost.html">nlpboost package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nlpboost.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nlpboost.augmentation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.autotrainer">nlpboost.autotrainer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.ckpt_cleaner">nlpboost.ckpt_cleaner module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.dataset_config">nlpboost.dataset_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.default_param_spaces">nlpboost.default_param_spaces module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.hfdatasets_manager">nlpboost.hfdatasets_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.hftransformers_manager">nlpboost.hftransformers_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.metrics">nlpboost.metrics module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.metrics_plotter">nlpboost.metrics_plotter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.model_config">nlpboost.model_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.results_getter">nlpboost.results_getter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.tokenization_functions">nlpboost.tokenization_functions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost.utils">nlpboost.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nlpboost.html#module-nlpboost">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nlpboost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">nlpboost</a></li>
+          <li class="breadcrumb-item"><a href="nlpboost.html">nlpboost package</a></li>
+      <li class="breadcrumb-item active">nlpboost.augmentation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nlpboost.augmentation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nlpboost-augmentation-package">
+<h1>nlpboost.augmentation package<a class="headerlink" href="#nlpboost-augmentation-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nlpboost.augmentation.TextAugmenterPipeline">
+<span id="nlpboost-augmentation-textaugmenterpipeline-module"></span><h2>nlpboost.augmentation.TextAugmenterPipeline module<a class="headerlink" href="#module-nlpboost.augmentation.TextAugmenterPipeline" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.augmentation.TextAugmenterPipeline.</span></span><span class="sig-name descname"><span class="pre">NLPAugPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/augmentation/TextAugmenterPipeline.html#NLPAugPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Augment text data, with various forms of augmenting. It uses <cite>nlpaug</cite> in the background.
+The configuration of the augmentation pipeline is done with <cite>nlpboost.augmentation.augmenter_config.NLPAugConfig</cite>.
+NLPAugPipeline receives a list of configs of that type, where each config defines a type
+of augmentation technique to use, as well as the proportion of the train dataset that is
+to be augmented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> (<em>List</em><em>[</em><a class="reference internal" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig" title="nlpboost.augmentation.augmenter_config.NLPAugConfig"><em>nlpboost.augmentation.augmenter_config.NLPAugConfig</em></a><em>]</em>) – List of steps. Each step must be a NLPAugConfig instance.</p></li>
+<li><p><strong>text_field</strong> (<em>str</em>) – Name of the field in the dataset where texts are.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline.augment">
+<span class="sig-name descname"><span class="pre">augment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/augmentation/TextAugmenterPipeline.html#NLPAugPipeline.augment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline.augment" title="Permalink to this definition"></a></dt>
+<dd><p>Augment data for datasets samples following the configuration defined at init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>samples</strong> – Samples from a datasets.Dataset</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Samples from a datasets.Dataset but processed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>samples</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nlpboost.augmentation.augmenter_config">
+<span id="nlpboost-augmentation-augmenter-config-module"></span><h2>nlpboost.augmentation.augmenter_config module<a class="headerlink" href="#module-nlpboost.augmentation.augmenter_config" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nlpboost.augmentation.augmenter_config.NLPAugConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.augmentation.augmenter_config.</span></span><span class="sig-name descname"><span class="pre">NLPAugConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">augmenter_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proportion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aug_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/augmentation/augmenter_config.html#NLPAugConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for augmenters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the data augmentation technique. Possible values currently are <cite>ocr</cite> (for OCR augmentation), <cite>contextual_w_e</cite>
+for Contextual Word Embedding augmentation, <cite>synonym</cite>, <cite>backtranslation</cite>, <cite>contextual_s_e</cite> for Contextual Word Embeddings for Sentence Augmentation,
+<cite>abstractive_summ</cite>. If using a custom augmenter class this can be a random name.</p></li>
+<li><p><strong>augmenter_cls</strong> (<em>Any</em>) – An optional augmenter class, from <cite>nlpaug</cite> library. Can be used instead of using an identifier name
+for loading the class (see param <cite>name</cite> of this class).</p></li>
+<li><p><strong>proportion</strong> (<em>float</em>) – Proportion of data augmentation.</p></li>
+<li><p><strong>aug_kwargs</strong> (<em>Dict</em>) – Arguments for the data augmentation class. See <a class="reference external" href="https://github.com/makcedward/nlpaug/blob/master/example/textual_augmenter.ipynb">https://github.com/makcedward/nlpaug/blob/master/example/textual_augmenter.ipynb</a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nlpboost.augmentation.augmenter_config.NLPAugConfig.aug_kwargs">
+<span class="sig-name descname"><span class="pre">aug_kwargs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig.aug_kwargs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nlpboost.augmentation.augmenter_config.NLPAugConfig.augmenter_cls">
+<span class="sig-name descname"><span class="pre">augmenter_cls</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig.augmenter_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nlpboost.augmentation.augmenter_config.NLPAugConfig.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nlpboost.augmentation.augmenter_config.NLPAugConfig.proportion">
+<span class="sig-name descname"><span class="pre">proportion</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig.proportion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nlpboost.augmentation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nlpboost.augmentation" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nlpboost.html" class="btn btn-neutral float-left" title="nlpboost package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alejandro Vaca.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

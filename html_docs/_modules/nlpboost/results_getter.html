@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nlpboost.results_getter &mdash; nlpboost  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> nlpboost
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nlpboost</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nlpboost.results_getter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nlpboost.results_getter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">evaluate</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">match_questions_multiple_answers</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<div class="viewcode-block" id="ResultsGetter"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter">[docs]</a><span class="k">class</span> <span class="nc">ResultsGetter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve results on the test set for different tasks (seq2seq, different forms of classification, NER, QA...).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataset_config: nlpboost.DatasetConfig</span>
+<span class="sd">        Configuration for the dataset.</span>
+<span class="sd">    model_config: nlpboost.ModelConfig</span>
+<span class="sd">        Configuration for the model.</span>
+<span class="sd">    compute_metrics_func: Any</span>
+<span class="sd">        Function to compute metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dataset_config</span><span class="p">,</span>
+        <span class="n">model_config</span><span class="p">,</span>
+        <span class="n">compute_metrics_func</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span> <span class="o">=</span> <span class="n">dataset_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="o">=</span> <span class="n">model_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span> <span class="o">=</span> <span class="n">compute_metrics_func</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get results for test dataset, using a trained transformers.Trainer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trainer: transformers.Trainer</span>
+<span class="sd">            Trainer trained, to get raw predictions on the test dataset.</span>
+<span class="sd">        test_dataset: datasets.Dataset</span>
+<span class="sd">            Test dataset for inference. Metrics are computed on this dataset.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        test_results: Dict</span>
+<span class="sd">            Dictionary with test results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;qa&quot;</span><span class="p">:</span>
+            <span class="n">test_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_test_results_qa</span><span class="p">(</span>
+                <span class="n">test_dataset</span><span class="p">,</span>
+                <span class="n">trainer</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">squad_v2</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">:</span>
+            <span class="n">test_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_test_results_summarization</span><span class="p">(</span>
+                <span class="n">test_dataset</span><span class="p">,</span>
+                <span class="n">trainer</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span><span class="p">,</span>
+                <span class="n">additional_metrics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">additional_metrics</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">test_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">general_get_test_results</span><span class="p">(</span>
+                <span class="n">test_dataset</span><span class="p">,</span>
+                <span class="n">trainer</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">test_results</span>
+
+<div class="viewcode-block" id="ResultsGetter.get_test_results_summarization"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.get_test_results_summarization">[docs]</a>    <span class="k">def</span> <span class="nf">get_test_results_summarization</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute and get the results in test for summarization tasks.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_dataset: datasets.Dataset</span>
+<span class="sd">            Test dataset.</span>
+<span class="sd">        trainer: transformers.Trainer</span>
+<span class="sd">            HF&#39;s transformers trainer.</span>
+<span class="sd">        compute_metrics_func: Any</span>
+<span class="sd">            Function to compute metrics.</span>
+<span class="sd">        model_config: ModelConfig</span>
+<span class="sd">            Configuration for the model.</span>
+<span class="sd">        additional_metrics: List</span>
+<span class="sd">            List with additional metrics to compute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metrics: Dict</span>
+<span class="sd">            Dictionary with metrics for the summarization task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">generation_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+                <span class="n">test_dataset</span><span class="p">,</span>
+                <span class="n">max_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">max_length_summary</span><span class="p">,</span>
+                <span class="n">num_beams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">num_beams</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+                <span class="n">test_dataset</span><span class="p">,</span>
+                <span class="n">max_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">max_length_summary</span><span class="p">,</span>
+                <span class="n">num_beams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">num_beams</span><span class="p">,</span>
+                <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">generation_params</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">compute_metrics_func</span><span class="p">(</span>
+            <span class="n">preds</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="n">additional_metrics</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">metrics</span></div>
+
+<div class="viewcode-block" id="ResultsGetter.general_get_test_results"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.general_get_test_results">[docs]</a>    <span class="k">def</span> <span class="nf">general_get_test_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute metrics in general for every NLU task except for QA.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_dataset: datasets.Dataset</span>
+<span class="sd">            Dataset  on any task except for QA.</span>
+<span class="sd">        trainer: transformers.Trainer</span>
+<span class="sd">            Trainer trained on a dataset that is not a QA dataset.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metrics: Dict</span>
+<span class="sd">            Metrics for the test dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">)</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">compute_metrics_func</span><span class="p">(</span>
+            <span class="n">preds</span><span class="p">,</span>
+            <span class="n">tokenizer</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+            <span class="n">id2tag</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id2label</span><span class="p">,</span>
+            <span class="n">additional_metrics</span><span class="o">=</span><span class="n">additional_metrics</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">metrics</span></div>
+
+<div class="viewcode-block" id="ResultsGetter.get_test_results_qa"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.get_test_results_qa">[docs]</a>    <span class="k">def</span> <span class="nf">get_test_results_qa</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">squad_v2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute metrics on test for QA datasets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test_dataset: datasets.Dataset</span>
+<span class="sd">            QA dataset.</span>
+<span class="sd">        trainer: transformers.Trainer</span>
+<span class="sd">            Trainer trained on QA dataset.</span>
+<span class="sd">        squad_v2: bool</span>
+<span class="sd">            Whether the dataset is in squad v2 format or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metrics: Dict</span>
+<span class="sd">            Metrics for the test dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validation_features</span> <span class="o">=</span> <span class="n">test_dataset</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="n">partial</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prepare_validation_features_squad</span><span class="p">,</span>
+                <span class="n">tokenizer</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">batched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">remove_columns</span><span class="o">=</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">column_names</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">raw_predictions</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">validation_features</span><span class="p">)</span>
+        <span class="n">validation_features</span><span class="o">.</span><span class="n">set_format</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">validation_features</span><span class="o">.</span><span class="n">format</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">validation_features</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+        <span class="p">)</span>
+        <span class="n">final_predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocess_qa_predictions</span><span class="p">(</span>
+            <span class="n">test_dataset</span><span class="p">,</span>
+            <span class="n">validation_features</span><span class="p">,</span>
+            <span class="n">raw_predictions</span><span class="o">.</span><span class="n">predictions</span><span class="p">,</span>
+            <span class="n">tokenizer</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">final_predictions</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">final_predictions</span> <span class="o">=</span> <span class="n">final_predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">metric</span><span class="p">,</span> <span class="n">formatted_predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metric_and_formatted_predictions</span><span class="p">(</span>
+            <span class="n">final_predictions</span><span class="p">,</span> <span class="n">squad_v2</span>
+        <span class="p">)</span>
+
+        <span class="n">references</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">ex</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="s2">&quot;answers&quot;</span><span class="p">:</span> <span class="n">ex</span><span class="p">[</span><span class="s2">&quot;answers&quot;</span><span class="p">]}</span> <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">test_dataset</span><span class="p">]</span>
+
+        <span class="n">references</span> <span class="o">=</span> <span class="n">match_questions_multiple_answers</span><span class="p">(</span><span class="n">formatted_predictions</span><span class="p">,</span> <span class="n">references</span><span class="p">)</span>
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span>
+            <span class="n">predictions</span><span class="o">=</span><span class="n">formatted_predictions</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="n">references</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">metrics</span></div>
+
+<div class="viewcode-block" id="ResultsGetter.prepare_validation_features_squad"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.prepare_validation_features_squad">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_validation_features_squad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">examples</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">pad_on_right</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process features for validating on squad-like datasets.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        examples: datasets.Dataset</span>
+<span class="sd">            Samples from datasets.Dataset.</span>
+<span class="sd">        tokenizer: tokenizers.Tokenizer</span>
+<span class="sd">            Instance of hf&#39;s tokenizer.</span>
+<span class="sd">        pad_on_right: bool</span>
+<span class="sd">            Whether or not to pad the samples on the right side. True for most models.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tokenized_examples:</span>
+<span class="sd">            Tokenized samples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">id_field</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">id_field_qa</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;id&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Some of the questions have lots of whitespace on the left, which is not useful and will make the</span>
+        <span class="c1"># truncation of the context fail (the tokenized question will take a lots of space). So we remove that</span>
+        <span class="c1"># left whitespace</span>
+        <span class="n">examples</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">examples</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]]</span>
+
+        <span class="c1"># Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results</span>
+        <span class="c1"># in one example possible giving several features when a context is long, each of those features having a</span>
+        <span class="c1"># context that overlaps a bit the context of the previous feature.</span>
+        <span class="n">tokenized_examples</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span>
+            <span class="n">examples</span><span class="p">[</span><span class="s2">&quot;question&quot;</span> <span class="k">if</span> <span class="n">pad_on_right</span> <span class="k">else</span> <span class="s2">&quot;context&quot;</span><span class="p">],</span>
+            <span class="n">examples</span><span class="p">[</span><span class="s2">&quot;context&quot;</span> <span class="k">if</span> <span class="n">pad_on_right</span> <span class="k">else</span> <span class="s2">&quot;question&quot;</span><span class="p">],</span>
+            <span class="n">truncation</span><span class="o">=</span><span class="s2">&quot;only_second&quot;</span> <span class="k">if</span> <span class="n">pad_on_right</span> <span class="k">else</span> <span class="s2">&quot;only_first&quot;</span><span class="p">,</span>
+            <span class="n">max_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+            <span class="n">return_overflowing_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">return_offsets_mapping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;max_length&quot;</span><span class="p">,</span>
+            <span class="n">is_split_into_words</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># Since one example might give us several features if it has a long context, we need a map from a feature to</span>
+        <span class="c1"># its corresponding example. This key gives us just that.</span>
+        <span class="n">sample_mapping</span> <span class="o">=</span> <span class="n">tokenized_examples</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;overflow_to_sample_mapping&quot;</span><span class="p">)</span>
+
+        <span class="c1"># We keep the example_id that gave us this feature and we will store the offset mappings.</span>
+        <span class="n">tokenized_examples</span><span class="p">[</span><span class="s2">&quot;example_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokenized_examples</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">])):</span>
+            <span class="c1"># Grab the sequence corresponding to that example (to know what is the context and what is the question).</span>
+            <span class="n">sequence_ids</span> <span class="o">=</span> <span class="n">tokenized_examples</span><span class="o">.</span><span class="n">sequence_ids</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">context_index</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">pad_on_right</span> <span class="k">else</span> <span class="mi">0</span>
+
+            <span class="c1"># One example can give several spans, this is the index of the example containing this span of text.</span>
+            <span class="n">sample_index</span> <span class="o">=</span> <span class="n">sample_mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">tokenized_examples</span><span class="p">[</span><span class="s2">&quot;example_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">examples</span><span class="p">[</span><span class="n">id_field</span><span class="p">][</span><span class="n">sample_index</span><span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># id</span>
+
+            <span class="c1"># Set to None the offset_mapping that are not part of the context so it&#39;s easy to determine if a token</span>
+            <span class="c1"># position is part of the context or not.</span>
+            <span class="n">tokenized_examples</span><span class="p">[</span><span class="s2">&quot;offset_mapping&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">o</span> <span class="k">if</span> <span class="n">sequence_ids</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">context_index</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tokenized_examples</span><span class="p">[</span><span class="s2">&quot;offset_mapping&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">tokenized_examples</span></div>
+
+<div class="viewcode-block" id="ResultsGetter.postprocess_qa_predictions"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.postprocess_qa_predictions">[docs]</a>    <span class="k">def</span> <span class="nf">postprocess_qa_predictions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">examples</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">,</span>
+        <span class="n">raw_predictions</span><span class="p">,</span>
+        <span class="n">tokenizer</span><span class="p">,</span>
+        <span class="n">n_best_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">max_answer_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">squad_v2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">min_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process raw predictions of a QA model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        examples: datasets.Dataset</span>
+<span class="sd">            Samples from datasets.Dataset.</span>
+<span class="sd">        features:</span>
+<span class="sd">            Validation features as processed by prepare_validation_features_squad.</span>
+<span class="sd">        raw_predictions:</span>
+<span class="sd">            Predictions by trainer.</span>
+<span class="sd">        tokenizer: tokenizers.Tokenizer</span>
+<span class="sd">            Instance of hf&#39;s tokenizer.</span>
+<span class="sd">        n_best_size: int</span>
+<span class="sd">            Number of best answers to get (maximum).</span>
+<span class="sd">        max_answer_length: int</span>
+<span class="sd">            Maximum answer length in number of characters. Answer longer than this are not even considered.</span>
+<span class="sd">        squad_v2: bool</span>
+<span class="sd">            Whether the dataset is in squad v2 format or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        predictions: collections.OrderedDict</span>
+<span class="sd">            An ordered dict with the predictions formatted so that we can compute metrics easily.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># After raw predictions are taken by a QA model, this function processes them</span>
+        <span class="c1"># and sorts them in terms of score etc. It also takes the concrete text that</span>
+        <span class="c1"># was predicted given the predicted start and end tokens.</span>
+        <span class="n">id_field</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">id_field_qa</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;id&quot;</span>
+        <span class="p">)</span>
+        <span class="n">all_start_logits</span><span class="p">,</span> <span class="n">all_end_logits</span> <span class="o">=</span> <span class="n">raw_predictions</span>
+        <span class="c1"># Build a map example to its corresponding features.</span>
+        <span class="n">example_id_to_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">examples</span><span class="p">[</span><span class="n">id_field</span><span class="p">])}</span>  <span class="c1"># id</span>
+        <span class="n">features_per_example</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+            <span class="n">features_per_example</span><span class="p">[</span><span class="n">example_id_to_index</span><span class="p">[</span><span class="n">feature</span><span class="p">[</span><span class="s2">&quot;example_id&quot;</span><span class="p">]]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">i</span>
+            <span class="p">)</span>
+
+        <span class="c1"># The dictionaries we have to fill.</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="c1"># Logging.</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Post-processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">examples</span><span class="p">)</span><span class="si">}</span><span class="s2"> example predictions split into </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="si">}</span><span class="s2"> features.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Let&#39;s loop over all the examples!</span>
+        <span class="k">for</span> <span class="n">example_index</span><span class="p">,</span> <span class="n">example</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">examples</span><span class="p">)):</span>
+            <span class="c1"># Those are the indices of the features associated to the current example.</span>
+            <span class="c1"># example[&quot;id&quot;]]#</span>
+            <span class="n">feature_indices</span> <span class="o">=</span> <span class="n">features_per_example</span><span class="p">[</span><span class="n">example_index</span><span class="p">]</span>
+
+            <span class="c1"># min_score  # Only used if squad_v2 is True.</span>
+            <span class="n">min_null_score</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">valid_answers</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">cls_scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">context</span> <span class="o">=</span> <span class="n">example</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">]</span>
+            <span class="c1"># input_ids = example[&quot;input_ids&quot;]</span>
+            <span class="c1"># Looping through all the features associated to the current example.</span>
+            <span class="k">for</span> <span class="n">feature_index</span> <span class="ow">in</span> <span class="n">feature_indices</span><span class="p">:</span>
+                <span class="c1"># We grab the predictions of the model for this feature.</span>
+                <span class="n">start_logits</span> <span class="o">=</span> <span class="n">all_start_logits</span><span class="p">[</span><span class="n">feature_index</span><span class="p">]</span>
+                <span class="n">end_logits</span> <span class="o">=</span> <span class="n">all_end_logits</span><span class="p">[</span><span class="n">feature_index</span><span class="p">]</span>
+                <span class="c1"># This is what will allow us to map some the positions in our logits to span of texts in the original</span>
+                <span class="c1"># context.</span>
+                <span class="n">offset_mapping</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">feature_index</span><span class="p">][</span><span class="s2">&quot;offset_mapping&quot;</span><span class="p">]</span>
+                <span class="c1"># Update minimum null prediction.</span>
+                <span class="n">cls_index</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">feature_index</span><span class="p">][</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
+                    <span class="n">tokenizer</span><span class="o">.</span><span class="n">cls_token_id</span>
+                <span class="p">)</span>
+                <span class="n">feature_null_score</span> <span class="o">=</span> <span class="n">start_logits</span><span class="p">[</span><span class="n">cls_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">end_logits</span><span class="p">[</span><span class="n">cls_index</span><span class="p">]</span>
+                <span class="n">cls_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_null_score</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">min_null_score</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">min_null_score</span> <span class="o">&lt;</span> <span class="n">feature_null_score</span><span class="p">:</span>
+                    <span class="n">min_null_score</span> <span class="o">=</span> <span class="n">feature_null_score</span>
+
+                <span class="c1"># Go through all possibilities for the `n_best_size` greater start and end logits.</span>
+                <span class="n">start_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">start_logits</span><span class="p">)[</span>
+                    <span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="n">n_best_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">end_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">end_logits</span><span class="p">)[</span>
+                    <span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="n">n_best_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">start_index</span> <span class="ow">in</span> <span class="n">start_indexes</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">end_index</span> <span class="ow">in</span> <span class="n">end_indexes</span><span class="p">:</span>
+                        <span class="c1"># Don&#39;t consider out-of-scope answers, either because the indices are out of bounds or correspond</span>
+                        <span class="c1"># to part of the input_ids that are not in the context.</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">start_index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset_mapping</span><span class="p">)</span>
+                            <span class="ow">or</span> <span class="n">end_index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset_mapping</span><span class="p">)</span>
+                            <span class="ow">or</span> <span class="n">offset_mapping</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+                            <span class="ow">or</span> <span class="n">offset_mapping</span><span class="p">[</span><span class="n">end_index</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+                        <span class="p">):</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># Don&#39;t consider answers with a length that is either &lt; 0 or &gt; max_answer_length.</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">end_index</span> <span class="o">&lt;</span> <span class="n">start_index</span>
+                            <span class="ow">or</span> <span class="n">end_index</span> <span class="o">-</span> <span class="n">start_index</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">max_answer_length</span>
+                        <span class="p">):</span>
+                            <span class="k">continue</span>
+
+                        <span class="n">start_char</span> <span class="o">=</span> <span class="n">offset_mapping</span><span class="p">[</span><span class="n">start_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">end_char</span> <span class="o">=</span> <span class="n">offset_mapping</span><span class="p">[</span><span class="n">end_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">text</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="n">start_char</span><span class="p">:</span><span class="n">end_char</span><span class="p">]</span>
+                        <span class="n">valid_answers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">start_logits</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span>
+                                <span class="o">+</span> <span class="n">end_logits</span><span class="p">[</span><span class="n">end_index</span><span class="p">],</span>
+                                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+                            <span class="p">}</span>
+                        <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_answers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">best_answer</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="n">valid_answers</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># In the very rare edge case we have not a single non-null prediction, we create a fake prediction to avoid</span>
+                <span class="c1"># failure.</span>
+                <span class="n">best_answer</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+
+            <span class="c1"># Let&#39;s pick our final answer: the best one or the null answer (only for squad_v2)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">squad_v2</span><span class="p">:</span>
+                <span class="n">predictions</span><span class="p">[</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">best_answer</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">min_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">thres</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">cls_scores</span><span class="p">),</span> <span class="n">min_score</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">thres</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cls_scores</span><span class="p">)</span>
+                <span class="n">answer</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">best_answer</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">best_answer</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">thres</span>
+                    <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">example</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+                    <span class="n">predictions</span><span class="p">[</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">answer</span>
+                    <span class="n">scores</span><span class="p">[</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">best_answer</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">predictions</span></div>
+
+<div class="viewcode-block" id="ResultsGetter.get_metric_and_formatted_predictions"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.get_metric_and_formatted_predictions">[docs]</a>    <span class="k">def</span> <span class="nf">get_metric_and_formatted_predictions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">final_predictions</span><span class="p">,</span> <span class="n">squad_v2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the metric from evaluate and the final predictions formatted.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        final_predictions: Dict</span>
+<span class="sd">            Predictions postprocessed.</span>
+<span class="sd">        squad_v2: bool</span>
+<span class="sd">            Whether it is squad_v2 mode or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metric: evaluate.Metric</span>
+<span class="sd">            Metric from the evaluate library.</span>
+<span class="sd">        formatted_predictions: Dict</span>
+<span class="sd">            Predictions in the correct format for the metric.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">squad_v2</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;squad&quot;</span><span class="p">)</span>
+            <span class="n">formatted_predictions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s2">&quot;prediction_text&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">final_predictions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;squad_v2&quot;</span><span class="p">)</span>
+            <span class="n">formatted_predictions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s2">&quot;prediction_text&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;no_answer_probability&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">final_predictions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">metric</span><span class="p">,</span> <span class="n">formatted_predictions</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Alejandro Vaca.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
