@@ -28,4 +28,4 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
 sphinxemoji==0.2.0
-git+https://github.com/avacaondata/nlpboost.git  
+# git+https://github.com/avacaondata/nlpboost.git  
