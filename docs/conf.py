@@ -19,7 +19,11 @@ author = 'Alejandro Vaca'
 
 extensions = ['sphinx.ext.napoleon', 'sphinx.ext.autodoc',
               'sphinx.ext.viewcode', 'sphinxemoji.sphinxemoji']
+
 napoleon_google_docstring = False
+napoleon_use_param = False
+napoleon_use_ivar = True
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
