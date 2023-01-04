@@ -9,7 +9,7 @@ The main functionality of ``nlpboost`` is depicted in the following figure, wher
 
 .. image:: ../imgs/nlpboost_diagram.png
    :target: ../imgs/nlpboost_diagram.png
-   :width: 1447
+   :width: 1400
    :alt: Diagram autotrainer
 
 
@@ -125,7 +125,7 @@ Here is a list of public projects that have used ``nlpboost`` as its main tool f
 MODULES
 -------
 
-The library is composed mainly of 3 important objects: the ModelConfig, DatasetConfig, and BenchMarker. The two first are useful for configuring the experiments in a user-friendly way; both of them are dataclasses. BenchMarker, on the other hand, serves for optimizing the models with the configurations passed to it. It uses Optuna in the background to optimize the models' parameters, which are passed in the ModelConfig.
+The library is composed mainly of 3 important objects: the ModelConfig, DatasetConfig, and AutoTrainer. The two first are useful for configuring the experiments in a user-friendly way; both of them are dataclasses. AutoTrainer, on the other hand, serves for optimizing the models with the configurations passed to it. It uses Optuna in the background to optimize the models' parameters, which are passed in the ModelConfig.
 
 ModelConfig
 ^^^^^^^^^^^
