@@ -1,4 +1,5 @@
 def hp_space_base(trial):
+    """Hyperparameter space in Optuna format for base-sized models (e.g. bert-base)."""
     return {
         "learning_rate": trial.suggest_float("learning_rate", 1e-5, 7e-5, log=True),
         "num_train_epochs": trial.suggest_categorical(
@@ -20,6 +21,7 @@ def hp_space_base(trial):
 
 
 def hp_space_large(trial):
+    """Hyperparameter space in Optuna format for large-sized models (e.g. bert-large)."""
     return {
         "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-4, log=True),
         "num_train_epochs": trial.suggest_categorical(
