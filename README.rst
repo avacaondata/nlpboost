@@ -51,13 +51,13 @@ To install ``nlpboost`` run:
 
 .. code-block::
 
-   pip install git+https://github.com/alexvaca0/nlpboost.git
+   pip install git+https://github.com/avacaondata/nlpboost.git
 
 If you prefer to have a local copy of the library, in case you want to customize any part of it or for whatever reason, you can install it from the local repository in editable mode, like this:
 
 .. code-block::
 
-   git clone https://github.com/alexvaca0/nlpboost.git
+   git clone https://github.com/avacaondata/nlpboost.git
    cd nlpboost
    pip install -e .
 
