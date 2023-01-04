@@ -88,10 +88,10 @@
 
 
 <div class="viewcode-block" id="MultilabelTrainer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.MultilabelTrainer">[docs]</a><span class="k">class</span> <span class="nc">MultilabelTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Version of the trainer used for multilabel setting.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Version of the trainer used for multilabel setting.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MultilabelTrainer.compute_loss"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.MultilabelTrainer.compute_loss">[docs]</a>    <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">return_outputs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute loss of the model.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute loss of the model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -130,7 +130,7 @@
 
 
 <div class="viewcode-block" id="HFTransformersManager"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager">[docs]</a><span class="k">class</span> <span class="nc">HFTransformersManager</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Utility for loading HF Transformers&#39; objects, using a dataset config and a model config.</span>
 
 <span class="sd">    Parameters</span>
@@ -147,7 +147,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">use_auth_token</span> <span class="o">=</span> <span class="n">use_auth_token</span>
 
 <div class="viewcode-block" id="HFTransformersManager.load_config"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_config">[docs]</a>    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">dropout</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load configuration for the model depending on the type of task we are doing.</span>
 
 <span class="sd">        Parameters</span>
@@ -200,7 +200,7 @@
         <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="HFTransformersManager.load_data_collator"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_data_collator">[docs]</a>    <span class="k">def</span> <span class="nf">load_data_collator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load data collator depending on the type of task we are doing.</span>
 
 <span class="sd">        Parameters</span>
@@ -223,7 +223,7 @@
 <div class="viewcode-block" id="HFTransformersManager.load_tokenizer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_tokenizer">[docs]</a>    <span class="k">def</span> <span class="nf">load_tokenizer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load tokenizer for the given model config and model name.</span>
 
 <span class="sd">        Returns</span>
@@ -255,7 +255,7 @@
         <span class="k">return</span> <span class="n">tokenizer</span></div>
 
 <div class="viewcode-block" id="HFTransformersManager.get_model_cls"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.get_model_cls">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the class to use for a model.</span>
 
 <span class="sd">        Returns</span>
@@ -284,7 +284,7 @@
         <span class="n">compute_metrics_func</span><span class="p">,</span>
         <span class="n">config</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load an instantiated Trainer object depending on the configuration.</span>
 
 <span class="sd">        Parameters</span>
@@ -337,7 +337,7 @@
         <span class="k">return</span> <span class="n">trainer</span></div>
 
 <div class="viewcode-block" id="HFTransformersManager.load_train_args"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_train_args">[docs]</a>    <span class="k">def</span> <span class="nf">load_train_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load training args depending on the task.</span>
 
 <span class="sd">        Parameters</span>
@@ -381,7 +381,7 @@
         <span class="k">return</span> <span class="n">args</span></div>
 
 <div class="viewcode-block" id="HFTransformersManager.load_model_init"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hftransformers_manager.HFTransformersManager.load_model_init">[docs]</a>    <span class="k">def</span> <span class="nf">load_model_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load the model init function.</span>
 
 <span class="sd">        This function is useful for the Transformers integration with Optuna.</span>
@@ -433,7 +433,7 @@
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">custom_model_class</span><span class="p">:</span>
 
             <span class="k">def</span> <span class="nf">model_init</span><span class="p">():</span>
-                <span class="sd">&quot;&quot;&quot;Model init function needed by optuna to initialize the model.&quot;&quot;&quot;</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Model init function needed by optuna to initialize the model.&quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span><span class="o">.</span><span class="n">is_multilabel</span><span class="p">:</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                         <span class="p">{</span>

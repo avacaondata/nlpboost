@@ -82,7 +82,7 @@
 
 
 <div class="viewcode-block" id="ResultsPlotter"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics_plotter.ResultsPlotter">[docs]</a><span class="k">class</span> <span class="nc">ResultsPlotter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tool for plotting the results of the models trained.</span>
 
 <span class="sd">    Parameters</span>
@@ -114,7 +114,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">metric_field</span> <span class="o">=</span> <span class="n">metric_field</span>
 
 <div class="viewcode-block" id="ResultsPlotter.plot_metrics"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics_plotter.ResultsPlotter.plot_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">plot_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Plot the metrics as a barplot.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot the metrics as a barplot.&quot;&quot;&quot;</span>
         <span class="n">df_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_metrics</span><span class="p">()</span>
         <span class="n">df_metrics</span> <span class="o">=</span> <span class="n">df_metrics</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
             <span class="p">[</span><span class="s2">&quot;dataset_name&quot;</span><span class="p">,</span> <span class="s2">&quot;model_name&quot;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span>
@@ -127,7 +127,7 @@
         <span class="k">return</span> <span class="n">plot</span></div>
 
     <span class="k">def</span> <span class="nf">_make_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build the plot with the dataset in the correct format.</span>
 
 <span class="sd">        Parameters</span>
@@ -172,7 +172,7 @@
 <div class="viewcode-block" id="ResultsPlotter.read_metrics"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics_plotter.ResultsPlotter.read_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">read_metrics</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Read the metrics in the self.metrics_dir directory, creating a dataset with the data.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the metrics in the self.metrics_dir directory, creating a dataset with the data.&quot;&quot;&quot;</span>
         <span class="n">dics</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">joinpaths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics_dir</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;reading metrics files...&quot;</span><span class="p">):</span>

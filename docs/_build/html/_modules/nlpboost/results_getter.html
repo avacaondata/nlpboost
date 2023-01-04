@@ -77,7 +77,7 @@
 
 
 <div class="viewcode-block" id="ResultsGetter"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter">[docs]</a><span class="k">class</span> <span class="nc">ResultsGetter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve results on the test set for different tasks (seq2seq, different forms of classification, NER, QA...).</span>
 
 <span class="sd">    Parameters</span>
@@ -101,7 +101,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span> <span class="o">=</span> <span class="n">compute_metrics_func</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get results for test dataset, using a trained transformers.Trainer.</span>
 
 <span class="sd">        Parameters</span>
@@ -140,7 +140,7 @@
 <div class="viewcode-block" id="ResultsGetter.get_test_results_summarization"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.get_test_results_summarization">[docs]</a>    <span class="k">def</span> <span class="nf">get_test_results_summarization</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute and get the results in test for summarization tasks.</span>
 
 <span class="sd">        Parameters</span>
@@ -182,7 +182,7 @@
 <div class="viewcode-block" id="ResultsGetter.general_get_test_results"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.general_get_test_results">[docs]</a>    <span class="k">def</span> <span class="nf">general_get_test_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute metrics in general for every NLU task except for QA.</span>
 
 <span class="sd">        Parameters</span>
@@ -209,7 +209,7 @@
 <div class="viewcode-block" id="ResultsGetter.get_test_results_qa"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.get_test_results_qa">[docs]</a>    <span class="k">def</span> <span class="nf">get_test_results_qa</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">squad_v2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute metrics on test for QA datasets.</span>
 
 <span class="sd">        Parameters</span>
@@ -262,7 +262,7 @@
         <span class="k">return</span> <span class="n">metrics</span></div>
 
 <div class="viewcode-block" id="ResultsGetter.prepare_validation_features_squad"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.prepare_validation_features_squad">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_validation_features_squad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">examples</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">pad_on_right</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process features for validating on squad-like datasets.</span>
 
 <span class="sd">        Parameters</span>
@@ -339,7 +339,7 @@
         <span class="n">squad_v2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">min_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process raw predictions of a QA model.</span>
 
 <span class="sd">        Parameters</span>
@@ -483,7 +483,7 @@
         <span class="k">return</span> <span class="n">predictions</span></div>
 
 <div class="viewcode-block" id="ResultsGetter.get_metric_and_formatted_predictions"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.results_getter.ResultsGetter.get_metric_and_formatted_predictions">[docs]</a>    <span class="k">def</span> <span class="nf">get_metric_and_formatted_predictions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">final_predictions</span><span class="p">,</span> <span class="n">squad_v2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the metric from evaluate and the final predictions formatted.</span>
 
 <span class="sd">        Parameters</span>

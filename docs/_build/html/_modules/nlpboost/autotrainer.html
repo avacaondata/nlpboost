@@ -99,7 +99,7 @@
 
 
 <div class="viewcode-block" id="AutoTrainer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.autotrainer.AutoTrainer">[docs]</a><span class="k">class</span> <span class="nc">AutoTrainer</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main class of nlpboost. Fine-tune and evaluate several models on several datasets.</span>
 
 <span class="sd">    Useful for performing benchmarking of different models on the same datasets,</span>
@@ -157,7 +157,7 @@
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use `train_with_fixed_params` or `optuna_hp_search` to carry out hyperparameter search defined in init.</span>
 <span class="sd">        Check the documentation of those methods for more information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -169,7 +169,7 @@
 <div class="viewcode-block" id="AutoTrainer.train_with_fixed_params"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.autotrainer.AutoTrainer.train_with_fixed_params">[docs]</a>    <span class="k">def</span> <span class="nf">train_with_fixed_params</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train without hyperparameter search, with a fixed set of params.</span>
 
 <span class="sd">        The default parameters are defined in the fixed_train_args of DatasetConfig.</span>
@@ -230,7 +230,7 @@
 <div class="viewcode-block" id="AutoTrainer.optuna_hp_search"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.autotrainer.AutoTrainer.optuna_hp_search">[docs]</a>    <span class="k">def</span> <span class="nf">optuna_hp_search</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Carry out hyperparameter search with Optuna.</span>
 
 <span class="sd">        By using the model_configs and dataset_configs passed in __call__. Iterate over</span>
@@ -310,7 +310,7 @@
 <div class="viewcode-block" id="AutoTrainer.train_one_model_fixed_params"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.autotrainer.AutoTrainer.train_one_model_fixed_params">[docs]</a>    <span class="k">def</span> <span class="nf">train_one_model_fixed_params</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">model_config</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="p">,</span> <span class="n">test_dataset</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train one model with fixed params in one dataset, without tuning parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -350,7 +350,7 @@
         <span class="n">output_dir</span><span class="p">,</span>
         <span class="n">test_dataset</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train one model in one dataset, with hyperparameter tuning, using Optuna.</span>
 <span class="sd">        Load a checkpoint cleaner in the background to clean bad performing checkpoints</span>
 <span class="sd">        every 10 minutes, also saving the best performing checkpoint. Then, carry out</span>
@@ -446,7 +446,7 @@
     <span class="k">def</span> <span class="nf">_get_test_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="p">,</span> <span class="n">model_config</span><span class="p">,</span> <span class="n">test_dataset</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get results for the test set. Metrics vary depending on the task.</span>
 <span class="sd">        Use `ResultsGetter` for dataset processing, obtaining the predictions</span>
 <span class="sd">        and getting the metrics. If desired, the user may change the behavior</span>
@@ -489,7 +489,7 @@
         <span class="n">modelname</span><span class="p">,</span>
         <span class="n">try_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a job to schedule cleaning process with CkptCleaner.</span>
 
 <span class="sd">        Parameters</span>
@@ -525,12 +525,12 @@
     <span class="k">def</span> <span class="nf">_adapt_tokenizer_summarization</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add bos and eos tokens to the tokenizer for summarization, in EncoderDecoder models.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add bos and eos tokens to the tokenizer for summarization, in EncoderDecoder models.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">cls_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">sep_token</span>
 
     <span class="k">def</span> <span class="nf">_get_compute_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the function to compute metrics with.</span>
 
 <span class="sd">        Parameters</span>
@@ -553,7 +553,7 @@
         <span class="k">return</span> <span class="n">compute_metrics_func</span>
 
     <span class="k">def</span> <span class="nf">_adapt_objects_summarization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_config</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adapt dataset config and model config, along with the tokenizer, for seq2seq tasks.</span>
 
 <span class="sd">        Parameters</span>

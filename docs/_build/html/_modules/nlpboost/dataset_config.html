@@ -74,7 +74,7 @@
 
 <div class="viewcode-block" id="DatasetConfig"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.dataset_config.DatasetConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">DatasetConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Configure a dataset for use within the AutoTrainer class.</span>
 
 <span class="sd">    This determines how to load the dataset,</span>
@@ -375,7 +375,7 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Representation of dataset config in str.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Representation of dataset config in str.&quot;&quot;&quot;</span>
         <span class="n">self_as_dict</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">attrs_as_str</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">self_as_dict</span><span class="o">.</span><span class="n">items</span><span class="p">())]</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attrs_as_str</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span></div>

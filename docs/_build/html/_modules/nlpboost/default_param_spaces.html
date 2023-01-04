@@ -69,7 +69,7 @@
              
   <h1>Source code for nlpboost.default_param_spaces</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="hp_space_base"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.default_param_spaces.hp_space_base">[docs]</a><span></span><span class="k">def</span> <span class="nf">hp_space_base</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Hyperparameter space in Optuna format for base-sized models (e.g. bert-base).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hyperparameter space in Optuna format for base-sized models (e.g. bert-base).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">7e-5</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="s2">&quot;num_train_epochs&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span>
@@ -91,7 +91,7 @@
 
 
 <div class="viewcode-block" id="hp_space_large"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.default_param_spaces.hp_space_large">[docs]</a><span class="k">def</span> <span class="nf">hp_space_large</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Hyperparameter space in Optuna format for large-sized models (e.g. bert-large).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hyperparameter space in Optuna format for large-sized models (e.g. bert-large).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="s2">&quot;num_train_epochs&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span>

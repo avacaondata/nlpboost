@@ -18,7 +18,7 @@ author = 'Alejandro Vaca'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ['sphinx.ext.napoleon', 'sphinx.ext.autodoc',
-              'sphinx.ext.viewcode', 'sphinxemoji.sphinxemoji']
+              'sphinx.ext.viewcode', 'sphinxemoji.sphinxemoji', 'numpydoc']
 napoleon_google_docstring = False
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
