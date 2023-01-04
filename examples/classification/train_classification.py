@@ -44,7 +44,7 @@ if __name__ == "__main__":
         save_name="bertin",
         hp_space=hp_space_base,
         n_trials=1,
-        only_test=True
+        only_test=False
     )
     autotrainer = AutoTrainer(
         model_configs=[model_config],
