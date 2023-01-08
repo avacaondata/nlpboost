@@ -65,7 +65,7 @@ def dict_to_list(
     example:
         Sample of huggingface Dataset, with an entities field containing
         the entities in the format mentioned above.
-    nulltoken: str
+    nulltoken: Union[str, int]
         Default token for the "no-entities". Usually O is used for this,
         which is the default value.
     entities_field: str
@@ -117,6 +117,7 @@ def dict_to_list(
         text_last = list(filter(filter_empty, text_last))
         token_list.extend(text_last)
         label_list.extend([nulltoken] * len(text_last))
+    assert len(token_list) == len(label_list), "Token list and label list should have the same length."
     example["token_list"] = token_list
     example["label_list"] = label_list
     return example
