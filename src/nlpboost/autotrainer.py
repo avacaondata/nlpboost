@@ -63,6 +63,8 @@ class AutoTrainer:
         checkpoint removals.
     use_auth_token: bool
         Whether to use auth token to load datasets and models.
+    skip_mixes: List
+        List of SkipMix instances with combinations of datasets and models that must be skipped.
     """
 
     def __init__(
@@ -74,6 +76,7 @@ class AutoTrainer:
         clean: bool = True,
         metrics_cleaner: str = "tmp_metrics_cleaner",
         use_auth_token: bool = False,
+        skip_mixes: List = None
     ):
         self.model_configs = model_configs
         self.dataset_configs = dataset_configs
@@ -84,6 +87,7 @@ class AutoTrainer:
         self.use_auth_token = use_auth_token
         os.makedirs(self.metrics_dir, exist_ok=True)
         self.use_auth_token = use_auth_token
+        self.skip_mixes = skip_mixes
 
     def __call__(
         self,
@@ -116,6 +120,9 @@ class AutoTrainer:
                 self.model_configs,
                 desc=f"Trying models on dataset {dataset_config.dataset_name}",
             ):
+                if self.skip_mixes is not None:
+                    if any([skip_mix.dataset_name == dataset_config.alias and skip_mix.model_name == model_config.save_name for skip_mix in self.skip_mixes]):
+                        continue
                 transformers_manager = HFTransformersManager(
                     model_config, dataset_config
                 )
@@ -182,6 +189,9 @@ class AutoTrainer:
                 self.model_configs,
                 desc=f"Trying models on dataset {dataset_config.dataset_name}",
             ):
+                if self.skip_mixes is not None:
+                    if any([skip_mix.dataset_name == dataset_config.alias and skip_mix.model_name == model_config.save_name for skip_mix in self.skip_mixes]):
+                        continue
                 transformers_manager = HFTransformersManager(
                     model_config, dataset_config
                 )

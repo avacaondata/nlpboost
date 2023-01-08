@@ -16,6 +16,7 @@ from nlpboost.hftransformers_manager import MultilabelTrainer
 from nlpboost.hftransformers_manager import HFTransformersManager
 from nlpboost.hfdatasets_manager import HFDatasetsManager
 from nlpboost.results_getter import ResultsGetter
+from nlpboost.skip_mix import SkipMix
 
 
 def _create_multilabel_dataset(savename):
@@ -129,6 +130,53 @@ def test_autotrainer_no_train():
     assert isinstance(
         all_results[model_config.save_name.replace("/", "-")], dict
     ), "The results from the model should come in Dict format."
+
+
+def test_autotrainer_skip_mix():
+    """Test autotrainer by skipping mixes of datasets and models we dont want to train."""
+
+    conll2002_config = {
+        "seed": 44,
+        "direction_optimize": "maximize",
+        "metric_optimize": "eval_f1-score",
+        "callbacks": [],
+        "fixed_training_args": fixed_train_args,
+        "dataset_name": "conll2002",
+        "alias": "conll2002",
+        "task": "ner",
+        "text_field": "tokens",
+        "hf_load_kwargs": {"path": "IIC/conll_tests"},
+        "label_col": "ner_tags",
+        "smoke_test": False,
+        "retrain_at_end": False,
+    }
+
+    conll2002_config = DatasetConfig(**conll2002_config)
+    model_config = ModelConfig(
+        name="CenIA/albert-tiny-spanish",
+        save_name="bsc@roberta",
+        hp_space=hp_space,
+        only_test=True,
+        save_dir="test_models",
+        n_trials=1,
+        random_init_trials=1,
+        custom_params_config_model={"model_type": "bert"},
+        overwrite_training_args={"seed": 69},
+    )
+    skip_mix = SkipMix(dataset_name=conll2002_config.alias, model_name=model_config.save_name)
+    autotrainer = AutoTrainer(
+        model_configs=[model_config],
+        dataset_configs=[conll2002_config],
+        metrics_dir="test_notrain",
+        use_auth_token=False,
+        clean=False,
+        skip_mixes=[skip_mix]
+    )
+    all_results = autotrainer()
+    assert not hasattr(autotrainer, "trainer"), "AutoTrainer should not have a trainer, as the experiment was skipped."
+    assert isinstance(
+        all_results, dict
+    ), f"All_results should be a Dict, and is {type(all_results)}"
 
 
 def test_autotrainer_smoke_test():

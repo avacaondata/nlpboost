@@ -21,3 +21,4 @@ from .tokenization_functions import (
 )
 from .results_getter import ResultsGetter
 from .default_param_spaces import hp_space_base, hp_space_large
+from .skip_mix import SkipMix
