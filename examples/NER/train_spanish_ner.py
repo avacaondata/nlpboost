@@ -1,6 +1,6 @@
 from nlpboost import AutoTrainer, DatasetConfig, ModelConfig, dict_to_list, ResultsPlotter
 from transformers import EarlyStoppingCallback
-
+from functools import partial
 
 if __name__ == "__main__":
     fixed_train_args = {
@@ -15,8 +15,8 @@ if __name__ == "__main__":
         "save_strategy": "steps",
         "save_total_limit": 2,
         "seed": 69,
-        "fp16": False,
-        "no_cuda": True,
+        "fp16": True,
+        "no_cuda": False,
         "dataloader_num_workers": 2,
         "load_best_model_at_end": True,
         "per_device_eval_batch_size": 16,
@@ -55,17 +55,17 @@ if __name__ == "__main__":
             "dataset_name": "ehealth_kd",
             "alias": "ehealth",
             "task": "ner",
-            "text_field": "sentence",
+            "text_field": "token_list",
             "hf_load_kwargs": {"path": "ehealth_kd"},
             "label_col": "label_list",
-            "pre_func": dict_to_list
+            "pre_func": partial(dict_to_list, nulltoken=100),
         }
     )
 
     ehealth_config = DatasetConfig(**ehealth_config)
 
     dataset_configs = [
-        conll2002_config,
+        # conll2002_config,
         ehealth_config
     ]
 
@@ -97,12 +97,14 @@ if __name__ == "__main__":
         name="PlanTL-GOB-ES/roberta-base-bne",
         save_name="bsc@roberta",
         hp_space=hp_space,
+        n_trials=1
     )
 
     bertin_config = ModelConfig(
         name="bertin-project/bertin-roberta-base-spanish",
         save_name="bertin",
-        hp_space=hp_space
+        hp_space=hp_space,
+        n_trials=1
     )
 
     model_configs = [bsc_config, bertin_config]
@@ -112,7 +114,7 @@ if __name__ == "__main__":
     autotrainer = AutoTrainer(
         model_configs=model_configs,
         dataset_configs=dataset_configs,
-        metrics_dir="pruebas_ner_bertin_bsc",
+        metrics_dir="metrics_spanish_ner",
     )
 
     results = autotrainer()
