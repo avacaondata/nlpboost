@@ -1,4 +1,7 @@
-# NLPBOOST: A library for automatic training and comparison of Transformer models 
+# NLPBOOST: A library for automatic training and comparison of Transformer models
+
+![nlpboost logo](./imgs/nlpboost_logo_3.png "Logo for nlpboost")
+
 
 `nlpboost` is useful for training multiple transformer-like models for a bunch of datasets in one go, without writing much code or using too much time (the machine does the effort, not you). It is highly integrated with HuggingFace libraries: Transformers, Datasets and Evaluate.
 
