@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -74,7 +75,7 @@
 
 <div class="viewcode-block" id="DatasetConfig"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.dataset_config.DatasetConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">DatasetConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Configure a dataset for use within the AutoTrainer class.</span>
 
 <span class="sd">    This determines how to load the dataset,</span>
@@ -163,11 +164,11 @@
 <span class="sd">    --------</span>
 <span class="sd">    One can easily create a DatasetConfig for dataset conll2002 just with the following:</span>
 
-<span class="sd">    &gt;&gt;&gt;from nlpboost import DatasetConfig</span>
+<span class="sd">    &gt;&gt;&gt; from nlpboost import DatasetConfig</span>
 
-<span class="sd">    &gt;&gt;&gt;config={&#39;fixed_train_args&#39;: {}, &#39;dataset_name&#39;: &#39;conll2002&#39;, &#39;alias&#39;: &#39;conll2002&#39;, &#39;task&#39;: &#39;ner&#39;, &#39;hf_load_kwargs&#39;: {&#39;path&#39;: &#39;conll2002&#39;, &#39;name&#39;: &#39;es&#39;}, &#39;label_col&#39;:&#39;ner_tags&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; config={&#39;fixed_training_args&#39;: {}, &#39;dataset_name&#39;: &#39;conll2002&#39;, &#39;alias&#39;: &#39;conll2002&#39;, &#39;task&#39;: &#39;ner&#39;, &#39;hf_load_kwargs&#39;: {&#39;path&#39;: &#39;conll2002&#39;, &#39;name&#39;: &#39;es&#39;}, &#39;label_col&#39;:&#39;ner_tags&#39;}</span>
 
-<span class="sd">    &gt;&gt;&gt;config = DatasetConfig(**config)</span>
+<span class="sd">    &gt;&gt;&gt; config = DatasetConfig(**config)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;The name of the dataset&quot;</span><span class="p">})</span>
@@ -375,7 +376,7 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Representation of dataset config in str.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Representation of dataset config in str.&quot;&quot;&quot;</span>
         <span class="n">self_as_dict</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">attrs_as_str</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">self_as_dict</span><span class="o">.</span><span class="n">items</span><span class="p">())]</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attrs_as_str</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span></div>

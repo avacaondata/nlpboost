@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -81,6 +82,7 @@
     <span class="n">tokenize_classification</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.augmentation</span> <span class="kn">import</span> <span class="n">NLPAugPipeline</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">PreTrainedTokenizer</span>
 
 
 <span class="n">tok_func_map</span> <span class="o">=</span> <span class="p">{</span>
@@ -92,14 +94,14 @@
 
 
 <div class="viewcode-block" id="HFDatasetsManager"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hfdatasets_manager.HFDatasetsManager">[docs]</a><span class="k">class</span> <span class="nc">HFDatasetsManager</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Utility for loading HF Datasets&#39; objects, using a DatasetConfig and a ModelConfig.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    dataset_config:</span>
+<span class="sd">    dataset_config: nlpboost.DatasetConfig</span>
 <span class="sd">        Configuration for the dataset</span>
-<span class="sd">    model_config:</span>
+<span class="sd">    model_config: nlpboost.ModelConfig</span>
 <span class="sd">        Configuration for the model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -107,16 +109,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset_config</span> <span class="o">=</span> <span class="n">dataset_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="o">=</span> <span class="n">model_config</span>
 
-<div class="viewcode-block" id="HFDatasetsManager.get_dataset_and_tag2id"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hfdatasets_manager.HFDatasetsManager.get_dataset_and_tag2id">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset_and_tag2id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HFDatasetsManager.get_dataset_and_tag2id"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.hfdatasets_manager.HFDatasetsManager.get_dataset_and_tag2id">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset_and_tag2id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">PreTrainedTokenizer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get dataset and tag2id depending on dataset and model config.</span>
-<span class="sd">        Using dataset config (task, etc) a preprocessing is applied to</span>
+
+<span class="sd">        Using dataset config (task, etc), a preprocessing is applied to</span>
 <span class="sd">        the dataset, tokenizing text data, returning a processed dataset</span>
 <span class="sd">        ready for the configured task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tokenizer:</span>
+<span class="sd">        tokenizer: transformers.PretrainedTokenizer</span>
 <span class="sd">            Tokenizer to process data.</span>
 
 <span class="sd">        Returns</span>
@@ -135,8 +138,8 @@
             <span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;validation&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">tag2id</span></div>
 
-    <span class="k">def</span> <span class="nf">_generic_load_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_generic_load_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">PreTrainedTokenizer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a generic dataset.</span>
 
 <span class="sd">        Load the dataset and process it depending on the dataset configuration,</span>
@@ -144,12 +147,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tokenizer:</span>
+<span class="sd">        tokenizer: transformers.PretrainedTokenizer</span>
 <span class="sd">            Tokenizer to process data.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        dataset: datasets.Dataset or datasets.DatasetDict</span>
+<span class="sd">        dataset: Union[datasets.Dataset,datasets.DatasetDict]</span>
 <span class="sd">            Dataset containing data for training, evaluation and testing.</span>
 <span class="sd">        tag2id: Dict</span>
 <span class="sd">            Dictionary mapping the label names to their numerical ids.</span>
@@ -174,7 +177,7 @@
         <span class="k">return</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">tag2id</span>
 
     <span class="k">def</span> <span class="nf">_parse_types_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the types of the dataset if needed from int to float for regression.</span>
 
 <span class="sd">        Parameters</span>
@@ -196,7 +199,7 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_smoke_test_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter dataset if smoke test.</span>
 
 <span class="sd">        Parameters</span>
@@ -215,7 +218,7 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_basic_dataset_loading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load the raw dataset based on dataset config.</span>
 
 <span class="sd">        Returns</span>
@@ -243,7 +246,7 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_augment_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Augment dataset based on dataset config.</span>
 
 <span class="sd">        Parameters</span>
@@ -267,7 +270,7 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_resplit_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-split dataset based on dataset config.</span>
 
 <span class="sd">        Parameters</span>
@@ -287,12 +290,12 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_partial_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Split the train part of the dataset to create a validation split which did not exist.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        dataset: datasets.Dataset or datasets.DatasetDict</span>
+<span class="sd">        dataset: Union[datasets.Dataset, datasets.DatasetDict]</span>
 <span class="sd">            Dataset containing data for training and testing.</span>
 
 <span class="sd">        Returns</span>
@@ -313,12 +316,12 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_complete_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Split the train part of the dataset to create a validation split and test split which did not exist.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        dataset: datasets.Dataset or datasets.DatasetDict</span>
+<span class="sd">        dataset: Union[datasets.Dataset, datasets.DatasetDict]</span>
 <span class="sd">            Dataset containing data for training.</span>
 
 <span class="sd">        Returns</span>
@@ -342,7 +345,7 @@
         <span class="k">return</span> <span class="n">dataset</span>
 
     <span class="k">def</span> <span class="nf">_general_label_mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag2id</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transcript the labels from label names to label ids, for classification and ner.</span>
 
 <span class="sd">        Parameters</span>
