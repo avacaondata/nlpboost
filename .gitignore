@@ -1,0 +1,5 @@
+*.json
+*.xml
+.coverage
+cover/
+*__pycache__*
