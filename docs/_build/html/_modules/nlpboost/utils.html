@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -82,24 +83,24 @@
 
 
 <span class="k">def</span> <span class="nf">_load_json</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a json file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Load a json file.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_save_json</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save data in a json file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Save data in a json file.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="joinpaths"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.utils.joinpaths">[docs]</a><span class="k">def</span> <span class="nf">joinpaths</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Join all paths passed as args.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Join all paths passed as args.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="filter_empty"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.utils.filter_empty">[docs]</a><span class="k">def</span> <span class="nf">filter_empty</span><span class="p">(</span><span class="n">string_list</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remove empty characters and spaces from list.</span>
 
 <span class="sd">    Parameters</span>
@@ -121,7 +122,7 @@
     <span class="n">entities_field</span><span class="o">=</span><span class="s2">&quot;entities&quot;</span><span class="p">,</span>
     <span class="n">sentence_field</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a dictionary of entities in the default format.</span>
 
 <span class="sd">    With start and end characters for each entity, into lists of words and</span>
@@ -135,7 +136,7 @@
 <span class="sd">    example:</span>
 <span class="sd">        Sample of huggingface Dataset, with an entities field containing</span>
 <span class="sd">        the entities in the format mentioned above.</span>
-<span class="sd">    nulltoken: str</span>
+<span class="sd">    nulltoken: Union[str, int]</span>
 <span class="sd">        Default token for the &quot;no-entities&quot;. Usually O is used for this,</span>
 <span class="sd">        which is the default value.</span>
 <span class="sd">    entities_field: str</span>
@@ -187,13 +188,14 @@
         <span class="n">text_last</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">filter_empty</span><span class="p">,</span> <span class="n">text_last</span><span class="p">))</span>
         <span class="n">token_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">text_last</span><span class="p">)</span>
         <span class="n">label_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">nulltoken</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_last</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_list</span><span class="p">),</span> <span class="s2">&quot;Token list and label list should have the same length.&quot;</span>
     <span class="n">example</span><span class="p">[</span><span class="s2">&quot;token_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token_list</span>
     <span class="n">example</span><span class="p">[</span><span class="s2">&quot;label_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_list</span>
     <span class="k">return</span> <span class="n">example</span></div>
 
 
 <div class="viewcode-block" id="get_windowed_match_context_answer"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.utils.get_windowed_match_context_answer">[docs]</a><span class="k">def</span> <span class="nf">get_windowed_match_context_answer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">answer</span><span class="p">,</span> <span class="n">maxrange</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find the best possible match for an answer in the context.</span>
 
 <span class="sd">    Useful for translated QA datasets, where we don&#39;t have exact translations</span>
@@ -247,7 +249,7 @@
 
 
 <span class="k">def</span> <span class="nf">_fix_json</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fix a json that has incorrect data types.</span>
 
 <span class="sd">    Parameters</span>
@@ -278,14 +280,14 @@
 
 
 <span class="k">def</span> <span class="nf">_parse_modelname</span><span class="p">(</span><span class="n">modelname</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix a modelname if it has &quot;/&quot; instead of &quot;-&quot; .&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Fix a modelname if it has &quot;/&quot; instead of &quot;-&quot; .&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">modelname</span><span class="p">:</span>
         <span class="n">modelname</span> <span class="o">=</span> <span class="n">modelname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">modelname</span>
 
 
 <span class="k">def</span> <span class="nf">_save_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">metrics_dir</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save metrics in the metrics directory.</span>
 
 <span class="sd">    Parameters</span>
@@ -319,7 +321,7 @@
 
 
 <span class="k">def</span> <span class="nf">_unwrap_reference</span><span class="p">(</span><span class="n">reference</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unwraps a reference into multiple ones if the question has more than one answer.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Unwraps a reference into multiple ones if the question has more than one answer.&quot;&quot;&quot;</span>
     <span class="n">new_references</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">answers</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref</span><span class="p">[</span><span class="s2">&quot;answers&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">reference</span><span class="p">]</span>
@@ -331,7 +333,7 @@
 
 
 <div class="viewcode-block" id="match_questions_multiple_answers"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.utils.match_questions_multiple_answers">[docs]</a><span class="k">def</span> <span class="nf">match_questions_multiple_answers</span><span class="p">(</span><span class="n">formatted_predictions</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if any of the given answers for a question coincides with our answer.</span>
 
 <span class="sd">    Parameters</span>
@@ -379,7 +381,7 @@
 
 
 <div class="viewcode-block" id="get_tags"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.utils.get_tags">[docs]</a><span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the list of unique tags for a dataset.</span>
 
 <span class="sd">    Parameters</span>
@@ -416,7 +418,7 @@
 
 
 <span class="k">def</span> <span class="nf">_tokenize_dataset</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">tok_func_map</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">dataset_config</span><span class="p">,</span> <span class="n">model_config</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tokenize dataset, depending on the configuration of dataset and model config.</span>
 
 <span class="sd">    Parameters</span>
@@ -462,7 +464,7 @@
 
 
 <div class="viewcode-block" id="chunks"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.utils.chunks">[docs]</a><span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Split a list into n-sized chunks.</span>
 
 <span class="sd">    Parameters</span>

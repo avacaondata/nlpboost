@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -75,7 +76,7 @@
 
 <div class="viewcode-block" id="ModelConfig"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.model_config.ModelConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">ModelConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Configure a model to use inside the AutoTrainer class.</span>
 
 <span class="sd">    With this we determine every choice related to the model</span>
@@ -160,11 +161,11 @@
 <span class="sd">    --------</span>
 <span class="sd">    With the following lines you can create a ModelConfig for bert-base-cased model.</span>
 
-<span class="sd">    &gt;&gt;&gt;from nlpboost import ModelConfig</span>
+<span class="sd">    &gt;&gt;&gt; from nlpboost import ModelConfig</span>
 
-<span class="sd">    &gt;&gt;&gt;from nlpboost.default_param_spaces import hp_space_base</span>
+<span class="sd">    &gt;&gt;&gt; from nlpboost.default_param_spaces import hp_space_base</span>
 
-<span class="sd">    &gt;&gt;&gt;model_config = ModelConfig(name=&#39;bert-base-cased&#39;, save_name=&#39;bert&#39;, hp_space=hp_space_base)</span>
+<span class="sd">    &gt;&gt;&gt; model_config = ModelConfig(name=&#39;bert-base-cased&#39;, save_name=&#39;bert&#39;, hp_space=hp_space_base)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>

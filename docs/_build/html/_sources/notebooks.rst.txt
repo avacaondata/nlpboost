@@ -1,0 +1,1 @@
+.. include:: ../notebooks/README.rst

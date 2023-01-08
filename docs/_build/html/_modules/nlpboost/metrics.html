@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -79,12 +80,13 @@
 <span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;punkt&quot;</span><span class="p">)</span>
 
 <span class="n">metric_sum</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;rouge&quot;</span><span class="p">)</span>
+<span class="n">metric_seqeval</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;seqeval&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="compute_metrics_classification"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics.compute_metrics_classification">[docs]</a><span class="k">def</span> <span class="nf">compute_metrics_classification</span><span class="p">(</span>
     <span class="n">pred</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id2tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute metrics for classification (multi-class or binary) tasks.</span>
 
 <span class="sd">    Parameters</span>
@@ -114,7 +116,7 @@
 <div class="viewcode-block" id="compute_metrics_multilabel"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics.compute_metrics_multilabel">[docs]</a><span class="k">def</span> <span class="nf">compute_metrics_multilabel</span><span class="p">(</span>
     <span class="n">pred</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id2tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the metrics for a multilabel task.</span>
 
 <span class="sd">    Parameters</span>
@@ -158,11 +160,12 @@
 
 
 <div class="viewcode-block" id="compute_metrics_ner"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics.compute_metrics_ner">[docs]</a><span class="k">def</span> <span class="nf">compute_metrics_ner</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id2tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute metrics for ner.</span>
 
-<span class="sd">    Useful for ner such as precision, recall, f1, accuracy.</span>
-<span class="sd">    It is used to report metrics on eval set while training.</span>
+<span class="sd">    Use seqeval metric from HF Evaluate. Get the predicted label for each instance,</span>
+<span class="sd">    then skip padded tokens and finally use seqeval metric, which takes into account</span>
+<span class="sd">    full entities, not individual tokens, when computing the metrics.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -197,19 +200,15 @@
         <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">id2tag</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
     <span class="p">]</span>
-    <span class="n">class_report</span> <span class="o">=</span> <span class="n">classification_report</span><span class="p">(</span>
-        <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">true_labels</span><span class="p">)),</span>
-        <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">true_predictions</span><span class="p">)),</span>
-        <span class="n">output_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">metrics</span> <span class="o">=</span> <span class="n">class_report</span><span class="p">[</span><span class="s2">&quot;macro avg&quot;</span><span class="p">]</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">metric_seqeval</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">predictions</span><span class="o">=</span><span class="n">true_predictions</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="n">true_labels</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;f1-score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;overall_f1&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">metrics</span></div>
 
 
 <div class="viewcode-block" id="compute_metrics_summarization"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.metrics.compute_metrics_summarization">[docs]</a><span class="k">def</span> <span class="nf">compute_metrics_summarization</span><span class="p">(</span>
     <span class="n">eval_pred</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">id2tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">additional_metrics</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute metrics for summarization tasks, by using rouge metrics in datasets library.</span>
 
 <span class="sd">    Parameters</span>

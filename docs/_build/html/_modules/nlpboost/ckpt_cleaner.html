@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -72,14 +73,20 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_load_json</span><span class="p">,</span> <span class="n">_save_json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
 
 
 <div class="viewcode-block" id="CkptCleaner"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner">[docs]</a><span class="k">class</span> <span class="nc">CkptCleaner</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clean all checkpoints that are not longer useful.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clean all checkpoints that are no longer useful.</span>
 
-<span class="sd">    CkptCleaner makes sure that not too much checkpoints are saved. To do so,</span>
-<span class="sd">    it removes the checkpoints which have not achieved the best results.</span>
+<span class="sd">    Use a metrics dictionary to check the results of all runs of a model</span>
+<span class="sd">    for a dataset, then sort these metrics to decide which checkpoints are</span>
+<span class="sd">    removable and which are among the four best. When called, only those</span>
+<span class="sd">    are kept, and all the other checkpoints are removed. This enables the</span>
+<span class="sd">    user to effectively use their computer resources, so there is no need to</span>
+<span class="sd">    worry about the disk usage, which is a typical concern when running multiple</span>
+<span class="sd">    transformer models.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -88,7 +95,7 @@
         <span class="n">current_dataset_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">metrics_save_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">modelname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
         <span class="n">try_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_folder_clean</span> <span class="o">=</span> <span class="n">current_folder_clean</span>
@@ -101,8 +108,8 @@
 
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics_save_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_last</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_last</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check the metrics folder and remove checkpoints of models not performing well (all except 4 best).</span>
 
 <span class="sd">        Called by a scheduler, to eventually remove the undesired checkpoints.</span>
@@ -187,8 +194,8 @@
                 <span class="p">]</span>  <span class="c1"># REMOVE ALL BUT BEST 4 CHECKPOINTS.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove_dirs</span><span class="p">(</span><span class="n">dirs_to_remove</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CkptCleaner.get_best_name"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.get_best_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_best_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CkptCleaner.get_best_name"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.get_best_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_best_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the path of the best performing model.</span>
 
 <span class="sd">        Parameters</span>
@@ -207,9 +214,9 @@
 
 <div class="viewcode-block" id="CkptCleaner.save_best"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.save_best">[docs]</a>    <span class="k">def</span> <span class="nf">save_best</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">best_model</span><span class="p">,</span>
+        <span class="n">best_model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save best model.</span>
 
 <span class="sd">        Parameters</span>
@@ -242,8 +249,8 @@
             <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s2">&quot;TARGET DOES NOT EXIST...&quot;</span>
         <span class="k">return</span> <span class="n">target</span></div>
 
-<div class="viewcode-block" id="CkptCleaner.fix_dir"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.fix_dir">[docs]</a>    <span class="k">def</span> <span class="nf">fix_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CkptCleaner.fix_dir"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.fix_dir">[docs]</a>    <span class="k">def</span> <span class="nf">fix_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fix directory path for windows file systems.</span>
 
 <span class="sd">        Parameters</span>
@@ -258,8 +265,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">dir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;D:&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CkptCleaner.remove_dirs"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.remove_dirs">[docs]</a>    <span class="k">def</span> <span class="nf">remove_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_dirs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CkptCleaner.remove_dirs"><a class="viewcode-back" href="../../nlpboost.html#nlpboost.ckpt_cleaner.CkptCleaner.remove_dirs">[docs]</a>    <span class="k">def</span> <span class="nf">remove_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete checkpoint directories.</span>
 
 <span class="sd">        Parameters</span>

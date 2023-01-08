@@ -43,6 +43,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">nlpboost</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">nlpboost package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
@@ -182,18 +183,19 @@
 <span id="nlpboost-autotrainer-module"></span><h2>nlpboost.autotrainer module<a class="headerlink" href="#module-nlpboost.autotrainer" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="nlpboost.autotrainer.AutoTrainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.autotrainer.</span></span><span class="sig-name descname"><span class="pre">AutoTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tmp_experiments_metrics'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hp_search_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'optuna'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_cleaner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tmp_metrics_cleaner'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_auth_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/autotrainer.html#AutoTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.autotrainer.AutoTrainer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.autotrainer.</span></span><span class="sig-name descname"><span class="pre">AutoTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_configs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tmp_experiments_metrics'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hp_search_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'optuna'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_cleaner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tmp_metrics_cleaner'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_auth_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_mixes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/autotrainer.html#AutoTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.autotrainer.AutoTrainer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main class of nlpboost. Fine-tune and evaluate several models on several datasets.</p>
-<p>Useful for performing benchmarking of different models on the same datasets,
-keeping track of each experiment with mlflow.</p>
+<p>Useful for performing benchmarking of different models on the same datasets. The behavior
+of <cite>AutoTrainer</cite> is mainly configured through <cite>model_configs</cite> and <cite>dataset_configs</cite>, which
+define the datasets and the models to be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_configs</strong> (<em>list</em>) – Configurations for the models, instances of ModelConfig, each describing their
+<li><p><strong>model_configs</strong> (<em>List</em>) – Configurations for the models, instances of ModelConfig, each describing their
 names in the hub or local directory, the name to save the model, the dropout
 values to use, and a long etc.</p></li>
-<li><p><strong>dataset_configs</strong> (<em>list</em>) – Configurations for the datasets, instances of DatasetConfig, each describing
+<li><p><strong>dataset_configs</strong> (<em>List</em>) – Configurations for the datasets, instances of DatasetConfig, each describing
 how each dataset should be processed.</p></li>
 <li><p><strong>metrics_dir</strong> (<em>str</em>) – Directory to save the metrics for the experiments, as returned by <cite>nlpboost.ResultsGetter</cite>.</p></li>
 <li><p><strong>hp_search_mode</strong> (<em>str</em>) – Mode for hyperparameter search; possibilities are <cite>optuna</cite> or <cite>fixed</cite>. If <cite>fixed</cite>,
@@ -208,6 +210,7 @@ before doing so. Otherwise there will probably be an error, as the checkpoint cl
 will use metrics from past experiments, not the running one, so there will be incorrect
 checkpoint removals.</p></li>
 <li><p><strong>use_auth_token</strong> (<em>bool</em>) – Whether to use auth token to load datasets and models.</p></li>
+<li><p><strong>skip_mixes</strong> (<em>List</em>) – List of SkipMix instances with combinations of datasets and models that must be skipped.</p></li>
 </ul>
 </dd>
 </dl>
@@ -215,10 +218,10 @@ checkpoint removals.</p></li>
 <dt class="sig sig-object py" id="nlpboost.autotrainer.AutoTrainer.optuna_hp_search">
 <span class="sig-name descname"><span class="pre">optuna_hp_search</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/autotrainer.html#AutoTrainer.optuna_hp_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.autotrainer.AutoTrainer.optuna_hp_search" title="Permalink to this definition"></a></dt>
 <dd><p>Carry out hyperparameter search with Optuna.</p>
-<p>By using the model_configs and dataset_configs passed in __call__. Iterate over
-each dataset, and then over each model, by doing hyperparameter tuning.
-It also saves the metrics over the test dataset in the metrics_dir specified in __call__
-for each of those models, for later comparison.</p>
+<p>Use <cite>model_configs</cite> and <cite>dataset_configs</cite> passed in init. Iterate over
+each dataset, and then over each model, with hyperparameter tuning.
+Metrics over the test dataset are gathered and then saved
+in the <cite>metrics_dir</cite> specified in init for each of those models, for later comparison.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>all_results</strong> – Dictionary with results from the experiments.</p>
@@ -236,11 +239,17 @@ for each of those models, for later comparison.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_config</strong> (<a class="reference internal" href="#nlpboost.model_config.ModelConfig" title="nlpboost.model_config.ModelConfig"><em>ModelConfig</em></a>) – Configuration for the model.</p></li>
-<li><p><strong>dataset_config</strong> (<a class="reference internal" href="#nlpboost.dataset_config.DatasetConfig" title="nlpboost.dataset_config.DatasetConfig"><em>DatasetConfig</em></a><em>,</em>) – Configuration for the dataset.</p></li>
-<li><p><strong>compute_metrics_func</strong> – Function to compute metrics.</p></li>
+<li><p><strong>model_config</strong> (<em>nlpboost.ModelConfig</em>) – Configuration for the model.</p></li>
+<li><p><strong>dataset_config</strong> (<em>nlpboost.DatasetConfig,</em>) – Configuration for the dataset.</p></li>
+<li><p><strong>compute_metrics_func</strong> (<em>Any</em>) – Function to compute metrics.</p></li>
 <li><p><strong>test_dataset</strong> (<em>datasets.Dataset</em>) – Test dataset to get metrics on.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>test_results</strong> – Dictionary with results over the test set after training with fixed params.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -248,8 +257,8 @@ for each of those models, for later comparison.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.autotrainer.AutoTrainer.train_one_model_optuna">
 <span class="sig-name descname"><span class="pre">train_one_model_optuna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_metrics_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/autotrainer.html#AutoTrainer.train_one_model_optuna"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.autotrainer.AutoTrainer.train_one_model_optuna" title="Permalink to this definition"></a></dt>
-<dd><p>Train one model in one dataset, with hyperparameter tuning, using Optuna.
-Load a checkpoint cleaner in the background to clean bad performing checkpoints
+<dd><p>Train one model in one dataset, with hyperparameter tuning, using Optuna.</p>
+<p>Load a checkpoint cleaner in the background to clean bad performing checkpoints
 every 10 minutes, also saving the best performing checkpoint. Then, carry out
 hyperparameter search and, if configured (see <cite>DatasetConfig</cite>), retrain at end
 with the best hyperparameters again. After that, results on the test set are
@@ -262,10 +271,10 @@ is pushed to the hub.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_config</strong> (<a class="reference internal" href="#nlpboost.model_config.ModelConfig" title="nlpboost.model_config.ModelConfig"><em>ModelConfig</em></a>) – Configuration for the model.</p></li>
-<li><p><strong>dataset_config</strong> (<a class="reference internal" href="#nlpboost.dataset_config.DatasetConfig" title="nlpboost.dataset_config.DatasetConfig"><em>DatasetConfig</em></a><em>,</em>) – Configuration for the dataset.</p></li>
-<li><p><strong>compute_objective</strong> – Function to return the computed metric objective.</p></li>
-<li><p><strong>compute_metrics_func</strong> – Function to compute metrics.</p></li>
+<li><p><strong>model_config</strong> (<em>nlpboost.ModelConfig</em>) – Configuration for the model.</p></li>
+<li><p><strong>dataset_config</strong> (<em>nlpboost.DatasetConfig,</em>) – Configuration for the dataset.</p></li>
+<li><p><strong>compute_objective</strong> (<em>Any</em>) – Function to return the computed metric objective.</p></li>
+<li><p><strong>compute_metrics_func</strong> (<em>Any</em>) – Function to compute metrics.</p></li>
 <li><p><strong>output_dir</strong> (<em>str</em>) – Directory where the model is saved.</p></li>
 <li><p><strong>test_dataset</strong> (<em>datasets.Dataset</em>) – Test dataset to get metrics on.</p></li>
 </ul>
@@ -295,14 +304,19 @@ by passing a dictionary with the new parameters that we want to use for a model.
 <span id="nlpboost-ckpt-cleaner-module"></span><h2>nlpboost.ckpt_cleaner module<a class="headerlink" href="#module-nlpboost.ckpt_cleaner" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="nlpboost.ckpt_cleaner.CkptCleaner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.ckpt_cleaner.</span></span><span class="sig-name descname"><span class="pre">CkptCleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_folder_clean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_dataset_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">try_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.ckpt_cleaner.</span></span><span class="sig-name descname"><span class="pre">CkptCleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_folder_clean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_dataset_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">try_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Clean all checkpoints that are not longer useful.</p>
-<p>CkptCleaner makes sure that not too much checkpoints are saved. To do so,
-it removes the checkpoints which have not achieved the best results.</p>
+<p>Clean all checkpoints that are no longer useful.</p>
+<p>Use a metrics dictionary to check the results of all runs of a model
+for a dataset, then sort these metrics to decide which checkpoints are
+removable and which are among the four best. When called, only those
+are kept, and all the other checkpoints are removed. This enables the
+user to effectively use their computer resources, so there is no need to
+worry about the disk usage, which is a typical concern when running multiple
+transformer models.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.ckpt_cleaner.CkptCleaner.fix_dir">
-<span class="sig-name descname"><span class="pre">fix_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.fix_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.fix_dir" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fix_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.fix_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.fix_dir" title="Permalink to this definition"></a></dt>
 <dd><p>Fix directory path for windows file systems.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -319,7 +333,7 @@ it removes the checkpoints which have not achieved the best results.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.ckpt_cleaner.CkptCleaner.get_best_name">
-<span class="sig-name descname"><span class="pre">get_best_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.get_best_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.get_best_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_best_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.get_best_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.get_best_name" title="Permalink to this definition"></a></dt>
 <dd><p>Get the path of the best performing model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -336,7 +350,7 @@ it removes the checkpoints which have not achieved the best results.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.ckpt_cleaner.CkptCleaner.remove_dirs">
-<span class="sig-name descname"><span class="pre">remove_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_dirs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.remove_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.remove_dirs" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.remove_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.remove_dirs" title="Permalink to this definition"></a></dt>
 <dd><p>Delete checkpoint directories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -347,7 +361,7 @@ it removes the checkpoints which have not achieved the best results.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.ckpt_cleaner.CkptCleaner.save_best">
-<span class="sig-name descname"><span class="pre">save_best</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.save_best"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.save_best" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">save_best</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">best_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/ckpt_cleaner.html#CkptCleaner.save_best"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.ckpt_cleaner.CkptCleaner.save_best" title="Permalink to this definition"></a></dt>
 <dd><p>Save best model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -400,7 +414,7 @@ If None, it is assumed that all necessary files exist locally and are passed in 
 <li><p><strong>is_2sents</strong> (<em>bool</em>) – Whether it is a 2 sentence dataset. Useful for processing datasets like xnli or paws-x.</p></li>
 <li><p><strong>sentence1_field</strong> (<em>str</em>) – In case this is a 2 sents dataset, the name of the first sentence field.</p></li>
 <li><p><strong>sentence2_field</strong> (<em>str</em>) – In case this is a 2 sents dataset, the name of the second sentence field.</p></li>
-<li><p><strong>summary_field</strong> (<em>str = field</em><em>(</em>) – The name of the field with summaries (we assume the long texts are in the text_field field). Only useful for summarization tasks. Default is summary.</p></li>
+<li><p><strong>summary_field</strong> (<em>str = field(</em>) – The name of the field with summaries (we assume the long texts are in the text_field field). Only useful for summarization tasks. Default is summary.</p></li>
 <li><p><strong>callbacks</strong> (<em>List</em>) – Callbacks to use inside transformers.</p></li>
 <li><p><strong>metric_optimize</strong> (<em>str</em>) – Name of the metric you want to optimize in the hyperparameter search.</p></li>
 <li><p><strong>direction_optimize</strong> (<em>str</em>) – Direction of the optimization problem. Whether you want to maximize or minimize metric_optimize.</p></li>
@@ -421,9 +435,15 @@ If None, it is assumed that all necessary files exist locally and are passed in 
 </dl>
 <p class="rubric">Examples</p>
 <p>One can easily create a DatasetConfig for dataset conll2002 just with the following:</p>
-<p>&gt;&gt;&gt;from nlpboost import DatasetConfig</p>
-<p>&gt;&gt;&gt;config={‘fixed_train_args’: {}, ‘dataset_name’: ‘conll2002’, ‘alias’: ‘conll2002’, ‘task’: ‘ner’, ‘hf_load_kwargs’: {‘path’: ‘conll2002’, ‘name’: ‘es’}, ‘label_col’:’ner_tags’}</p>
-<p>&gt;&gt;&gt;config = DatasetConfig(<a href="#id1"><span class="problematic" id="id2">**</span></a>config)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">DatasetConfig</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fixed_training_args&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;dataset_name&#39;</span><span class="p">:</span> <span class="s1">&#39;conll2002&#39;</span><span class="p">,</span> <span class="s1">&#39;alias&#39;</span><span class="p">:</span> <span class="s1">&#39;conll2002&#39;</span><span class="p">,</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="s1">&#39;ner&#39;</span><span class="p">,</span> <span class="s1">&#39;hf_load_kwargs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;conll2002&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;es&#39;</span><span class="p">},</span> <span class="s1">&#39;label_col&#39;</span><span class="p">:</span><span class="s1">&#39;ner_tags&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">DatasetConfig</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nlpboost.dataset_config.DatasetConfig.additional_metrics">
 <span class="sig-name descname"><span class="pre">additional_metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nlpboost.dataset_config.DatasetConfig.additional_metrics" title="Permalink to this definition"></a></dt>
@@ -647,21 +667,21 @@ If None, it is assumed that all necessary files exist locally and are passed in 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset_config</strong> – Configuration for the dataset</p></li>
-<li><p><strong>model_config</strong> – Configuration for the model.</p></li>
+<li><p><strong>dataset_config</strong> (<em>nlpboost.DatasetConfig</em>) – Configuration for the dataset</p></li>
+<li><p><strong>model_config</strong> (<em>nlpboost.ModelConfig</em>) – Configuration for the model.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.hfdatasets_manager.HFDatasetsManager.get_dataset_and_tag2id">
-<span class="sig-name descname"><span class="pre">get_dataset_and_tag2id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/hfdatasets_manager.html#HFDatasetsManager.get_dataset_and_tag2id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.hfdatasets_manager.HFDatasetsManager.get_dataset_and_tag2id" title="Permalink to this definition"></a></dt>
-<dd><p>Get dataset and tag2id depending on dataset and model config.
-Using dataset config (task, etc) a preprocessing is applied to
+<span class="sig-name descname"><span class="pre">get_dataset_and_tag2id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PreTrainedTokenizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/hfdatasets_manager.html#HFDatasetsManager.get_dataset_and_tag2id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.hfdatasets_manager.HFDatasetsManager.get_dataset_and_tag2id" title="Permalink to this definition"></a></dt>
+<dd><p>Get dataset and tag2id depending on dataset and model config.</p>
+<p>Using dataset config (task, etc), a preprocessing is applied to
 the dataset, tokenizing text data, returning a processed dataset
 ready for the configured task.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tokenizer</strong> – Tokenizer to process data.</p>
+<dd class="field-odd"><p><strong>tokenizer</strong> (<em>transformers.PretrainedTokenizer</em>) – Tokenizer to process data.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
@@ -680,14 +700,14 @@ ready for the configured task.</p>
 <span id="nlpboost-hftransformers-manager-module"></span><h2>nlpboost.hftransformers_manager module<a class="headerlink" href="#module-nlpboost.hftransformers_manager" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="nlpboost.hftransformers_manager.HFTransformersManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.hftransformers_manager.</span></span><span class="sig-name descname"><span class="pre">HFTransformersManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_auth_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/hftransformers_manager.html#HFTransformersManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.hftransformers_manager.HFTransformersManager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.hftransformers_manager.</span></span><span class="sig-name descname"><span class="pre">HFTransformersManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nlpboost.model_config.ModelConfig" title="nlpboost.model_config.ModelConfig"><span class="pre">ModelConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nlpboost.dataset_config.DatasetConfig" title="nlpboost.dataset_config.DatasetConfig"><span class="pre">DatasetConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_auth_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/hftransformers_manager.html#HFTransformersManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.hftransformers_manager.HFTransformersManager" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Utility for loading HF Transformers’ objects, using a dataset config and a model config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_config</strong> – Configuration for the model.</p></li>
-<li><p><strong>dataset_config</strong> – Configuration for the dataset</p></li>
+<li><p><strong>model_config</strong> (<em>nlpboost.ModelConfig</em>) – Configuration for the model.</p></li>
+<li><p><strong>dataset_config</strong> (<em>nlpboost.DatasetConfig</em>) – Configuration for the dataset</p></li>
 </ul>
 </dd>
 </dl>
@@ -707,12 +727,12 @@ ready for the configured task.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nlpboost.hftransformers_manager.HFTransformersManager.load_config">
-<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag2id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/hftransformers_manager.html#HFTransformersManager.load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.hftransformers_manager.HFTransformersManager.load_config" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag2id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/hftransformers_manager.html#HFTransformersManager.load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.hftransformers_manager.HFTransformersManager.load_config" title="Permalink to this definition"></a></dt>
 <dd><p>Load configuration for the model depending on the type of task we are doing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tag2id</strong> (<em>Dict</em>) – Dictionary with the map of tag to id of those tags.</p></li>
+<li><p><strong>tag2id</strong> (<em>Dict</em>) – Dictionary mapping labels to indices of those labels in the network output layer.</p></li>
 <li><p><strong>dropout</strong> (<em>float</em>) – Dropout proportion for the pooler layer.</p></li>
 </ul>
 </dd>
@@ -720,7 +740,7 @@ ready for the configured task.</p>
 <dd class="field-even"><p><strong>config</strong> – Configuration for use in the transformers module.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>transformers.AutoConfig</p>
+<dd class="field-odd"><p>transformers.PretrainedConfig</p>
 </dd>
 </dl>
 </dd></dl>
@@ -803,19 +823,19 @@ ready for the configured task.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dataset</strong> (<em>datasets.DatasetDict</em>) – Dataset with train and validation splits.</p></li>
-<li><p><strong>tokenizer</strong> (<em>transformers.AutoTokenizer</em>) – Tokenizer from transformers.</p></li>
-<li><p><strong>args</strong> – TrainingArguments for the Trainer.</p></li>
-<li><p><strong>model_init</strong> – Function that loads the model.</p></li>
-<li><p><strong>data_collator</strong> – Data Collator to use inside Trainer.</p></li>
-<li><p><strong>compute_metrics_func</strong> – Function to compute metrics.</p></li>
-<li><p><strong>config</strong> – Configuration for the model in Huggingface Transformers.</p></li>
+<li><p><strong>tokenizer</strong> (<em>transformers.PretrainedTokenizer</em>) – Tokenizer from transformers.</p></li>
+<li><p><strong>args</strong> (<em>transformers.TrainingArguments</em>) – TrainingArguments for the Trainer.</p></li>
+<li><p><strong>model_init</strong> (<em>Any</em>) – Function that loads the model.</p></li>
+<li><p><strong>data_collator</strong> (<em>Any</em>) – Data Collator to use inside Trainer.</p></li>
+<li><p><strong>compute_metrics_func</strong> (<em>Any</em>) – Function to compute metrics.</p></li>
+<li><p><strong>config</strong> (<em>transformers.PretrainedConfig</em>) – Configuration for the model in Huggingface Transformers.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Trainer object loaded with the given configuration.</p>
+<dd class="field-even"><p><strong>Trainer</strong> – Trainer object loaded with the given configuration.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Trainer</p>
+<dd class="field-odd"><p>transformers.Trainer</p>
 </dd>
 </dl>
 </dd></dl>
@@ -896,8 +916,9 @@ received in it, see the documentation for sklearn.metrics.classification_report.
 <dt class="sig sig-object py" id="nlpboost.metrics.compute_metrics_ner">
 <span class="sig-prename descclassname"><span class="pre">nlpboost.metrics.</span></span><span class="sig-name descname"><span class="pre">compute_metrics_ner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id2tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/metrics.html#compute_metrics_ner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.metrics.compute_metrics_ner" title="Permalink to this definition"></a></dt>
 <dd><p>Compute metrics for ner.</p>
-<p>Useful for ner such as precision, recall, f1, accuracy.
-It is used to report metrics on eval set while training.</p>
+<p>Use seqeval metric from HF Evaluate. Get the predicted label for each instance,
+then skip padded tokens and finally use seqeval metric, which takes into account
+full entities, not individual tokens, when computing the metrics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1025,9 +1046,15 @@ such as the original name, the name to save the model with, the hyperparameter s
 </dl>
 <p class="rubric">Examples</p>
 <p>With the following lines you can create a ModelConfig for bert-base-cased model.</p>
-<p>&gt;&gt;&gt;from nlpboost import ModelConfig</p>
-<p>&gt;&gt;&gt;from nlpboost.default_param_spaces import hp_space_base</p>
-<p>&gt;&gt;&gt;model_config = ModelConfig(name=’bert-base-cased’, save_name=’bert’, hp_space=hp_space_base)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nlpboost</span> <span class="kn">import</span> <span class="n">ModelConfig</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nlpboost.default_param_spaces</span> <span class="kn">import</span> <span class="n">hp_space_base</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model_config</span> <span class="o">=</span> <span class="n">ModelConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;bert-base-cased&#39;</span><span class="p">,</span> <span class="n">save_name</span><span class="o">=</span><span class="s1">&#39;bert&#39;</span><span class="p">,</span> <span class="n">hp_space</span><span class="o">=</span><span class="n">hp_space_base</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nlpboost.model_config.ModelConfig.additional_params_tokenizer">
 <span class="sig-name descname"><span class="pre">additional_params_tokenizer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nlpboost.model_config.ModelConfig.additional_params_tokenizer" title="Permalink to this definition"></a></dt>
@@ -1215,7 +1242,7 @@ such as the original name, the name to save the model with, the hyperparameter s
 <span id="nlpboost-results-getter-module"></span><h2>nlpboost.results_getter module<a class="headerlink" href="#module-nlpboost.results_getter" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="nlpboost.results_getter.ResultsGetter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.results_getter.</span></span><span class="sig-name descname"><span class="pre">ResultsGetter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_metrics_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/results_getter.html#ResultsGetter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.results_getter.ResultsGetter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.results_getter.</span></span><span class="sig-name descname"><span class="pre">ResultsGetter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nlpboost.dataset_config.DatasetConfig" title="nlpboost.dataset_config.DatasetConfig"><span class="pre">DatasetConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nlpboost.model_config.ModelConfig" title="nlpboost.model_config.ModelConfig"><span class="pre">ModelConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_metrics_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/results_getter.html#ResultsGetter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.results_getter.ResultsGetter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Retrieve results on the test set for different tasks (seq2seq, different forms of classification, NER, QA…).</p>
 <dl class="field-list simple">
@@ -1243,27 +1270,6 @@ such as the original name, the name to save the model with, the hyperparameter s
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="nlpboost.results_getter.ResultsGetter.get_metric_and_formatted_predictions">
-<span class="sig-name descname"><span class="pre">get_metric_and_formatted_predictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squad_v2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/results_getter.html#ResultsGetter.get_metric_and_formatted_predictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.results_getter.ResultsGetter.get_metric_and_formatted_predictions" title="Permalink to this definition"></a></dt>
-<dd><p>Get the metric from evaluate and the final predictions formatted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>final_predictions</strong> (<em>Dict</em>) – Predictions postprocessed.</p></li>
-<li><p><strong>squad_v2</strong> (<em>bool</em>) – Whether it is squad_v2 mode or not.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>metric</strong> (<em>evaluate.Metric</em>) – Metric from the evaluate library.</p></li>
-<li><p><strong>formatted_predictions</strong> (<em>Dict</em>) – Predictions in the correct format for the metric.</p></li>
-</ul>
-</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1299,7 +1305,7 @@ such as the original name, the name to save the model with, the hyperparameter s
 <li><p><strong>test_dataset</strong> (<em>datasets.Dataset</em>) – Test dataset.</p></li>
 <li><p><strong>trainer</strong> (<em>transformers.Trainer</em>) – HF’s transformers trainer.</p></li>
 <li><p><strong>compute_metrics_func</strong> (<em>Any</em>) – Function to compute metrics.</p></li>
-<li><p><strong>model_config</strong> (<a class="reference internal" href="#nlpboost.model_config.ModelConfig" title="nlpboost.model_config.ModelConfig"><em>ModelConfig</em></a>) – Configuration for the model.</p></li>
+<li><p><strong>model_config</strong> (<em>nlpboost.ModelConfig</em>) – Configuration for the model.</p></li>
 <li><p><strong>additional_metrics</strong> (<em>List</em>) – List with additional metrics to compute.</p></li>
 </ul>
 </dd>
@@ -1489,7 +1495,7 @@ passing them to the tokenizer.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>example</strong> – Sample of huggingface Dataset, with an entities field containing
 the entities in the format mentioned above.</p></li>
-<li><p><strong>nulltoken</strong> (<em>str</em>) – Default token for the “no-entities”. Usually O is used for this,
+<li><p><strong>nulltoken</strong> (<em>Union[str, int]</em>) – Default token for the “no-entities”. Usually O is used for this,
 which is the default value.</p></li>
 <li><p><strong>entities_field</strong> (<em>str</em>) – Name of the field which contains entities in (ent_label, start_char, end_char)
 format. Usually “entities” is used for this, which is the default value.</p></li>

@@ -40,6 +40,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">nlpboost</a></li>
 </ul>
 
@@ -74,8 +75,9 @@
 
 
 <div class="viewcode-block" id="NLPAugPipeline"><a class="viewcode-back" href="../../../nlpboost.augmentation.html#nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline">[docs]</a><span class="k">class</span> <span class="nc">NLPAugPipeline</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Augment text data, with various forms of augmenting. It uses `nlpaug` in the background.</span>
+
 <span class="sd">    The configuration of the augmentation pipeline is done with `nlpboost.augmentation.augmenter_config.NLPAugConfig`.</span>
 <span class="sd">    NLPAugPipeline receives a list of configs of that type, where each config defines a type</span>
 <span class="sd">    of augmentation technique to use, as well as the proportion of the train dataset that is</span>
@@ -100,7 +102,7 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="NLPAugPipeline.augment"><a class="viewcode-back" href="../../../nlpboost.augmentation.html#nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline.augment">[docs]</a>    <span class="k">def</span> <span class="nf">augment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Augment data for datasets samples following the configuration defined at init.</span>
 
 <span class="sd">        Parameters</span>

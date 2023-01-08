@@ -42,6 +42,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">NLPBOOST: A library for automatic training and comparison of Transformer models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Example scripts of how to use nlpboost for each task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Notebook Tutorials on how to use nlpboost</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">nlpboost</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="nlpboost.html">nlpboost package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="nlpboost.html#subpackages">Subpackages</a><ul class="current">
@@ -105,15 +106,15 @@
 <dt class="sig sig-object py" id="nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nlpboost.augmentation.TextAugmenterPipeline.</span></span><span class="sig-name descname"><span class="pre">NLPAugPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'text'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlpboost/augmentation/TextAugmenterPipeline.html#NLPAugPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlpboost.augmentation.TextAugmenterPipeline.NLPAugPipeline" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Augment text data, with various forms of augmenting. It uses <cite>nlpaug</cite> in the background.
-The configuration of the augmentation pipeline is done with <cite>nlpboost.augmentation.augmenter_config.NLPAugConfig</cite>.
+<p>Augment text data, with various forms of augmenting. It uses <cite>nlpaug</cite> in the background.</p>
+<p>The configuration of the augmentation pipeline is done with <cite>nlpboost.augmentation.augmenter_config.NLPAugConfig</cite>.
 NLPAugPipeline receives a list of configs of that type, where each config defines a type
 of augmentation technique to use, as well as the proportion of the train dataset that is
 to be augmented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>steps</strong> (<em>List</em><em>[</em><a class="reference internal" href="#nlpboost.augmentation.augmenter_config.NLPAugConfig" title="nlpboost.augmentation.augmenter_config.NLPAugConfig"><em>nlpboost.augmentation.augmenter_config.NLPAugConfig</em></a><em>]</em>) – List of steps. Each step must be a NLPAugConfig instance.</p></li>
+<li><p><strong>steps</strong> (<em>List[nlpboost.augmentation.augmenter_config.NLPAugConfig]</em>) – List of steps. Each step must be a NLPAugConfig instance.</p></li>
 <li><p><strong>text_field</strong> (<em>str</em>) – Name of the field in the dataset where texts are.</p></li>
 </ul>
 </dd>

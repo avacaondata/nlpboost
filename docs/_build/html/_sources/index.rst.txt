@@ -6,8 +6,8 @@
 Welcome to nlpboost's documentation!
 ====================================
 
-.. image:: ../imgs/nlpboost_logo_2.png
-   :target: ../imgs/nlpboost_logo_2.png
+.. image:: ../imgs/nlpboost_logo_3.png
+   :target: ../imgs/nlpboost_logo_3.png
    :width: 500
    :alt: nlpboost logo
 
@@ -17,6 +17,7 @@ Welcome to nlpboost's documentation!
 
    readme
    examples
+   notebooks
    modules
 
 
