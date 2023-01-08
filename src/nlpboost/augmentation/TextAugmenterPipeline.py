@@ -6,6 +6,7 @@ import numpy as np
 class NLPAugPipeline:
     """
     Augment text data, with various forms of augmenting. It uses `nlpaug` in the background.
+
     The configuration of the augmentation pipeline is done with `nlpboost.augmentation.augmenter_config.NLPAugConfig`.
     NLPAugPipeline receives a list of configs of that type, where each config defines a type
     of augmentation technique to use, as well as the proportion of the train dataset that is

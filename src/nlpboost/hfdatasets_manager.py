@@ -11,6 +11,7 @@ from .tokenization_functions import (
     tokenize_classification,
 )
 from .augmentation import NLPAugPipeline
+from transformers import PreTrainedTokenizer
 
 
 tok_func_map = {
@@ -27,9 +28,9 @@ class HFDatasetsManager:
 
     Parameters
     ----------
-    dataset_config:
+    dataset_config: nlpboost.DatasetConfig
         Configuration for the dataset
-    model_config:
+    model_config: nlpboost.ModelConfig
         Configuration for the model.
     """
 
@@ -37,16 +38,17 @@ class HFDatasetsManager:
         self.dataset_config = dataset_config
         self.model_config = model_config
 
-    def get_dataset_and_tag2id(self, tokenizer):
+    def get_dataset_and_tag2id(self, tokenizer: PreTrainedTokenizer):
         """
         Get dataset and tag2id depending on dataset and model config.
-        Using dataset config (task, etc) a preprocessing is applied to
+
+        Using dataset config (task, etc), a preprocessing is applied to
         the dataset, tokenizing text data, returning a processed dataset
         ready for the configured task.
 
         Parameters
         ----------
-        tokenizer:
+        tokenizer: transformers.PretrainedTokenizer
             Tokenizer to process data.
 
         Returns
@@ -65,7 +67,7 @@ class HFDatasetsManager:
             dataset["test"] = dataset["validation"]
         return dataset, tag2id
 
-    def _generic_load_dataset(self, tokenizer):
+    def _generic_load_dataset(self, tokenizer: PreTrainedTokenizer):
         """
         Load a generic dataset.
 
@@ -74,12 +76,12 @@ class HFDatasetsManager:
 
         Parameters
         ----------
-        tokenizer:
+        tokenizer: transformers.PretrainedTokenizer
             Tokenizer to process data.
 
         Returns
         -------
-        dataset: datasets.Dataset or datasets.DatasetDict
+        dataset: Union[datasets.Dataset,datasets.DatasetDict]
             Dataset containing data for training, evaluation and testing.
         tag2id: Dict
             Dictionary mapping the label names to their numerical ids.
@@ -222,7 +224,7 @@ class HFDatasetsManager:
 
         Parameters
         ----------
-        dataset: datasets.Dataset or datasets.DatasetDict
+        dataset: Union[datasets.Dataset, datasets.DatasetDict]
             Dataset containing data for training and testing.
 
         Returns
@@ -248,7 +250,7 @@ class HFDatasetsManager:
 
         Parameters
         ----------
-        dataset: datasets.Dataset or datasets.DatasetDict
+        dataset: Union[datasets.Dataset, datasets.DatasetDict]
             Dataset containing data for training.
 
         Returns

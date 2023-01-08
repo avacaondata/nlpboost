@@ -224,7 +224,7 @@ def test_tokenize_qa():
     assert final_predictions != raw_predictions, "Predictions were not changed."
     assert final_predictions_squadv2 != raw_predictions, "Predictions were not changed."
 
-    metric, formatted_predictions = results_getter.get_metric_and_formatted_predictions(
+    metric, formatted_predictions = results_getter._get_metric_and_formatted_predictions(
         final_predictions, False
     )
     references = [{"id": ex["id"], "answers": ex["answers"]} for ex in dataset["test"]]

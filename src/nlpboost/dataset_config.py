@@ -93,11 +93,11 @@ class DatasetConfig:
     --------
     One can easily create a DatasetConfig for dataset conll2002 just with the following:
 
-    >>>from nlpboost import DatasetConfig
+    >>> from nlpboost import DatasetConfig
 
-    >>>config={'fixed_train_args': {}, 'dataset_name': 'conll2002', 'alias': 'conll2002', 'task': 'ner', 'hf_load_kwargs': {'path': 'conll2002', 'name': 'es'}, 'label_col':'ner_tags'}
+    >>> config={'fixed_training_args': {}, 'dataset_name': 'conll2002', 'alias': 'conll2002', 'task': 'ner', 'hf_load_kwargs': {'path': 'conll2002', 'name': 'es'}, 'label_col':'ner_tags'}
 
-    >>>config = DatasetConfig(**config)
+    >>> config = DatasetConfig(**config)
     """
 
     dataset_name: str = field(metadata={"help": "The name of the dataset"})

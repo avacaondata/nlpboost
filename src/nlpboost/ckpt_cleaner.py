@@ -2,14 +2,20 @@ import shutil
 import os
 from tqdm import tqdm
 from .utils import _load_json, _save_json
+from typing import List, Dict
 
 
 class CkptCleaner:
     """
-    Clean all checkpoints that are not longer useful.
+    Clean all checkpoints that are no longer useful.
 
-    CkptCleaner makes sure that not too much checkpoints are saved. To do so,
-    it removes the checkpoints which have not achieved the best results.
+    Use a metrics dictionary to check the results of all runs of a model
+    for a dataset, then sort these metrics to decide which checkpoints are
+    removable and which are among the four best. When called, only those
+    are kept, and all the other checkpoints are removed. This enables the
+    user to effectively use their computer resources, so there is no need to
+    worry about the disk usage, which is a typical concern when running multiple
+    transformer models.
     """
 
     def __init__(
@@ -18,7 +24,7 @@ class CkptCleaner:
         current_dataset_folder: str,
         metrics_save_dir: str,
         modelname: str,
-        mode="max",
+        mode: str = "max",
         try_mode: bool = False,
     ):
         self.current_folder_clean = current_folder_clean
@@ -31,7 +37,7 @@ class CkptCleaner:
 
         os.makedirs(self.metrics_save_dir, exist_ok=True)
 
-    def __call__(self, skip_last=True):
+    def __call__(self, skip_last: bool = True):
         """
         Check the metrics folder and remove checkpoints of models not performing well (all except 4 best).
 
@@ -117,7 +123,7 @@ class CkptCleaner:
                 ]  # REMOVE ALL BUT BEST 4 CHECKPOINTS.
                 self.remove_dirs(dirs_to_remove)
 
-    def get_best_name(self, metrics):
+    def get_best_name(self, metrics: Dict):
         """
         Get the path of the best performing model.
 
@@ -137,7 +143,7 @@ class CkptCleaner:
 
     def save_best(
         self,
-        best_model,
+        best_model: str,
     ):
         """
         Save best model.
@@ -172,7 +178,7 @@ class CkptCleaner:
             assert os.path.exists(target), "TARGET DOES NOT EXIST..."
         return target
 
-    def fix_dir(self, dir):
+    def fix_dir(self, dir: str):
         """
         Fix directory path for windows file systems.
 
@@ -188,7 +194,7 @@ class CkptCleaner:
         """
         return dir.replace("D:\\", "D:")
 
-    def remove_dirs(self, checkpoint_dirs):
+    def remove_dirs(self, checkpoint_dirs: List):
         """
         Delete checkpoint directories.
 

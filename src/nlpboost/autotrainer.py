@@ -32,16 +32,17 @@ class AutoTrainer:
     """
     Main class of nlpboost. Fine-tune and evaluate several models on several datasets.
 
-    Useful for performing benchmarking of different models on the same datasets,
-    keeping track of each experiment with mlflow.
+    Useful for performing benchmarking of different models on the same datasets. The behavior
+    of `AutoTrainer` is mainly configured through `model_configs` and `dataset_configs`, which
+    define the datasets and the models to be used.
 
     Parameters
     ----------
-    model_configs: list
+    model_configs: List
         Configurations for the models, instances of ModelConfig, each describing their
         names in the hub or local directory, the name to save the model, the dropout
         values to use, and a long etc.
-    dataset_configs: list
+    dataset_configs: List
         Configurations for the datasets, instances of DatasetConfig, each describing
         how each dataset should be processed.
     metrics_dir: str
@@ -72,7 +73,7 @@ class AutoTrainer:
         hp_search_mode: str = "optuna",
         clean: bool = True,
         metrics_cleaner: str = "tmp_metrics_cleaner",
-        use_auth_token: bool = True,
+        use_auth_token: bool = False,
     ):
         self.model_configs = model_configs
         self.dataset_configs = dataset_configs
@@ -89,6 +90,7 @@ class AutoTrainer:
     ):
         """
         Use `train_with_fixed_params` or `optuna_hp_search` to carry out hyperparameter search defined in init.
+
         Check the documentation of those methods for more information.
         """
         if self.hp_search_mode == "optuna":
@@ -118,7 +120,6 @@ class AutoTrainer:
                     model_config, dataset_config
                 )
                 datasets_manager = HFDatasetsManager(dataset_config, model_config)
-                # TODO: REVISAR SI DATASET Y TOKENIZER SIGUEN TENIENDO QUE COLGAR DEL SELF. INTENTAR SACAR DEL SELF ESTOS OBJETOS.
                 self.tokenizer = transformers_manager.load_tokenizer()
                 model_config, dataset_config = self._adapt_objects_summarization(
                     model_config, dataset_config
@@ -163,10 +164,10 @@ class AutoTrainer:
         """
         Carry out hyperparameter search with Optuna.
 
-        By using the model_configs and dataset_configs passed in __call__. Iterate over
-        each dataset, and then over each model, by doing hyperparameter tuning.
-        It also saves the metrics over the test dataset in the metrics_dir specified in __call__
-        for each of those models, for later comparison.
+        Use `model_configs` and `dataset_configs` passed in init. Iterate over
+        each dataset, and then over each model, with hyperparameter tuning.
+        Metrics over the test dataset are gathered and then saved
+        in the `metrics_dir` specified in init for each of those models, for later comparison.
 
         Returns
         -------
@@ -245,14 +246,19 @@ class AutoTrainer:
 
         Parameters
         ----------
-        model_config: ModelConfig
+        model_config: nlpboost.ModelConfig
             Configuration for the model.
-        dataset_config: DatasetConfig,
+        dataset_config: nlpboost.DatasetConfig,
             Configuration for the dataset.
-        compute_metrics_func
+        compute_metrics_func: Any
             Function to compute metrics.
         test_dataset: datasets.Dataset
             Test dataset to get metrics on.
+
+        Returns
+        -------
+        test_results: Dict
+            Dictionary with results over the test set after training with fixed params.
         """
         if not model_config.only_test:
             self.trainer.train()
@@ -265,8 +271,11 @@ class AutoTrainer:
             dataset_config.alias,
             self.metrics_dir,
         )
-        if model_config.push_to_hub:
-            self.trainer.push_to_hub(f"IIC/{model_config.save_name}", private=True)
+        if model_config.push_to_hub and model_config.hf_hub_username is not None:
+            self.trainer.push_to_hub(
+                f"{model_config.hf_hub_username}/{model_config.save_name}",
+                private=True,
+            )
         test_results["model_name"] = model_config.save_name
         test_results["dataset_name"] = dataset_config.alias
         return test_results
@@ -282,6 +291,7 @@ class AutoTrainer:
     ):
         """
         Train one model in one dataset, with hyperparameter tuning, using Optuna.
+
         Load a checkpoint cleaner in the background to clean bad performing checkpoints
         every 10 minutes, also saving the best performing checkpoint. Then, carry out
         hyperparameter search and, if configured (see `DatasetConfig`), retrain at end
@@ -295,13 +305,13 @@ class AutoTrainer:
 
         Parameters
         ----------
-        model_config: ModelConfig
+        model_config: nlpboost.ModelConfig
             Configuration for the model.
-        dataset_config: DatasetConfig,
+        dataset_config: nlpboost.DatasetConfig,
             Configuration for the dataset.
-        compute_objective
+        compute_objective: Any
             Function to return the computed metric objective.
-        compute_metrics_func
+        compute_metrics_func: Any
             Function to compute metrics.
         output_dir: str
             Directory where the model is saved.
@@ -378,6 +388,7 @@ class AutoTrainer:
     ):
         """
         Get results for the test set. Metrics vary depending on the task.
+
         Use `ResultsGetter` for dataset processing, obtaining the predictions
         and getting the metrics. If desired, the user may change the behavior
         of this part by creating a custom `ResultsGetter` overriding the desired
@@ -385,11 +396,11 @@ class AutoTrainer:
 
         Parameters
         ----------
-        dataset_config: DatasetConfig,
+        dataset_config: nlpboost.DatasetConfig,
             Configuration for the dataset.
-        compute_metrics_func
+        compute_metrics_func: Any
             Function to compute metrics.
-        model_config: ModelConfig
+        model_config: nlpboost.ModelConfig
             Configuration for the model.
         test_dataset: datasets.Dataset
             Test dataset to get metrics on.
@@ -421,6 +432,11 @@ class AutoTrainer:
     ):
         """
         Create a job to schedule cleaning process with CkptCleaner.
+
+        Initialize a checkpoint cleaner with class CkptCleaner,
+        with parameters passed in this function call. This callable class
+        is used as a job to be scheduled, so that checkpoints are cleaned
+        every 10 minutes.
 
         Parameters
         ----------

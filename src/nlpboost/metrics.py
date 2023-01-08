@@ -9,6 +9,7 @@ import evaluate
 nltk.download("punkt")
 
 metric_sum = evaluate.load("rouge")
+metric_seqeval = evaluate.load("seqeval")
 
 
 def compute_metrics_classification(
@@ -91,8 +92,9 @@ def compute_metrics_ner(p, tokenizer=None, id2tag=None, additional_metrics=None)
     """
     Compute metrics for ner.
 
-    Useful for ner such as precision, recall, f1, accuracy.
-    It is used to report metrics on eval set while training.
+    Use seqeval metric from HF Evaluate. Get the predicted label for each instance,
+    then skip padded tokens and finally use seqeval metric, which takes into account
+    full entities, not individual tokens, when computing the metrics.
 
     Parameters
     ----------
@@ -127,12 +129,8 @@ def compute_metrics_ner(p, tokenizer=None, id2tag=None, additional_metrics=None)
         [str(id2tag[i]) for (p, i) in zip(prediction, label) if i != -100]
         for prediction, label in zip(predictions, labels)
     ]
-    class_report = classification_report(
-        list(itertools.chain.from_iterable(true_labels)),
-        list(itertools.chain.from_iterable(true_predictions)),
-        output_dict=True,
-    )
-    metrics = class_report["macro avg"]
+    metrics = metric_seqeval.compute(predictions=true_predictions, references=true_labels)
+    metrics["f1-score"] = metrics["overall_f1"]
     return metrics
 
 

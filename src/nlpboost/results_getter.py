@@ -4,6 +4,9 @@ import collections
 import evaluate
 from .utils import match_questions_multiple_answers
 from tqdm import tqdm
+from .dataset_config import DatasetConfig
+from .model_config import ModelConfig
+from typing import Any
 
 
 class ResultsGetter:
@@ -22,9 +25,9 @@ class ResultsGetter:
 
     def __init__(
         self,
-        dataset_config,
-        model_config,
-        compute_metrics_func,
+        dataset_config: DatasetConfig,
+        model_config: ModelConfig,
+        compute_metrics_func: Any,
     ):
         self.dataset_config = dataset_config
         self.model_config = model_config
@@ -81,7 +84,7 @@ class ResultsGetter:
             HF's transformers trainer.
         compute_metrics_func: Any
             Function to compute metrics.
-        model_config: ModelConfig
+        model_config: nlpboost.ModelConfig
             Configuration for the model.
         additional_metrics: List
             List with additional metrics to compute.
@@ -178,7 +181,7 @@ class ResultsGetter:
         if isinstance(final_predictions, tuple):
             final_predictions = final_predictions[0]
 
-        metric, formatted_predictions = self.get_metric_and_formatted_predictions(
+        metric, formatted_predictions = self._get_metric_and_formatted_predictions(
             final_predictions, squad_v2
         )
 
@@ -412,7 +415,7 @@ class ResultsGetter:
 
         return predictions
 
-    def get_metric_and_formatted_predictions(self, final_predictions, squad_v2):
+    def _get_metric_and_formatted_predictions(self, final_predictions, squad_v2):
         """
         Get the metric from evaluate and the final predictions formatted.
 

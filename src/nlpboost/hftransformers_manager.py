@@ -15,6 +15,9 @@ from transformers import (
 )
 import torch
 from functools import partial
+from .dataset_config import DatasetConfig
+from .model_config import ModelConfig
+from typing import Dict
 
 
 class MultilabelTrainer(Trainer):
@@ -65,31 +68,31 @@ class HFTransformersManager:
 
     Parameters
     ----------
-    model_config:
+    model_config: nlpboost.ModelConfig
         Configuration for the model.
-    dataset_config:
+    dataset_config: nlpboost.DatasetConfig
         Configuration for the dataset
     """
 
-    def __init__(self, model_config=None, dataset_config=None, use_auth_token=True):
+    def __init__(self, model_config: ModelConfig = None, dataset_config: DatasetConfig = None, use_auth_token: bool = True):
         self.model_config = model_config
         self.dataset_config = dataset_config
         self.use_auth_token = use_auth_token
 
-    def load_config(self, tag2id, dropout):
+    def load_config(self, tag2id: Dict, dropout: float):
         """
         Load configuration for the model depending on the type of task we are doing.
 
         Parameters
         ----------
         tag2id: Dict
-            Dictionary with the map of tag to id of those tags.
+            Dictionary mapping labels to indices of those labels in the network output layer.
         dropout: float
             Dropout proportion for the pooler layer.
 
         Returns
         -------
-        config: transformers.AutoConfig
+        config: transformers.PretrainedConfig
             Configuration for use in the transformers module.
         """
         task = self.dataset_config.task
@@ -221,22 +224,22 @@ class HFTransformersManager:
         ----------
         dataset: datasets.DatasetDict
             Dataset with train and validation splits.
-        tokenizer: transformers.AutoTokenizer
+        tokenizer: transformers.PretrainedTokenizer
             Tokenizer from transformers.
-        args:
+        args: transformers.TrainingArguments
             TrainingArguments for the Trainer.
-        model_init:
+        model_init: Any
             Function that loads the model.
-        data_collator:
+        data_collator: Any
             Data Collator to use inside Trainer.
-        compute_metrics_func:
+        compute_metrics_func: Any
             Function to compute metrics.
-        config:
+        config: transformers.PretrainedConfig
             Configuration for the model in Huggingface Transformers.
 
         Returns
         -------
-        Trainer:
+        Trainer: transformers.Trainer
             Trainer object loaded with the given configuration.
         """
         trainer_cls = (
