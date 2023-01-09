@@ -9,7 +9,7 @@ setuptools.setup(
     description="A package for automatic training of NLP (transformers) models",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/alexvaca0/nlpboost",
+    url="https://github.com/avacaondata/nlpboost",
     project_urls={
         "Bug Tracker": "",
     },
