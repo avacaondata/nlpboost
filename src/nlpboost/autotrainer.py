@@ -38,11 +38,11 @@ class AutoTrainer:
 
     Parameters
     ----------
-    model_configs: List
+    model_configs: List[nlpboost.ModelConfig]
         Configurations for the models, instances of ModelConfig, each describing their
         names in the hub or local directory, the name to save the model, the dropout
         values to use, and a long etc.
-    dataset_configs: List
+    dataset_configs: List[nlpboost.DatasetConfig]
         Configurations for the datasets, instances of DatasetConfig, each describing
         how each dataset should be processed.
     metrics_dir: str
@@ -63,7 +63,7 @@ class AutoTrainer:
         checkpoint removals.
     use_auth_token: bool
         Whether to use auth token to load datasets and models.
-    skip_mixes: List
+    skip_mixes: List[nlpboost.SkipMix]
         List of SkipMix instances with combinations of datasets and models that must be skipped.
     """
 
