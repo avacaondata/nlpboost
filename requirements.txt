@@ -2,7 +2,7 @@ transformers[torch]>=4.16
 datasets>=1.11.0
 optuna>=3.0.2
 scikit-learn>=1.0.2
-nltk==3.7
+nltk>=3.7
 rouge_score==0.1.2
 tensorboard==2.10.1
 tensorboardX==2.5.1

@@ -56,7 +56,13 @@ The main advantages you will find when using nlpboost are the following:
 INSTALLATION AND TESTING
 ------------------------
 
-To install ``nlpboost`` run: 
+To install ``nlpboost`` from pypi, you can simply run:
+
+.. code-block::
+
+   pip install nlpboost
+
+Alternatively, to install the most recent version from source, you can directly install it from GitHub:
 
 .. code-block::
 
