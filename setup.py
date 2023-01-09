@@ -1,7 +1,10 @@
 import setuptools
-
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+# from pathlib import Path
+# this_directory = Path(__file__).parent
+# long_description = (this_directory / "README.md").read_text()
+# with open("README.md", "r", encoding="utf-8") as fh:
+#     long_description = fh.read()
+long_description = "A package for automatic training and comparison of transformers models for NLP"
 
 setuptools.setup(
     name="nlpboost",
@@ -28,5 +31,5 @@ setuptools.setup(
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.9.13,<3.11",
-    install_requires=open("requirements.txt", "r").read().split("\n"),
+    install_requires=open("requirements.txt", "r").read().splitlines(),
 )
