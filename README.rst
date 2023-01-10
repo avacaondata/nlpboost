@@ -123,7 +123,7 @@ Here is a list of public projects that have used ``nlpboost`` as its main tool f
 
 
 #. 
-   `BioMedIA`: The winning project of [SomosNLP Hackaton](https://huggingface.co/hackathon-pln-es). It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper `here <https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf>`_.
+   `BioMedIA`: The winning project of `SomosNLP Hackaton <https://huggingface.co/hackathon-pln-es>`_. It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper `here <https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf>`_.
 
 #. 
    ``Detecting and Classifying Sexism by Ensembling Transformers Models``. This work was presented as part of IberLEF2022@Sepln2022 Conference. In the `results page of the workshop <http://nlp.uned.es/exist2022/#results>`_ you can check that the systems produced by this paper achieved highest on both tasks of the workshop. Link to the paper `here <https://ceur-ws.org/Vol-3202/exist-paper3.pdf>`_.
