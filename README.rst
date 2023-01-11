@@ -51,7 +51,7 @@ The main advantages you will find when using nlpboost are the following:
   |:bar_chart:| Metrics on test after hyperparameter tuning are saved in a directory defined when initializing AutoTrainer. Additionally, with ResultsPlotter you can easily generate a beautiful graph depicting the comparison of the different models you have trained for a dataset. This is handy for presenting a models' comparison in a visual way.
 
 * 
-  |:palm_tree:| nlpboost is flexible, so when you get a deep understanding on the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel and configure ModelConfig and DatasetConfig accordingly; the rest is done by AutoTrainer. The same applies to artificial Encoder-Decoder models (that is encoder-decoder models created from pre-trained encoder-only or decoder-only models) - check `this <https://huggingface.co/docs/transformers/model_doc/encoder-decoder>`_ for more information. EncoderDecoderModel architecture can be configured for seq2seq tasks by setting the correct ModelConfig's parameters. This is useful for seq2seq tasks on languages for which there is no Encoder-Decoder model available.
+  |:palm_tree:| nlpboost is flexible, so when you get a deep understanding of the tool, you will be able to train ensembles of transformers or other monsters of nature. Simpler architectures like pre-trained Transformers models plus LSTMs or other type of layers before the task layers are also possible. This speeds up the research process, as the user only needs to create a custom class inheriting from transformers.PretrainedModel and configure ModelConfig and DatasetConfig accordingly; the rest is done by AutoTrainer. The same applies to artificial Encoder-Decoder models (that is encoder-decoder models created from pre-trained encoder-only or decoder-only models) - check `this <https://huggingface.co/docs/transformers/model_doc/encoder-decoder>`_ for more information. EncoderDecoderModel architecture can be configured for seq2seq tasks by setting the correct ModelConfig's parameters. This is useful for seq2seq tasks on languages for which there is no Encoder-Decoder model available.
 
 INSTALLATION AND TESTING
 ------------------------
@@ -123,7 +123,7 @@ Here is a list of public projects that have used ``nlpboost`` as its main tool f
 
 
 #. 
-   `BioMedIA`: The winning project of `SomosNLP Hackaton <https://huggingface.co/hackathon-pln-es>`_. It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper `here <https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf>`_.
+   `BioMedIA`: The winning project of [SomosNLP Hackaton](https://huggingface.co/hackathon-pln-es). It was also presented at NAACL2022, obtaining the Best Poster Presentation Award. You can check the paper `here <https://research.latinxinai.org/papers/naacl/2022/pdf/paper_06.pdf>`_.
 
 #. 
    ``Detecting and Classifying Sexism by Ensembling Transformers Models``. This work was presented as part of IberLEF2022@Sepln2022 Conference. In the `results page of the workshop <http://nlp.uned.es/exist2022/#results>`_ you can check that the systems produced by this paper achieved highest on both tasks of the workshop. Link to the paper `here <https://ceur-ws.org/Vol-3202/exist-paper3.pdf>`_.
