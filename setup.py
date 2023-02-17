@@ -25,7 +25,7 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    python_requires=">=3.9.13,<3.11",
+    python_requires=">=3.8,<3.11",
     install_requires=open("requirements.txt", "r").read().splitlines(),
     keywords="natural-language-processing, nlp, transformers, hyperparameter-tuning, automatic-training"
 )
