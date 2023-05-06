@@ -284,7 +284,7 @@ class AutoTrainer:
         if model_config.push_to_hub and model_config.hf_hub_username is not None:
             self.trainer.push_to_hub(
                 f"{model_config.hf_hub_username}/{model_config.save_name}",
-                private=True,
+                # private=True,
             )
         test_results["model_name"] = model_config.save_name
         test_results["dataset_name"] = dataset_config.alias
